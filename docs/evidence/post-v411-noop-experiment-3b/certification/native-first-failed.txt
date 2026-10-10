@@ -1,0 +1,54 @@
+native (windows, windows-latest)	Build both candidates on Windows	﻿2026-10-10T19:29:47.6949880Z ##[group]Run make -j2 nift && make -C .build/e2-source -j2 nift
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6950514Z [36;1mmake -j2 nift && make -C .build/e2-source -j2 nift[0m
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6954478Z shell: D:\a\_temp\setup-msys2\msys2.CMD {0}
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6954815Z env:
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6955203Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6955677Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6956306Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6956749Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6957185Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6957559Z   MSYSTEM: UCRT64
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:47.6957812Z ##[endgroup]
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:48.4954187Z make: *** No rule to make target 'nift'.  Stop.
+native (windows, windows-latest)	Build both candidates on Windows	2026-10-10T19:29:48.5594548Z ##[error]Process completed with exit code 2.
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	﻿2026-10-10T19:32:38.4538448Z ##[group]Run actions/upload-artifact@v7
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4538766Z with:
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4538974Z   name: sidecar-native-linux
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4539262Z   path: .build/sidecar-*.json
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	.build/sidecar-*.txt
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4539569Z   if-no-files-found: error
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4539802Z   compression-level: 6
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4540017Z   overwrite: false
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4540232Z   include-hidden-files: false
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4540461Z   archive: true
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4540650Z env:
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4540900Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4541327Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4541741Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4542127Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4542502Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4542898Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.4543259Z ##[endgroup]
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:38.6035766Z ##[error]No files were found with the provided path: .build/sidecar-*.json
+native (linux, ubuntu-latest)	Run actions/upload-artifact@v7	.build/sidecar-*.txt. No artifacts will be uploaded.
+native (macos, macos-latest)	Run actions/upload-artifact@v7	﻿2026-10-10T19:32:57.7537550Z ##[group]Run actions/upload-artifact@v7
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7537890Z with:
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7538220Z   name: sidecar-native-macos
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7538510Z   path: .build/sidecar-*.json
+native (macos, macos-latest)	Run actions/upload-artifact@v7	.build/sidecar-*.txt
+native (macos, macos-latest)	Run actions/upload-artifact@v7	
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7538890Z   if-no-files-found: error
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7539200Z   compression-level: 6
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7539430Z   overwrite: false
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7539720Z   include-hidden-files: false
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7539970Z   archive: true
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7540300Z env:
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7540600Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.15/arm64
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7541280Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.15/arm64/lib/pkgconfig
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7541740Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.15/arm64
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7542230Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.15/arm64
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7542710Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.15/arm64
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:57.7543140Z ##[endgroup]
+native (macos, macos-latest)	Run actions/upload-artifact@v7	2026-10-10T19:32:58.2906020Z ##[error]No files were found with the provided path: .build/sidecar-*.json
+native (macos, macos-latest)	Run actions/upload-artifact@v7	.build/sidecar-*.txt. No artifacts will be uploaded.

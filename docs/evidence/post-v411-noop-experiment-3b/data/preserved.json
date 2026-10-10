@@ -1,0 +1,1835 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "mode": "modified",
+      "case": "add",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/one.txt\",\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.000824 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001087 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "remove",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.000941 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "removed_path_changed_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: data/one.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "removed_path_changed_build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: data/one.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001689 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after_later_build": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b5d7d",
+          "declaration-indices": []
+        }
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "replace",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.000952 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001318 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "malformed",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{broken",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001246 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "invalid-parent",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"../outside\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001574 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency must be a project-relative path: ../outside\n"
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "same-length",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.001293 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001415 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "add",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/one.txt\",\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/two.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/two.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002608 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html",
+          "data/two.txt"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "13020247841095740192",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874222c22646174612f74776f2e747874225d7d",
+          "declaration-indices": [
+            2,
+            4
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: data/two.txt\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001407 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "remove",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002066 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "15769302949686708352",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b5d7d",
+          "declaration-indices": []
+        }
+      },
+      "removed_path_changed_status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "removed_path_changed_build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.001119 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after_later_build": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "15769302949686708352",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b5d7d",
+          "declaration-indices": []
+        }
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "replace",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/two.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/two.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.00222 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html",
+          "data/two.txt"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "8994024433044362761",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f74776f2e747874225d7d",
+          "declaration-indices": [
+            3
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: data/two.txt\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001385 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "malformed",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{broken",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001619 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "invalid-parent",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"../outside\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001347 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency must be a project-relative path: ../outside\n"
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "same-length",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/two.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/two.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.00243 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html",
+          "data/two.txt"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "8994024433044362761",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f74776f2e747874225d7d",
+          "declaration-indices": [
+            3
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: data/two.txt\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001245 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "add",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/one.txt\",\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/two.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/two.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.00242 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html",
+          "data/two.txt"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "13020247841095740192",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874222c22646174612f74776f2e747874225d7d",
+          "declaration-indices": [
+            2,
+            4
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: data/two.txt\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001265 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "remove",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002185 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "15769302949686708352",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b5d7d",
+          "declaration-indices": []
+        }
+      },
+      "removed_path_changed_status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "removed_path_changed_build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.001073 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after_later_build": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "15769302949686708352",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b5d7d",
+          "declaration-indices": []
+        }
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "replace",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/two.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/two.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.00211 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html",
+          "data/two.txt"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "8994024433044362761",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f74776f2e747874225d7d",
+          "declaration-indices": [
+            3
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: data/two.txt\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001296 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "malformed",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{broken",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001644 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "invalid-parent",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"../outside\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001298 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency must be a project-relative path: ../outside\n"
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "same-length",
+      "initial_bytes": "{\"dependencies\":[\"data/one.txt\"]}",
+      "current_bytes": "{\"dependencies\":[\"data/two.txt\"]}",
+      "exact_mtime_before_and_after": 1600000000123456789,
+      "metadata_before": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/one.txt",
+          "data/shared.html"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "819526867438812779",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      },
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/two.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/two.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.00225 seconds\n",
+        "stderr": ""
+      },
+      "metadata_after": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html",
+          "data/two.txt"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "8994024433044362761",
+          "content/a.html": "12264517700770491562",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415"
+        },
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f74776f2e747874225d7d",
+          "declaration-indices": [
+            3
+          ]
+        }
+      },
+      "new_declared_path_deleted_status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: data/two.txt\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "new_declared_path_deleted_build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001328 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/two.txt\n"
+      }
+    }
+  ]
+}

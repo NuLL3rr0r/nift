@@ -1,0 +1,15 @@
+{
+  "workflow_id": 38081731159,
+  "source_sha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+  "first_failed_job": "windows process contracts",
+  "diagnostic": "unrelated inheritable handle leaked",
+  "compiled_sources": [
+    "tests/process_contract.cpp",
+    "src/Process.cpp",
+    "src/JobControl.cpp"
+  ],
+  "these_sources_unchanged_from_e2": true,
+  "e3b_linked": false,
+  "probe_limitation": "GetHandleInformation tests numeric handle validity without proving event object identity; handle-value reuse is a possible false-positive cause, not proven here.",
+  "action": "rerun failed job once, unchanged source/assertions; preserve first failure"
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/nick/Repositories/nift/nift/tests/sidecar_state_contracts.py", line 36, in <module>
+    if pre[-1]!=post[-1]:assert 'sidecar-state' not in info
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

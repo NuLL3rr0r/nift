@@ -1,0 +1,47 @@
+{
+  "linux": {
+    "source": "c20124abf4ad3b389acce63d746c5240cb1fccec",
+    "binary_sha256": "c403a2885fa5a8d04e8830eef4df5419fd11ebe86ce9933a234f886f1fe45824",
+    "sidecar_contracts": 40,
+    "platform_contracts": 6,
+    "randomized": {
+      "passed": true,
+      "seeds": 9,
+      "operations": 288,
+      "builds": 645,
+      "clean_oracles": 288
+    },
+    "randomized_native_skips": {}
+  },
+  "macos": {
+    "source": "c20124abf4ad3b389acce63d746c5240cb1fccec",
+    "binary_sha256": "a9a2a19ff00bfe3b2b73adc1554676e6dd0d3582e1189af9f91fe6ae99db88b4",
+    "sidecar_contracts": 40,
+    "platform_contracts": 6,
+    "randomized": {
+      "passed": true,
+      "seeds": 9,
+      "operations": 288,
+      "builds": 645,
+      "clean_oracles": 288
+    },
+    "randomized_native_skips": {}
+  },
+  "windows": {
+    "source": "c20124abf4ad3b389acce63d746c5240cb1fccec",
+    "binary_sha256": "7240ceb66f682bce85d5a9f85c0fd41ceb166a1f2b7b841c0bfe1bc177a12e96",
+    "sidecar_contracts": 40,
+    "platform_contracts": 7,
+    "randomized": {
+      "passed": true,
+      "seeds": 9,
+      "operations": 288,
+      "builds": 540,
+      "clean_oracles": 243
+    },
+    "randomized_native_skips": {
+      "native-symlink-unavailable": 30,
+      "posix-interruption-unavailable": 15
+    }
+  }
+}

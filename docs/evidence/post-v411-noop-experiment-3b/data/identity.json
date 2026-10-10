@@ -1,0 +1,16 @@
+{
+  "production_head": "c5f449c31cf93bd0155cae0332d6c4ffdd2aa161",
+  "e2_runtime": "64d68993a981fdb6aaf6a52e37c666b035073b3e",
+  "binaries": {
+    "e2": "9d7e1438531c5f476c4603fb0a2d79d614b49d98ffbea3787edeb1842c7c92e5",
+    "e3b": "65719bd1a91dd901d3fec51a6c999fb83564d1ce207990f784daed0870a41b26"
+  },
+  "candidate_files": [
+    "src/ProjectInfo.cpp",
+    "src/ProjectInfo.h"
+  ],
+  "production_tracked_diff": "",
+  "compiled_from": "/tmp/nift-sidecar-experiment",
+  "implementation_authorization": "NONE FURTHER",
+  "native_macos_windows": "NOT RUN: local-only uncommitted candidate; hosted workflow checks out a remote ref and no remote publication is authorized"
+}

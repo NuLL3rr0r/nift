@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/nick/Repositories/nift/nift/tests/sidecar_state_contracts.py", line 58, in <module>
+    stamp=meta.stat().st_mtime_ns;meta.chmod(0o644);meta.write_text(json.dumps(info));os.utime(meta,ns=(stamp,stamp));r=run(d,'e3b','build');assert r.returncode!=0 and 'invalid user dependencies JSON' in r.stdout+r.stderr,(case,r.stdout,r.stderr);rows.append(dict(group='migration-corruption',case=case,passed=True))
+                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('duplicate', '✓ 3 tracked files are up to date\ntime taken: 0.000747 seconds\n', '')

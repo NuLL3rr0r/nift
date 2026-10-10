@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/nick/Repositories/nift/nift/tests/sidecar_platform_contracts.py", line 114, in <module>
+    assert result.returncode != 0 and 'invalid user dependencies JSON' in result.stdout + result.stderr, (source, mode, result.stdout, result.stderr)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/tmp/nift-sidecar-experiment/foreign-unit/sidecar-export.json'), 'modified', '✓ 3 tracked files are up to date\ntime taken: 0.001139 seconds\n', '')

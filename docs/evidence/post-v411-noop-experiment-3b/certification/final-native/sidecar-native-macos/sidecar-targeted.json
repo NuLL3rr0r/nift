@@ -1,0 +1,1159 @@
+{
+  "classification": "NOT REPRODUCED",
+  "cases": [
+    {
+      "mode": "modified",
+      "kind": "template",
+      "timing": "advance",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001134 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.001471 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001667 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "template",
+      "timing": "preserve",
+      "target": "a",
+      "omitted": "b",
+      "contractual": false,
+      "incremental_equals_fresh": false,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001014 seconds\n",
+      "status_after_target": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+      "ordinary_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001537 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.002086 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "template",
+      "timing": "collision",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.0024 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.00134 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001947 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "explicit",
+      "timing": "advance",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.002205 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.001844 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001446 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "explicit",
+      "timing": "preserve",
+      "target": "a",
+      "omitted": "b",
+      "contractual": false,
+      "incremental_equals_fresh": false,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.004972 seconds\n",
+      "status_after_target": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+      "ordinary_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001691 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001166 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "explicit",
+      "timing": "collision",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001072 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.00236 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001593 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "generated",
+      "timing": "advance",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.001652 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001656 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001703 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "generated",
+      "timing": "preserve",
+      "target": "b",
+      "omitted": "c",
+      "contractual": false,
+      "incremental_equals_fresh": false,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "incremental": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "1 target/prerequisite items built; 1 prerequisites up to date; build succeeded\ntime taken: 0.001323 seconds\n",
+      "status_after_target": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+      "ordinary_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001469 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001272 seconds\n"
+    },
+    {
+      "mode": "modified",
+      "kind": "generated",
+      "timing": "collision",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {},
+      "stored_hashes_after_target": {},
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.003266 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002967 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.000809 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "template",
+      "timing": "advance",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "16473904012775050393\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "713020539408678042\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.004051 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.059719 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.002005 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "template",
+      "timing": "preserve",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "16473904012775050393\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "713020539408678042\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001999 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.003887 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001087 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "template",
+      "timing": "collision",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "16473904012775050393\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "713020539408678042\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.0016 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.004733 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.00196 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "explicit",
+      "timing": "advance",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3435029466893288598\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001838 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.002572 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.00102 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "explicit",
+      "timing": "preserve",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3435029466893288598\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.003528 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.002347 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001178 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "explicit",
+      "timing": "collision",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3435029466893288598\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001709 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.004618 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001104 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "generated",
+      "timing": "advance",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/public/a.html.hash": "17782289108851700468\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "3951087448474134545\n",
+        ".nift/public/a.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.005964 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002205 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001208 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "generated",
+      "timing": "preserve",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/public/a.html.hash": "17782289108851700468\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "3951087448474134545\n",
+        ".nift/public/a.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.003591 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001887 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001573 seconds\n"
+    },
+    {
+      "mode": "hash",
+      "kind": "generated",
+      "timing": "collision",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/public/a.html.hash": "17782289108851700468\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "3951087448474134545\n",
+        ".nift/public/a.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.003531 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002316 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001546 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "template",
+      "timing": "advance",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "16473904012775050393\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "713020539408678042\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.004133 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.004471 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001785 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "template",
+      "timing": "preserve",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "16473904012775050393\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "713020539408678042\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.00216 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.002234 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001728 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "template",
+      "timing": "collision",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "OLD\ncontent-a\n"
+      },
+      "after_target": {
+        "b.html": "OLD\ncontent-b\n",
+        "c.html": "OLD\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "incremental": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "fresh": {
+        "b.html": "NEW\ncontent-b\n",
+        "c.html": "NEW\ncontent-c\n",
+        "a.html": "NEW\ncontent-a\n"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "16473904012775050393\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "17782292407386585101\n",
+        ".nift/content/c.html.hash": "17782291307874956890\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/templates/shared.html.hash": "713020539408678042\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.003217 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: templates/shared.html\nc\n  \u21b3 dependency changed: templates/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: templates/shared.html\nbuilt c\n    \u21b3 dependency changed: templates/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.003075 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.00124 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "explicit",
+      "timing": "advance",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3435029466893288598\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.001674 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.00387 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001083 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "explicit",
+      "timing": "preserve",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3435029466893288598\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.002472 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.002984 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001003 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "explicit",
+      "timing": "collision",
+      "target": "a",
+      "omitted": "b",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nOLD"
+      },
+      "after_target": {
+        "b.html": "\nOLD",
+        "c.html": "\nOLD",
+        "a.html": "\nNEW"
+      },
+      "incremental": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "fresh": {
+        "b.html": "\nNEW",
+        "c.html": "\nNEW",
+        "a.html": "\nNEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3435029466893288598\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "12264517700770491562\n",
+        ".nift/content/c.html.hash": "12264517700770491562\n",
+        ".nift/content/a.html.hash": "12264517700770491562\n",
+        ".nift/data/shared.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.003707 seconds\n",
+      "status_after_target": "Nift status\n2 of 3 tracked files need rebuilding\n\nb\n  \u21b3 dependency changed: data/shared.html\nc\n  \u21b3 dependency changed: data/shared.html\n\nrun nift build to rebuild these files\n",
+      "ordinary_log": "built b\n    \u21b3 dependency changed: data/shared.html\nbuilt c\n    \u21b3 dependency changed: data/shared.html\n\ud83d\udce6 2 files rebuilt successfully\ntime taken: 0.003052 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001097 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "generated",
+      "timing": "advance",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/public/a.html.hash": "17782289108851700468\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "3951087448474134545\n",
+        ".nift/public/a.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.005917 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002486 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001423 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "generated",
+      "timing": "preserve",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/public/a.html.hash": "17782289108851700468\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "3951087448474134545\n",
+        ".nift/public/a.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.003171 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.01951 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.001451 seconds\n"
+    },
+    {
+      "mode": "hybrid",
+      "kind": "generated",
+      "timing": "collision",
+      "target": "b",
+      "omitted": "c",
+      "contractual": true,
+      "incremental_equals_fresh": true,
+      "before": {
+        "b.html": "content-a",
+        "c.html": "content-a",
+        "a.html": "content-a"
+      },
+      "after_target": {
+        "b.html": "NEW",
+        "c.html": "content-a",
+        "a.html": "NEW"
+      },
+      "incremental": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "fresh": {
+        "b.html": "NEW",
+        "c.html": "NEW",
+        "a.html": "NEW"
+      },
+      "omitted_metadata_unchanged_after_target": true,
+      "stored_hashes_before": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "17782289108851700468\n",
+        ".nift/public/a.html.hash": "17782289108851700468\n"
+      },
+      "stored_hashes_after_target": {
+        ".nift/content/b.html.hash": "15267147696917715936\n",
+        ".nift/content/c.html.hash": "15267147696917715936\n",
+        ".nift/content/a.html.hash": "3951087448474134545\n",
+        ".nift/public/a.html.hash": "3951087448474134545\n"
+      },
+      "target_log": "built b\nbuilt a\n    \u21b3 dependency changed: content/a.html\n2 target/prerequisite items built; 0 prerequisites up to date; build succeeded\ntime taken: 0.004759 seconds\n",
+      "status_after_target": "Nift status\n1 of 3 tracked files need rebuilding\n\nc\n  \u21b3 dependency changed: public/a.html\n\nrun nift build to rebuild this file\n",
+      "ordinary_log": "built c\n    \u21b3 dependency changed: public/a.html\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002729 seconds\n",
+      "no_op_log": "\u2713 3 tracked files are up to date\ntime taken: 0.002463 seconds\n"
+    }
+  ],
+  "contractual_failures": 0,
+  "cases_run": 27
+}

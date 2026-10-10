@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/nick/Repositories/nift/nift/tests/sidecar_state_contracts.py", line 50, in <module>
+    assert observed[0]==observed[1],(mode,observed);rows.append(dict(group='eligibility',mode=mode,case='missing-edge',passed=True))
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('modified', [(0, 'Nift status\n1 of 3 tracked files need rebuilding\n\na\n  ↳ dependency removed: data/one.txt\n  ↳ user dependency metadata is invalid\n\nrun nift build to rebuild this file\n', ''), (0, 'Nift status\n1 of 3 tracked files need rebuilding\n\na\n  ↳ dependency removed: data/one.txt\n\nrun nift build to rebuild this file\n', '')])

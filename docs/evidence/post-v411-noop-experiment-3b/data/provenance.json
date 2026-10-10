@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "mode": "hash",
+      "rc": 0,
+      "stdout": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.06071 seconds\n",
+      "stderr": "",
+      "initial_bytes": "{\"dependencies\": [\"data/one.txt\"]}",
+      "second_parse_bytes": "{\"dependencies\": [\"data/two.txt\"]}",
+      "final_bytes": "{\"dependencies\": [\"data/one.txt\"]}",
+      "initial_hash": "13390078995113249269",
+      "second_parse_hash": "2132675056384506555",
+      "metadata": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "build-hooks": "post build\u0000post.f\u0000pre build\u0000pre.f\u0000type\u0000\u0000frontmatter\u0000\u0000",
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html",
+          "data/two.txt",
+          "post.f",
+          "pre.f"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "13390078995113249269",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415",
+          "post.f": "14150891635663480950",
+          "pre.f": "11831283211569330425"
+        }
+      }
+    },
+    {
+      "mode": "hybrid",
+      "rc": 0,
+      "stdout": "\ud83d\udce6 all 1 specified files built successfully\ntime taken: 0.075221 seconds\n",
+      "stderr": "",
+      "initial_bytes": "{\"dependencies\": [\"data/one.txt\"]}",
+      "second_parse_bytes": "{\"dependencies\": [\"data/two.txt\"]}",
+      "final_bytes": "{\"dependencies\": [\"data/one.txt\"]}",
+      "initial_hash": "13390078995113249269",
+      "second_parse_hash": "2132675056384506555",
+      "metadata": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "build-hooks": "post build\u0000post.f\u0000pre build\u0000pre.f\u0000type\u0000\u0000frontmatter\u0000\u0000",
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/shared.html",
+          "data/two.txt",
+          "post.f",
+          "pre.f"
+        ],
+        "reqs": [],
+        "dependency-hashes": {
+          "content/a.deps.json": "13390078995113249269",
+          "content/a.html": "12264517700770491562",
+          "data/one.txt": "16992273867106184937",
+          "data/shared.html": "3435029466893288598",
+          "data/two.txt": "15005779988705062415",
+          "post.f": "14150891635663480950",
+          "pre.f": "11831283211569330425"
+        }
+      }
+    }
+  ]
+}

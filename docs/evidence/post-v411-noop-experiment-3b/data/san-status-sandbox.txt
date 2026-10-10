@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/nick/Repositories/nift/nift/tests/dependency_status.py", line 42, in <module>
+    run(exe, p, 'build', '--all')
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nick/Repositories/nift/nift/tests/shared_dependency_targeted_reproducer.py", line 11, in run
+    if r.returncode:raise AssertionError((args,r.returncode,r.stdout,r.stderr))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (('build', '--all'), 1, '', '==395==LeakSanitizer has encountered a fatal error.\n==395==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1\n==395==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)\n')

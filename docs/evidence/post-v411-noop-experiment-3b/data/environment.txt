@@ -1,0 +1,5 @@
+Linux 7.0.0-29-generic
+g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Affinity 0,1,2,3: two physical cores with SMT.
+NRS 6da99128a5ea053551fe952a4994a390a38d0258
+PRS 1da43659da269c96af21aea7234799d2ad56b2df

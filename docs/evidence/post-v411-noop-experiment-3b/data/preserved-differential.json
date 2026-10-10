@@ -1,0 +1,92 @@
+[
+  {
+    "mode": "modified",
+    "case": "add",
+    "observable_match": true
+  },
+  {
+    "mode": "modified",
+    "case": "remove",
+    "observable_match": true
+  },
+  {
+    "mode": "modified",
+    "case": "replace",
+    "observable_match": true
+  },
+  {
+    "mode": "modified",
+    "case": "malformed",
+    "observable_match": true
+  },
+  {
+    "mode": "modified",
+    "case": "invalid-parent",
+    "observable_match": true
+  },
+  {
+    "mode": "modified",
+    "case": "same-length",
+    "observable_match": true
+  },
+  {
+    "mode": "hash",
+    "case": "add",
+    "observable_match": true
+  },
+  {
+    "mode": "hash",
+    "case": "remove",
+    "observable_match": true
+  },
+  {
+    "mode": "hash",
+    "case": "replace",
+    "observable_match": true
+  },
+  {
+    "mode": "hash",
+    "case": "malformed",
+    "observable_match": true
+  },
+  {
+    "mode": "hash",
+    "case": "invalid-parent",
+    "observable_match": true
+  },
+  {
+    "mode": "hash",
+    "case": "same-length",
+    "observable_match": true
+  },
+  {
+    "mode": "hybrid",
+    "case": "add",
+    "observable_match": true
+  },
+  {
+    "mode": "hybrid",
+    "case": "remove",
+    "observable_match": true
+  },
+  {
+    "mode": "hybrid",
+    "case": "replace",
+    "observable_match": true
+  },
+  {
+    "mode": "hybrid",
+    "case": "malformed",
+    "observable_match": true
+  },
+  {
+    "mode": "hybrid",
+    "case": "invalid-parent",
+    "observable_match": true
+  },
+  {
+    "mode": "hybrid",
+    "case": "same-length",
+    "observable_match": true
+  }
+]

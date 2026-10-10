@@ -1,0 +1,19 @@
++ set -euo pipefail
+++ pwd
++ NIFT_BIN=/home/nick/Repositories/nift/nift/nift
++ command -v strace
+++ mktemp -d /tmp/nift-pagination-order.XXXXXX
++ TMP=/tmp/nift-pagination-order.6KnAd0
++ trap 'rm -rf "$TMP"' EXIT
++ cd /tmp/nift-pagination-order.6KnAd0
++ mkdir -p .nift content templates public
++ cat
++ cat
++ echo @content
++ cat
++ cat
++ /home/nick/Repositories/nift/nift/nift build --all
++ test -f public/blog.html -a -f public/blog-2.html -a -f public/blog-3.html
++ cat
++ strace -f -y -e trace=write,unlink,unlinkat,rename,renameat,renameat2 -o trace.txt /home/nick/Repositories/nift/nift/nift build --all
++ rm -rf /tmp/nift-pagination-order.6KnAd0

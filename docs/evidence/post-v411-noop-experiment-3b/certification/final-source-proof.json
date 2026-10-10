@@ -1,0 +1,12 @@
+{
+  "candidate_sha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+  "runtime_source_files_identical_to_review": true,
+  "all_runtime_paths_unchanged_since_initial_checkpoint": true,
+  "reviewed_test_ast_identical": true,
+  "files": {
+    "src/ProjectInfo.cpp": "44501382d6431bbe439c6981f4aa533d3ecc3d5ce4f415b27c7bceff3d40b23d",
+    "src/ProjectInfo.h": "d68a320112c7b85fc17d7a6440549981bf718231e252a78bfec9f092fd66f0b6"
+  },
+  "measured_local_binary_sha256": "65719bd1a91dd901d3fec51a6c999fb83564d1ce207990f784daed0870a41b26",
+  "tracked_worktree_clean": true
+}

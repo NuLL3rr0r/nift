@@ -1,0 +1,114 @@
+{
+  "platform": "windows-lexical-v1",
+  "metadata": {
+    "modified": {
+      "name": "a",
+      "title": "a",
+      "template": "",
+      "content": "content/a.html",
+      "output": "public/a.html",
+      "minify": false,
+      "minify-version": 0,
+      "pagination": false,
+      "pagination-items-per-page": 0,
+      "pagination-template": "",
+      "pagination-separator": "",
+      "pagination-pages": 0,
+      "project-fingerprint": "",
+      "hierarchy-fingerprint": "",
+      "dependencies": [
+        "content/a.deps.json",
+        "content/a.html",
+        "data/one.txt",
+        "data/shared.html"
+      ],
+      "reqs": [],
+      "dependency-hashes": {},
+      "sidecar-state": {
+        "version": 1,
+        "platform": "windows-lexical-v1",
+        "present": true,
+        "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+        "declaration-indices": [
+          2
+        ]
+      }
+    },
+    "hash": {
+      "name": "a",
+      "title": "a",
+      "template": "",
+      "content": "content/a.html",
+      "output": "public/a.html",
+      "minify": false,
+      "minify-version": 0,
+      "pagination": false,
+      "pagination-items-per-page": 0,
+      "pagination-template": "",
+      "pagination-separator": "",
+      "pagination-pages": 0,
+      "project-fingerprint": "",
+      "hierarchy-fingerprint": "",
+      "dependencies": [
+        "content/a.deps.json",
+        "content/a.html",
+        "data/one.txt",
+        "data/shared.html"
+      ],
+      "reqs": [],
+      "dependency-hashes": {
+        "content/a.deps.json": "819526867438812779",
+        "content/a.html": "9750684948934698387",
+        "data/one.txt": "1875936269717626031",
+        "data/shared.html": "3435029466893288598"
+      },
+      "sidecar-state": {
+        "version": 1,
+        "platform": "windows-lexical-v1",
+        "present": true,
+        "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+        "declaration-indices": [
+          2
+        ]
+      }
+    },
+    "hybrid": {
+      "name": "a",
+      "title": "a",
+      "template": "",
+      "content": "content/a.html",
+      "output": "public/a.html",
+      "minify": false,
+      "minify-version": 0,
+      "pagination": false,
+      "pagination-items-per-page": 0,
+      "pagination-template": "",
+      "pagination-separator": "",
+      "pagination-pages": 0,
+      "project-fingerprint": "",
+      "hierarchy-fingerprint": "",
+      "dependencies": [
+        "content/a.deps.json",
+        "content/a.html",
+        "data/one.txt",
+        "data/shared.html"
+      ],
+      "reqs": [],
+      "dependency-hashes": {
+        "content/a.deps.json": "819526867438812779",
+        "content/a.html": "9750684948934698387",
+        "data/one.txt": "1875936269717626031",
+        "data/shared.html": "3435029466893288598"
+      },
+      "sidecar-state": {
+        "version": 1,
+        "platform": "windows-lexical-v1",
+        "present": true,
+        "bytes-hex": "7b22646570656e64656e63696573223a5b22646174612f6f6e652e747874225d7d",
+        "declaration-indices": [
+          2
+        ]
+      }
+    }
+  }
+}

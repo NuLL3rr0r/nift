@@ -1,0 +1,23 @@
+windows process contracts	Native Windows process launch and failure contracts	﻿2026-10-10T19:58:09.2083040Z ##[group]Run make -j2 test-process-hardening
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2083493Z [36;1mmake -j2 test-process-hardening[0m
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2087521Z shell: D:\a\_temp\setup-msys2\msys2.CMD {0}
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2087809Z env:
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2088083Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2088565Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2089050Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2089470Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2089891Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2090209Z   MSYSTEM: UCRT64
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:09.2090399Z ##[endgroup]
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:10.5756266Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -DNIFT_PROCESS_TEST_HOOKS tests/process_failure.cpp src/Process.cpp src/JobControl.cpp -o .build/process-failure.exe
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:10.6092194Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -DNIFT_PROCESS_TEST_HOOKS tests/process_contract.cpp src/Process.cpp -o .build/process-contract.exe
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.3914116Z python3 tests/process_hardening.py --failure .build/process-failure.exe --contract .build/process-contract.exe --output .build/process-hardening.json
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7258160Z Traceback (most recent call last):
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7269653Z   File "/d/a/nift/nift/tests/process_hardening.py", line 14, in <module>
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7270338Z     run(a.contract,[])
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7270902Z   File "/d/a/nift/nift/tests/process_hardening.py", line 13, in run
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7271502Z     assert r.returncode==0,results[-1]
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7271919Z            ^^^^^^^^^^^^^^^
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7272558Z AssertionError: {'case': [], 'returncode': 1, 'stdout': '', 'stderr': 'unrelated inheritable handle leaked\n'}
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7412968Z make: *** [Makefile:1989: test-process-hardening] Error 1
+windows process contracts	Native Windows process launch and failure contracts	2026-10-10T19:58:18.7486750Z ##[error]Process completed with exit code 2.

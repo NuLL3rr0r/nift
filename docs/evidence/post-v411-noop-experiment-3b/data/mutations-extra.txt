@@ -1,0 +1,13 @@
+/tmp/nift-sidecar-experiment/mutant-reread-certificate-bytes.cpp: In member function ‘bool ProjectInfo::build_one(TrackedInfo&, std::optional<BuildError>*)’:
+/tmp/nift-sidecar-experiment/mutant-reread-certificate-bytes.cpp:1184:9: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+ 1184 |         if(current)authoritative_sidecar.bytes=*current;certificate_valid=current.has_value();
+      |         ^~
+/tmp/nift-sidecar-experiment/mutant-reread-certificate-bytes.cpp:1184:57: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+ 1184 |         if(current)authoritative_sidecar.bytes=*current;certificate_valid=current.has_value();
+      |                                                         ^~~~~~~~~~~~~~~~~
+caught reread-certificate-bytes
+/tmp/nift-sidecar-experiment/mutant-reuse-missing-edge.cpp: In member function ‘std::vector<std::__cxx11::basic_string<char> > ProjectInfo::build_reasons(const TrackedInfo&) const’:
+/tmp/nift-sidecar-experiment/mutant-reuse-missing-edge.cpp:736:10: warning: variable ‘saved_edges_clean’ set but not used [-Wunused-but-set-variable]
+  736 |     bool saved_edges_clean=true;
+      |          ^~~~~~~~~~~~~~~~~
+caught reuse-missing-edge

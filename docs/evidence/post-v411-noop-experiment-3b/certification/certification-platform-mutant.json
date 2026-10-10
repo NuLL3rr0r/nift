@@ -1,0 +1,7 @@
+{
+  "caught": true,
+  "returncode": 1,
+  "source": "mutant-trust-platform.cpp",
+  "test": "sidecar_platform_contracts.py",
+  "purpose": "prove imported-provenance test detects bypass"
+}

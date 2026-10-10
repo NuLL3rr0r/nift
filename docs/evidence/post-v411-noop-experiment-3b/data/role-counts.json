@@ -1,0 +1,12 @@
+{
+  "e2": {
+    "sidecar_reads": 10015,
+    "sidecar_read_bytes": 2121273,
+    "info_parse_bytes": 8070235
+  },
+  "e3b": {
+    "sidecar_reads": 10015,
+    "sidecar_read_bytes": 2121273,
+    "info_parse_bytes": 13933996
+  }
+}

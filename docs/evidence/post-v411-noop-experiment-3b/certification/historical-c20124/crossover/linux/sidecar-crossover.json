@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "platform": "posix-lexical-v1",
+  "cases": [
+    {
+      "mode": "modified",
+      "case": "native-export",
+      "passed": true
+    },
+    {
+      "mode": "modified",
+      "case": "preserved-mtime-replaced-declaration",
+      "passed": true
+    },
+    {
+      "mode": "hash",
+      "case": "native-export",
+      "passed": true
+    },
+    {
+      "mode": "hash",
+      "case": "preserved-mtime-replaced-declaration",
+      "passed": true
+    },
+    {
+      "mode": "hybrid",
+      "case": "native-export",
+      "passed": true
+    },
+    {
+      "mode": "hybrid",
+      "case": "preserved-mtime-replaced-declaration",
+      "passed": true
+    },
+    {
+      "mode": "modified",
+      "case": "foreign-provenance-fallback",
+      "source_platform": "windows-lexical-v1",
+      "passed": true
+    },
+    {
+      "mode": "hash",
+      "case": "foreign-provenance-fallback",
+      "source_platform": "windows-lexical-v1",
+      "passed": true
+    },
+    {
+      "mode": "hybrid",
+      "case": "foreign-provenance-fallback",
+      "source_platform": "windows-lexical-v1",
+      "passed": true
+    }
+  ]
+}

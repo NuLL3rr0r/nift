@@ -1,0 +1,425 @@
+{
+  "binary_sha256": "65719bd1a91dd901d3fec51a6c999fb83564d1ce207990f784daed0870a41b26",
+  "cases": [
+    {
+      "mode": "modified",
+      "case": "malformed-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001298 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "missing-declaration-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.000911 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/not-here\n"
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "new-edge-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.000864 seconds\n",
+        "stderr": ""
+      },
+      "after_named_dependency_change": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: data/new.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "second_build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: data/new.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001476 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "equal-sidecar",
+      "sidecar_older": false,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001077 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "deleted-sidecar",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency removed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001481 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "new-sidecar",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001039 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      }
+    },
+    {
+      "mode": "modified",
+      "case": "unreadable-sidecar-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.000872 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: file is not readable\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "malformed-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.00096 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "missing-declaration-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.000924 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/not-here\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "new-edge-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/new.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/new.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.002282 seconds\n",
+        "stderr": ""
+      },
+      "after_named_dependency_change": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: data/new.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "second_build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: data/new.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001945 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "equal-sidecar",
+      "sidecar_older": false,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n\u2713 all 3 tracked files are up to date\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "\u2713 3 tracked files are up to date\ntime taken: 0.000866 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "deleted-sidecar",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency removed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001897 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "new-sidecar",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001261 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      }
+    },
+    {
+      "mode": "hash",
+      "case": "unreadable-sidecar-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.000965 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: file is not readable\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "malformed-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001052 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "missing-declaration-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.000838 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  dependency does not exist: data/not-here\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "new-edge-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 dependency changed: data/new.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n    \u21b3 dependency changed: data/new.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.00185 seconds\n",
+        "stderr": ""
+      },
+      "after_named_dependency_change": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: data/new.txt\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "second_build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: data/new.txt\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001535 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "equal-sidecar",
+      "sidecar_older": false,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency changed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001801 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "deleted-sidecar",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency removed: content/a.deps.json\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 0,
+        "stdout": "built a\n    \u21b3 dependency removed: content/a.deps.json\n\ud83d\udce6 1 file rebuilt successfully\ntime taken: 0.001415 seconds\n",
+        "stderr": ""
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "new-sidecar",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.000952 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: expected quoted object key at line 1, column 2\n"
+      }
+    },
+    {
+      "mode": "hybrid",
+      "case": "unreadable-sidecar-old",
+      "sidecar_older": true,
+      "status": {
+        "rc": 0,
+        "stdout": "Nift status\n1 of 3 tracked files need rebuilding\n\na\n  \u21b3 dependency changed: content/a.deps.json\n  \u21b3 user dependency metadata is invalid\n\nrun nift build to rebuild this file\n",
+        "stderr": ""
+      },
+      "build": {
+        "rc": 1,
+        "stdout": "0 of 1 files built successfully\ntime taken: 0.001311 seconds\n",
+        "stderr": "error: while building a\n  content/a.deps.json\n  invalid user dependencies JSON: file is not readable\n"
+      }
+    }
+  ],
+  "provenance_ambiguity": [
+    {
+      "authored_declaration": "data/x",
+      "metadata": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/x",
+          "data/y"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a205b22646174612f78225d7d",
+          "declaration-indices": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "authored_declaration": "data/y",
+      "metadata": {
+        "name": "a",
+        "title": "a",
+        "template": "",
+        "content": "content/a.html",
+        "output": "public/a.html",
+        "minify": false,
+        "minify-version": 0,
+        "pagination": false,
+        "pagination-items-per-page": 0,
+        "pagination-template": "",
+        "pagination-separator": "",
+        "pagination-pages": 0,
+        "project-fingerprint": "",
+        "hierarchy-fingerprint": "",
+        "dependencies": [
+          "content/a.deps.json",
+          "content/a.html",
+          "data/x",
+          "data/y"
+        ],
+        "reqs": [],
+        "dependency-hashes": {},
+        "sidecar-state": {
+          "version": 1,
+          "platform": "posix-lexical-v1",
+          "present": true,
+          "bytes-hex": "7b22646570656e64656e63696573223a205b22646174612f79225d7d",
+          "declaration-indices": [
+            3
+          ]
+        }
+      }
+    }
+  ],
+  "passed": true
+}

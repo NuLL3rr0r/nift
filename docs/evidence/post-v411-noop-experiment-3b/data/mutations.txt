@@ -1,0 +1,18 @@
+caught skip-byte-comparison
+caught trust-version
+caught trust-platform
+caught trust-index-type
+caught trust-index-range
+/tmp/nift-sidecar-experiment/mutant-trust-duplicates.cpp: In member function ‘bool ProjectInfo::cached_user_dependencies_match(const TrackedInfo&, const json::Document&) const’:
+/tmp/nift-sidecar-experiment/mutant-trust-duplicates.cpp:456:17: warning: variable ‘previous’ set but not used [-Wunused-but-set-variable]
+  456 |     std::size_t previous=0;bool first=true;
+      |                 ^~~~~~~~
+/tmp/nift-sidecar-experiment/mutant-trust-duplicates.cpp:456:33: warning: variable ‘first’ set but not used [-Wunused-but-set-variable]
+  456 |     std::size_t previous=0;bool first=true;
+      |                                 ^~~~~
+caught trust-duplicates
+/tmp/nift-sidecar-experiment/mutant-publish-after-hook.cpp: In member function ‘bool ProjectInfo::build_one(TrackedInfo&, std::optional<BuildError>*)’:
+/tmp/nift-sidecar-experiment/mutant-publish-after-hook.cpp:1181:10: warning: variable ‘certificate_valid’ set but not used [-Wunused-but-set-variable]
+ 1181 |     bool certificate_valid=false;
+      |          ^~~~~~~~~~~~~~~~~
+caught publish-after-hook

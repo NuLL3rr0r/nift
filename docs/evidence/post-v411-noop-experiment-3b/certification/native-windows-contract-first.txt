@@ -1,0 +1,633 @@
+﻿2026-10-10T19:32:06.7087232Z Current runner version: '2.337.0'
+2026-10-10T19:32:06.7103144Z ##[group]Runner Image Provisioner
+2026-10-10T19:32:06.7103599Z Hosted Compute Agent
+2026-10-10T19:32:06.7103942Z Version: 20260901.588
+2026-10-10T19:32:06.7104639Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-10T19:32:06.7105030Z Build Date: 2026-09-01T19:56:44Z
+2026-10-10T19:32:06.7105429Z Worker ID: {cc22c7f8-3f5b-4038-a288-39bfd25d1bd4}
+2026-10-10T19:32:06.7105825Z Azure Region: westus3
+2026-10-10T19:32:06.7106159Z ##[endgroup]
+2026-10-10T19:32:06.7106959Z ##[group]Operating System
+2026-10-10T19:32:06.7107334Z Microsoft Windows Server 2025
+2026-10-10T19:32:06.7107674Z 10.0.26100
+2026-10-10T19:32:06.7107965Z Datacenter
+2026-10-10T19:32:06.7108266Z ##[endgroup]
+2026-10-10T19:32:06.7108560Z ##[group]Runner Image
+2026-10-10T19:32:06.7108874Z Image: windows-2025-vs2026
+2026-10-10T19:32:06.7109213Z Version: 20260925.250.1
+2026-10-10T19:32:06.7110114Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260925.250/images/windows/Windows2025-VS2026-Readme.md
+2026-10-10T19:32:06.7110988Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260925.250
+2026-10-10T19:32:06.7111501Z ##[endgroup]
+2026-10-10T19:32:06.7112110Z ##[group]GITHUB_TOKEN Permissions
+2026-10-10T19:32:06.7113222Z Contents: read
+2026-10-10T19:32:06.7113524Z Metadata: read
+2026-10-10T19:32:06.7113823Z ##[endgroup]
+2026-10-10T19:32:06.7115078Z Secret source: Actions
+2026-10-10T19:32:06.7115637Z Cache mode: write
+2026-10-10T19:32:06.7116018Z Prepare workflow directory
+2026-10-10T19:32:06.7315331Z Prepare all required actions
+2026-10-10T19:32:06.7346326Z Getting action download info
+2026-10-10T19:32:07.0483585Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-10T19:32:07.1338964Z Download action repository 'actions/setup-python@v6' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-10T19:32:07.2187487Z Download action repository 'msys2/setup-msys2@v2' (SHA:ec48f7c5447b3140e2b088413ae3a55687bccb6e)
+2026-10-10T19:32:07.6731454Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-10T19:32:08.4008512Z Complete job name: native (windows, windows-latest)
+2026-10-10T19:32:08.5190909Z ##[group]Run actions/checkout@v5
+2026-10-10T19:32:08.5191774Z with:
+2026-10-10T19:32:08.5192149Z   repository: nift-dev/nift
+2026-10-10T19:32:08.5196159Z   token: ***
+2026-10-10T19:32:08.5196538Z   ssh-strict: true
+2026-10-10T19:32:08.5196919Z   ssh-user: git
+2026-10-10T19:32:08.5197302Z   persist-credentials: true
+2026-10-10T19:32:08.5197847Z   clean: true
+2026-10-10T19:32:08.5198235Z   sparse-checkout-cone-mode: true
+2026-10-10T19:32:08.5198693Z   fetch-depth: 1
+2026-10-10T19:32:08.5199065Z   fetch-tags: false
+2026-10-10T19:32:08.5199449Z   show-progress: true
+2026-10-10T19:32:08.5199833Z   lfs: false
+2026-10-10T19:32:08.5200197Z   submodules: false
+2026-10-10T19:32:08.5200602Z   set-safe-directory: true
+2026-10-10T19:32:08.5201080Z   allow-unsafe-pr-checkout: false
+2026-10-10T19:32:08.5201641Z ##[endgroup]
+2026-10-10T19:32:08.6137914Z Syncing repository: nift-dev/nift
+2026-10-10T19:32:08.6139268Z ##[group]Getting Git version info
+2026-10-10T19:32:08.6139860Z Working directory is 'D:\a\nift\nift'
+2026-10-10T19:32:08.6616472Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:32:09.0524139Z git version 2.55.0.windows.5
+2026-10-10T19:32:09.0555122Z ##[endgroup]
+2026-10-10T19:32:09.0569175Z Temporarily overriding HOME='D:\a\_temp\5c7892e6-36fe-481e-91fe-0b7284718001' before making global git config changes
+2026-10-10T19:32:09.0570350Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:32:09.0575888Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift
+2026-10-10T19:32:09.1114466Z Deleting the contents of 'D:\a\nift\nift'
+2026-10-10T19:32:09.1118338Z ##[group]Initializing the repository
+2026-10-10T19:32:09.1124087Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\nift\nift
+2026-10-10T19:32:09.1852718Z Initialized empty Git repository in D:/a/nift/nift/.git/
+2026-10-10T19:32:09.1884375Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/nift-dev/nift
+2026-10-10T19:32:09.2378269Z ##[endgroup]
+2026-10-10T19:32:09.2379054Z ##[group]Disabling automatic garbage collection
+2026-10-10T19:32:09.2384428Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-10T19:32:09.2556635Z ##[endgroup]
+2026-10-10T19:32:09.2557262Z ##[group]Setting up auth
+2026-10-10T19:32:09.2564313Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:32:09.2736618Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:32:10.6638830Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:32:10.6822551Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:32:11.0196561Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:32:11.0376727Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:32:11.3677149Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-10T19:32:11.3948729Z ##[endgroup]
+2026-10-10T19:32:11.3949032Z ##[group]Fetching the repository
+2026-10-10T19:32:11.3957165Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5bdbe715915f2adb7e78146d423761df3fc93b96:refs/remotes/origin/main
+2026-10-10T19:32:14.3143446Z From https://github.com/nift-dev/nift
+2026-10-10T19:32:14.3145677Z  * [new ref]         5bdbe715915f2adb7e78146d423761df3fc93b96 -> origin/main
+2026-10-10T19:32:14.3177345Z ##[endgroup]
+2026-10-10T19:32:14.3177715Z ##[group]Determining the checkout info
+2026-10-10T19:32:14.3178263Z ##[endgroup]
+2026-10-10T19:32:14.3185390Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-10T19:32:14.3498352Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-10T19:32:14.3693569Z ##[group]Checking out the ref
+2026-10-10T19:32:14.3699127Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2026-10-10T19:32:15.1374465Z Switched to a new branch 'main'
+2026-10-10T19:32:15.1433649Z branch 'main' set up to track 'origin/main'.
+2026-10-10T19:32:15.1554082Z ##[endgroup]
+2026-10-10T19:32:15.1865506Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-10T19:32:15.2025942Z 5bdbe715915f2adb7e78146d423761df3fc93b96
+2026-10-10T19:32:15.2394920Z ##[group]Run actions/setup-python@v6
+2026-10-10T19:32:15.2395128Z with:
+2026-10-10T19:32:15.2395247Z   python-version: 3.13
+2026-10-10T19:32:15.2395381Z   check-latest: false
+2026-10-10T19:32:15.2396801Z   token: ***
+2026-10-10T19:32:15.2396920Z   update-environment: true
+2026-10-10T19:32:15.2397055Z   allow-prereleases: false
+2026-10-10T19:32:15.2397194Z   freethreaded: false
+2026-10-10T19:32:15.2397355Z ##[endgroup]
+2026-10-10T19:32:15.3408243Z ##[group]Installed versions
+2026-10-10T19:32:15.3564831Z Successfully set up CPython (3.13.15)
+2026-10-10T19:32:15.3565212Z ##[endgroup]
+2026-10-10T19:32:15.3771082Z ##[group]Run msys2/setup-msys2@v2
+2026-10-10T19:32:15.3771281Z with:
+2026-10-10T19:32:15.3771390Z   msystem: UCRT64
+2026-10-10T19:32:15.3771999Z   update: true
+2026-10-10T19:32:15.3772129Z   install: make diffutils mingw-w64-ucrt-x86_64-gcc
+2026-10-10T19:32:15.3772288Z   path-type: minimal
+2026-10-10T19:32:15.3772397Z   release: true
+2026-10-10T19:32:15.3772518Z   platform-check-severity: fatal
+2026-10-10T19:32:15.3772645Z   cache: true
+2026-10-10T19:32:15.3772743Z env:
+2026-10-10T19:32:15.3772884Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:15.3773128Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:32:15.3773370Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:15.3773581Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:15.3773786Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:15.3773979Z ##[endgroup]
+2026-10-10T19:32:15.4687705Z ##[group]Downloading MSYS2...
+2026-10-10T19:32:16.1823835Z ##[endgroup]
+2026-10-10T19:32:16.1824129Z ##[group]Extracting MSYS2...
+2026-10-10T19:32:16.1834316Z [command]C:\hostedtoolcache\windows\msys2-installer\0.0.20260927\x64\base.exe -y
+2026-10-10T19:32:16.4863371Z 
+2026-10-10T19:32:16.4863800Z 7-Zip SFX 26.02 ZS v1.5.7 R1 (x64) : Copyright (c) 1999- Igor Pavlov, 2016- Tino Reichardt, 2022- Sergey G. Brester : 2026-06-27
+2026-10-10T19:32:16.4864189Z 
+2026-10-10T19:32:16.4864394Z Extracting archive: C:\hostedtoolcache\windows\msys2-installer\0.0.20260927\x64\base.exe
+2026-10-10T19:32:16.4865875Z --
+2026-10-10T19:32:16.4866148Z Path = C:\hostedtoolcache\windows\msys2-installer\0.0.20260927\x64\base.exe
+2026-10-10T19:32:16.4866447Z Type = 7z
+2026-10-10T19:32:16.4866622Z 
+2026-10-10T19:32:16.6873050Z   0%
+2026-10-10T19:32:16.6873273Z     
+2026-10-10T19:32:16.9981884Z   1% 1415 - msys64\usr\lib\terminfo\63\contel300
+2026-10-10T19:32:16.9982219Z                                                 
+2026-10-10T19:32:17.1867556Z   1% 2034 - msys64\usr\lib\terminfo\69\ibmapa8c
+2026-10-10T19:32:17.1868024Z                                                
+2026-10-10T19:32:17.3900456Z   2% 3229 - msys64\usr\lib\terminfo\76\vt102
+2026-10-10T19:32:17.3900762Z                                             
+2026-10-10T19:32:17.5942087Z   3% 4479 - msys64\usr\share\bash-completion\completions-core\rsync.bash
+2026-10-10T19:32:17.5942519Z                                                                         
+2026-10-10T19:32:17.7960071Z  12% 5563 - msys64\usr\share\locale\de\LC_TIME\coreutils.mo
+2026-10-10T19:32:17.7960886Z                                                            
+2026-10-10T19:32:17.9995176Z  35% 6303 - msys64\usr\share\locale\zh_TW\LC_MESSAGES\gnupg2.mo
+2026-10-10T19:32:17.9995548Z                                                                
+2026-10-10T19:32:18.5710444Z  36% 7539 - msys64\usr\share\man\man3\CURLSHOPT_USERDATA.3.gz
+2026-10-10T19:32:18.5710742Z                                                              
+2026-10-10T19:32:18.7651751Z  37% 8471 - msys64\usr\share\man\man3\setcchar.3x.gz
+2026-10-10T19:32:18.7652138Z                                                     
+2026-10-10T19:32:18.9678020Z  44% 9478 - msys64\usr\share\terminfo\62\beehiveIIIm
+2026-10-10T19:32:18.9678369Z                                                     
+2026-10-10T19:32:19.1711351Z  45% 10763 - msys64\usr\share\terminfo\70\pccon+colors
+2026-10-10T19:32:19.1711693Z                                                       
+2026-10-10T19:32:19.4105147Z  45% 12050 - msys64\usr\share\zoneinfo\America\Bogota
+2026-10-10T19:32:19.4105473Z                                                      
+2026-10-10T19:32:19.6668450Z  46% 13011 - msys64\usr\share\zoneinfo\posix\Europe\Riga
+2026-10-10T19:32:19.6668705Z                                                         
+2026-10-10T19:32:19.8590962Z  46% 13939 - msys64\var\lib\pacman\local\libp11-kit-0.26.5-1\desc
+2026-10-10T19:32:19.8591389Z                                                                  
+2026-10-10T19:32:19.9740618Z  70% 14360 - msys64\usr\bin\pacman-conf.exe
+2026-10-10T19:32:19.9741744Z                                            
+2026-10-10T19:32:19.9741950Z Everything is Ok
+2026-10-10T19:32:19.9760973Z ##[endgroup]
+2026-10-10T19:32:19.9761301Z ##[group]Disable Key Refresh...
+2026-10-10T19:32:19.9774509Z ##[endgroup]
+2026-10-10T19:32:19.9787043Z ##[group]Restoring package cache...
+2026-10-10T19:32:20.2612692Z Cache hit for restore-key: msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:32:21.4730835Z Received 83886080 of 101047739 (83.0%), 79.7 MBs/sec
+2026-10-10T19:32:21.8668579Z Received 101047739 of 101047739 (100.0%), 68.9 MBs/sec
+2026-10-10T19:32:21.8671831Z Cache Size: ~96 MB (101047739 B)
+2026-10-10T19:32:21.8763447Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/fa5b135a-3b72-4cf7-be79-2c32668e7157/cache.tzst -P -C D:/a/nift/nift --force-local --use-compress-program "zstd -d"
+2026-10-10T19:32:22.1119501Z Cache restored successfully
+2026-10-10T19:32:22.1189726Z Cache restore for msys2-pkgs-upd:true-conf:90546b23, got msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:32:22.1190433Z Cache restore for msys2-pkgs-upd:true-conf:90546b23, got msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:32:22.1191906Z ##[endgroup]
+2026-10-10T19:32:22.1192207Z ##[group]Starting MSYS2 for the first time...
+2026-10-10T19:32:22.1905490Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'uname' '-a'"
+2026-10-10T19:32:22.2332960Z [1;32mMSYS2 is starting for the first time. Executing the initial setup.[1;0m
+2026-10-10T19:32:22.2989272Z Copying skeleton files.
+2026-10-10T19:32:22.2989682Z These files are for the users to personalise their msys2 experience.
+2026-10-10T19:32:22.2989920Z 
+2026-10-10T19:32:22.2990013Z They will never be overwritten nor automatically updated.
+2026-10-10T19:32:22.2990161Z 
+2026-10-10T19:32:22.3333995Z './.bashrc' -> '/home/runneradmin/.bashrc'
+2026-10-10T19:32:22.3443535Z './.bash_profile' -> '/home/runneradmin/.bash_profile'
+2026-10-10T19:32:22.3555850Z './.profile' -> '/home/runneradmin/.profile'
+2026-10-10T19:32:22.4078776Z 'C:\Windows\system32\drivers\etc\hosts' -> '/etc/hosts'
+2026-10-10T19:32:22.4416294Z 'C:\Windows\system32\drivers\etc\protocol' -> '/etc/protocols'
+2026-10-10T19:32:22.4751217Z 'C:\Windows\system32\drivers\etc\services' -> '/etc/services'
+2026-10-10T19:32:22.5100027Z 'C:\Windows\system32\drivers\etc\networks' -> '/etc/networks'
+2026-10-10T19:32:22.6488710Z gpg: /etc/pacman.d/gnupg/trustdb.gpg: trustdb created
+2026-10-10T19:32:22.6541376Z gpg: no ultimately trusted keys found
+2026-10-10T19:32:22.8565891Z gpg: starting migration from earlier GnuPG versions
+2026-10-10T19:32:22.8940358Z gpg: porting secret keys from '/etc/pacman.d/gnupg/secring.gpg' to gpg-agent
+2026-10-10T19:32:22.8942594Z gpg: migration succeeded
+2026-10-10T19:32:22.9109508Z ==> Generating pacman master key. This may take some time.
+2026-10-10T19:32:22.9236143Z gpg: Generating pacman keyring master key...
+2026-10-10T19:32:23.8569973Z gpg: directory '/etc/pacman.d/gnupg/openpgp-revocs.d' created
+2026-10-10T19:32:23.8737975Z gpg: revocation certificate stored as '/etc/pacman.d/gnupg/openpgp-revocs.d/7EBFFB44D9A78394C632ED48609047BD41263F42.rev'
+2026-10-10T19:32:23.8738442Z gpg: Done
+2026-10-10T19:32:23.8880622Z ==> Updating trust database...
+2026-10-10T19:32:23.9137071Z gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+2026-10-10T19:32:23.9137360Z gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+2026-10-10T19:32:23.9982639Z ==> Appending keys from msys2.gpg...
+2026-10-10T19:32:24.3553365Z ==> Locally signing trusted keys in keyring...
+2026-10-10T19:32:24.7328363Z   -> Locally signed 5 keys.
+2026-10-10T19:32:24.7434344Z ==> Importing owner trust values...
+2026-10-10T19:32:24.7555840Z gpg: setting ownertrust to 4
+2026-10-10T19:32:24.7556340Z gpg: setting ownertrust to 4
+2026-10-10T19:32:24.7556553Z gpg: setting ownertrust to 4
+2026-10-10T19:32:24.7556741Z gpg: setting ownertrust to 4
+2026-10-10T19:32:24.7556927Z gpg: setting ownertrust to 4
+2026-10-10T19:32:24.7754884Z ==> Disabling revoked keys in keyring...
+2026-10-10T19:32:24.9521851Z   -> Disabled 4 keys.
+2026-10-10T19:32:24.9626014Z ==> Updating trust database...
+2026-10-10T19:32:24.9874817Z gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+2026-10-10T19:32:24.9889971Z gpg: depth: 0  valid:   1  signed:   5  trust: 0-, 0q, 0n, 0m, 0f, 1u
+2026-10-10T19:32:24.9910171Z gpg: depth: 1  valid:   5  signed:   7  trust: 0-, 0q, 0n, 5m, 0f, 0u
+2026-10-10T19:32:24.9917729Z gpg: depth: 2  valid:   4  signed:   2  trust: 4-, 0q, 0n, 0m, 0f, 0u
+2026-10-10T19:32:24.9919427Z gpg: next trustdb check due at 2027-02-10
+2026-10-10T19:32:25.0171811Z pacman-key (pacman) 6.1.0
+2026-10-10T19:32:25.0172091Z Copyright (c) 2010-2024 Pacman Development Team <pacman-dev@lists.archlinux.org>.
+2026-10-10T19:32:25.0172302Z 
+2026-10-10T19:32:25.0270961Z This is free software; see the source for copying conditions.
+2026-10-10T19:32:25.0271298Z There is NO WARRANTY, to the extent permitted by law.
+2026-10-10T19:32:25.1696157Z [1;32mInitial setup complete. MSYS2 is now ready to use.[1;0m
+2026-10-10T19:32:25.1815389Z MINGW64_NT-10.0-26100 runnervmfi6oq 3.6.10-c770e1b9.x86_64 2026-09-26 06:38 UTC x86_64 Msys
+2026-10-10T19:32:25.1862542Z ##[endgroup]
+2026-10-10T19:32:25.1862790Z ##[group]Disable CheckSpace...
+2026-10-10T19:32:25.2196923Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'sed' '-i' 's/^CheckSpace/#CheckSpace/g' '/etc/pacman.conf'"
+2026-10-10T19:32:25.3530909Z ##[endgroup]
+2026-10-10T19:32:25.3531181Z ##[group]Updating packages...
+2026-10-10T19:32:25.3845407Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Syuu' '--overwrite' '*'"
+2026-10-10T19:32:25.8336124Z :: Synchronizing package databases...
+2026-10-10T19:32:27.2327757Z  clangarm64 downloading...
+2026-10-10T19:32:27.2328016Z  mingw32 downloading...
+2026-10-10T19:32:27.2328144Z  mingw64 downloading...
+2026-10-10T19:32:27.2328264Z  ucrt64 downloading...
+2026-10-10T19:32:27.2328377Z  clang64 downloading...
+2026-10-10T19:32:27.2328487Z  msys downloading...
+2026-10-10T19:32:27.5290069Z :: Starting core system upgrade...
+2026-10-10T19:32:27.6471535Z warning: terminate other MSYS2 programs before proceeding
+2026-10-10T19:32:27.6471903Z resolving dependencies...
+2026-10-10T19:32:27.6472122Z looking for conflicting packages...
+2026-10-10T19:32:27.6530206Z 
+2026-10-10T19:32:27.6530525Z Packages (1) msys2-runtime-3.6.10-6
+2026-10-10T19:32:27.6530709Z 
+2026-10-10T19:32:27.6530795Z Total Installed Size:  6.31 MiB
+2026-10-10T19:32:27.6531048Z Net Upgrade Size:      0.00 MiB
+2026-10-10T19:32:27.6531187Z 
+2026-10-10T19:32:27.6531944Z :: Proceed with installation? [Y/n] 
+2026-10-10T19:32:27.6532178Z checking keyring...
+2026-10-10T19:32:27.7059058Z checking package integrity...
+2026-10-10T19:32:27.8029021Z loading package files...
+2026-10-10T19:32:27.8044341Z checking for file conflicts...
+2026-10-10T19:32:27.8044688Z :: Processing package changes...
+2026-10-10T19:32:27.8044947Z upgrading msys2-runtime...
+2026-10-10T19:32:27.8912350Z :: To complete this update all MSYS2 processes including this terminal will be closed. Confirm to proceed [Y/n] 
+2026-10-10T19:32:28.0811404Z ##[endgroup]
+2026-10-10T19:32:28.0811674Z ##[group]Killing remaining tasks...
+2026-10-10T19:32:28.1151173Z [command]C:\Windows\system32\taskkill.exe /F /FI "MODULES eq msys-2.0.dll"
+2026-10-10T19:32:28.2065245Z 
+2026-10-10T19:32:28.2065664Z INFO: No tasks running with the specified criteria.
+2026-10-10T19:32:28.2092201Z ##[endgroup]
+2026-10-10T19:32:28.2092683Z ##[group]Final system upgrade...
+2026-10-10T19:32:28.2487951Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Syuu' '--overwrite' '*'"
+2026-10-10T19:32:28.7044188Z :: Synchronizing package databases...
+2026-10-10T19:32:29.6824866Z  clangarm64 downloading...
+2026-10-10T19:32:29.6825177Z  mingw32 downloading...
+2026-10-10T19:32:29.6825364Z  mingw64 downloading...
+2026-10-10T19:32:29.6825540Z  ucrt64 downloading...
+2026-10-10T19:32:29.6825728Z  clang64 downloading...
+2026-10-10T19:32:29.6825897Z  msys downloading...
+2026-10-10T19:32:29.9929411Z :: Starting core system upgrade...
+2026-10-10T19:32:30.1133519Z  there is nothing to do
+2026-10-10T19:32:30.1133782Z :: Starting full system upgrade...
+2026-10-10T19:32:30.1306999Z resolving dependencies...
+2026-10-10T19:32:30.1359806Z looking for conflicting packages...
+2026-10-10T19:32:30.1373163Z 
+2026-10-10T19:32:30.1373663Z Packages (5) libexpat-2.9.0-1  libopenssl-3.6.5-1  libpcre2_8-10.49-1  openssl-3.6.5-1  tzcode-2026e-1
+2026-10-10T19:32:30.1374013Z 
+2026-10-10T19:32:30.1374099Z Total Installed Size:  9.36 MiB
+2026-10-10T19:32:30.1374318Z Net Upgrade Size:      0.01 MiB
+2026-10-10T19:32:30.1374460Z 
+2026-10-10T19:32:30.1379969Z :: Proceed with installation? [Y/n] 
+2026-10-10T19:32:30.1380177Z checking keyring...
+2026-10-10T19:32:30.1762808Z checking package integrity...
+2026-10-10T19:32:30.5608827Z loading package files...
+2026-10-10T19:32:30.5721190Z checking for file conflicts...
+2026-10-10T19:32:30.5737899Z :: Processing package changes...
+2026-10-10T19:32:30.5738161Z upgrading libexpat...
+2026-10-10T19:32:30.5766633Z upgrading libopenssl...
+2026-10-10T19:32:30.5971632Z upgrading libpcre2_8...
+2026-10-10T19:32:30.6004427Z upgrading openssl...
+2026-10-10T19:32:30.6592166Z upgrading tzcode...
+2026-10-10T19:32:31.7076782Z ##[endgroup]
+2026-10-10T19:32:31.7077092Z ##[group]Installing additional packages through pacman...
+2026-10-10T19:32:31.7402036Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-S' '--needed' '--overwrite' '*' 'make' 'diffutils' 'mingw-w64-ucrt-x86_64-gcc'"
+2026-10-10T19:32:32.3362075Z resolving dependencies...
+2026-10-10T19:32:32.3416154Z looking for conflicting packages...
+2026-10-10T19:32:32.3431447Z 
+2026-10-10T19:32:32.3434211Z Packages (21) mingw-w64-ucrt-x86_64-binutils-2.47-4  mingw-w64-ucrt-x86_64-cc-libs-16.2.0-5  mingw-w64-ucrt-x86_64-crt-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-gettext-runtime-1.0-1  mingw-w64-ucrt-x86_64-gmp-6.3.0-2  mingw-w64-ucrt-x86_64-headers-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-isl-0.28-1  mingw-w64-ucrt-x86_64-libgcc-16.2.0-5  mingw-w64-ucrt-x86_64-libiconv-1.19-1  mingw-w64-ucrt-x86_64-libstdc++-16.2.0-5  mingw-w64-ucrt-x86_64-libwinpthread-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-mpc-1.4.1-1  mingw-w64-ucrt-x86_64-mpfr-4.2.2-3  mingw-w64-ucrt-x86_64-tzdata-2026e-1  mingw-w64-ucrt-x86_64-windows-default-manifest-20260815-1  mingw-w64-ucrt-x86_64-winpthreads-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-zlib-1.3.2-2  mingw-w64-ucrt-x86_64-zstd-1.5.7-2  diffutils-3.12-1  make-4.4.1-3  mingw-w64-ucrt-x86_64-gcc-16.2.0-5
+2026-10-10T19:32:32.3436809Z 
+2026-10-10T19:32:32.3436911Z Total Installed Size:  474.72 MiB
+2026-10-10T19:32:32.3437062Z 
+2026-10-10T19:32:32.3451936Z :: Proceed with installation? [Y/n] 
+2026-10-10T19:32:32.3452172Z checking keyring...
+2026-10-10T19:32:32.3818071Z checking package integrity...
+2026-10-10T19:32:34.5086412Z loading package files...
+2026-10-10T19:32:34.5485170Z checking for file conflicts...
+2026-10-10T19:32:34.6944221Z :: Processing package changes...
+2026-10-10T19:32:34.6944582Z installing make...
+2026-10-10T19:32:34.7124456Z installing diffutils...
+2026-10-10T19:32:34.7339242Z installing mingw-w64-ucrt-x86_64-libwinpthread...
+2026-10-10T19:32:34.7366732Z installing mingw-w64-ucrt-x86_64-libgcc...
+2026-10-10T19:32:34.7396230Z installing mingw-w64-ucrt-x86_64-tzdata...
+2026-10-10T19:32:35.6092717Z installing mingw-w64-ucrt-x86_64-libstdc++...
+2026-10-10T19:32:35.6165252Z installing mingw-w64-ucrt-x86_64-cc-libs...
+2026-10-10T19:32:35.6181920Z installing mingw-w64-ucrt-x86_64-libiconv...
+2026-10-10T19:32:35.6326467Z installing mingw-w64-ucrt-x86_64-gettext-runtime...
+2026-10-10T19:32:35.7033497Z installing mingw-w64-ucrt-x86_64-zlib...
+2026-10-10T19:32:35.7082085Z installing mingw-w64-ucrt-x86_64-zstd...
+2026-10-10T19:32:35.7208255Z installing mingw-w64-ucrt-x86_64-binutils...
+2026-10-10T19:32:35.8944692Z installing mingw-w64-ucrt-x86_64-headers...
+2026-10-10T19:32:36.8288128Z installing mingw-w64-ucrt-x86_64-crt...
+2026-10-10T19:32:37.2206962Z installing mingw-w64-ucrt-x86_64-gmp...
+2026-10-10T19:32:37.2303700Z installing mingw-w64-ucrt-x86_64-isl...
+2026-10-10T19:32:37.2703501Z installing mingw-w64-ucrt-x86_64-mpfr...
+2026-10-10T19:32:37.2837952Z installing mingw-w64-ucrt-x86_64-mpc...
+2026-10-10T19:32:37.2878696Z installing mingw-w64-ucrt-x86_64-windows-default-manifest...
+2026-10-10T19:32:37.2895207Z installing mingw-w64-ucrt-x86_64-winpthreads...
+2026-10-10T19:32:37.2953057Z installing mingw-w64-ucrt-x86_64-gcc...
+2026-10-10T19:32:38.0779678Z Optional dependencies for mingw-w64-ucrt-x86_64-gcc
+2026-10-10T19:32:38.0779928Z     mingw-w64-ucrt-x86_64-libatomic
+2026-10-10T19:32:38.0780082Z     mingw-w64-ucrt-x86_64-libgomp: OpenMP
+2026-10-10T19:32:38.0780244Z     mingw-w64-ucrt-x86_64-libquadmath: Quad Math
+2026-10-10T19:32:38.0801832Z :: Running post-transaction hooks...
+2026-10-10T19:32:38.0802094Z (1/1) Updating the info directory file...
+2026-10-10T19:32:38.3269473Z ##[endgroup]
+2026-10-10T19:32:38.3269813Z ##[group]Saving package cache...
+2026-10-10T19:32:38.3587482Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'paccache' '-r' '-f' '-u' '-k0'"
+2026-10-10T19:32:38.8874581Z ==> no candidate packages found for pruning
+2026-10-10T19:32:38.9227709Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'paccache' '-r' '-f' '-k1'"
+2026-10-10T19:32:39.1143541Z ==> no candidate packages found for pruning
+2026-10-10T19:32:39.2995453Z Cache unchanged, skipping save for msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:32:39.3334857Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Scc'"
+2026-10-10T19:32:39.7842222Z 
+2026-10-10T19:32:39.7842779Z Cache directory: /var/cache/pacman/pkg/
+2026-10-10T19:32:39.7973584Z :: Do you want to remove ALL files from cache? [Y/n] 
+2026-10-10T19:32:39.7973911Z removing all files from cache...
+2026-10-10T19:32:39.7974065Z 
+2026-10-10T19:32:39.7974169Z Database directory: /var/lib/pacman/
+2026-10-10T19:32:39.7985170Z :: Do you want to remove unused repositories? [Y/n] 
+2026-10-10T19:32:39.7985478Z removing unused sync repositories...
+2026-10-10T19:32:39.8023186Z ##[endgroup]
+2026-10-10T19:32:39.8290142Z ##[group]Run actions/checkout@v5
+2026-10-10T19:32:39.8290310Z with:
+2026-10-10T19:32:39.8290444Z   ref: c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:32:39.8290603Z   path: .build/e2-source
+2026-10-10T19:32:39.8290742Z   repository: nift-dev/nift
+2026-10-10T19:32:39.8292148Z   token: ***
+2026-10-10T19:32:39.8292249Z   ssh-strict: true
+2026-10-10T19:32:39.8292353Z   ssh-user: git
+2026-10-10T19:32:39.8292461Z   persist-credentials: true
+2026-10-10T19:32:39.8292591Z   clean: true
+2026-10-10T19:32:39.8292703Z   sparse-checkout-cone-mode: true
+2026-10-10T19:32:39.8292839Z   fetch-depth: 1
+2026-10-10T19:32:39.8292943Z   fetch-tags: false
+2026-10-10T19:32:39.8293055Z   show-progress: true
+2026-10-10T19:32:39.8293162Z   lfs: false
+2026-10-10T19:32:39.8293263Z   submodules: false
+2026-10-10T19:32:39.8293371Z   set-safe-directory: true
+2026-10-10T19:32:39.8293502Z   allow-unsafe-pr-checkout: false
+2026-10-10T19:32:39.8293638Z env:
+2026-10-10T19:32:39.8293808Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:39.8294050Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:32:39.8294285Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:39.8294640Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:39.8294849Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:39.8295013Z   MSYSTEM: UCRT64
+2026-10-10T19:32:39.8295119Z ##[endgroup]
+2026-10-10T19:32:39.9012940Z Syncing repository: nift-dev/nift
+2026-10-10T19:32:39.9014831Z ##[group]Getting Git version info
+2026-10-10T19:32:39.9015196Z Working directory is 'D:\a\nift\nift\.build\e2-source'
+2026-10-10T19:32:39.9340227Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:32:39.9516526Z git version 2.55.0.windows.5
+2026-10-10T19:32:39.9541652Z ##[endgroup]
+2026-10-10T19:32:39.9551159Z Temporarily overriding HOME='D:\a\_temp\1db09cc1-d33e-49f1-b3e1-f604e78a9774' before making global git config changes
+2026-10-10T19:32:39.9551707Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:32:39.9557229Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift\.build\e2-source
+2026-10-10T19:32:39.9741042Z ##[group]Initializing the repository
+2026-10-10T19:32:39.9746222Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\nift\nift\.build\e2-source
+2026-10-10T19:32:39.9946223Z Initialized empty Git repository in D:/a/nift/nift/.build/e2-source/.git/
+2026-10-10T19:32:39.9970338Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/nift-dev/nift
+2026-10-10T19:32:40.0159112Z ##[endgroup]
+2026-10-10T19:32:40.0159525Z ##[group]Disabling automatic garbage collection
+2026-10-10T19:32:40.0165544Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-10T19:32:40.0385998Z ##[endgroup]
+2026-10-10T19:32:40.0386343Z ##[group]Setting up auth
+2026-10-10T19:32:40.0394968Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:32:40.0601990Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:32:40.4210523Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:32:40.4402408Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:32:40.7821143Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:32:40.8007566Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:32:41.1510584Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-10T19:32:41.1694582Z ##[endgroup]
+2026-10-10T19:32:41.1694826Z ##[group]Fetching the repository
+2026-10-10T19:32:41.1702478Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:32:43.4189415Z From https://github.com/nift-dev/nift
+2026-10-10T19:32:43.4189744Z  * branch            c5f449c31cf93bd0155cae0332d6c4ffdd2aa161 -> FETCH_HEAD
+2026-10-10T19:32:43.4216406Z ##[endgroup]
+2026-10-10T19:32:43.4216682Z ##[group]Determining the checkout info
+2026-10-10T19:32:43.4218171Z ##[endgroup]
+2026-10-10T19:32:43.4225045Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-10T19:32:43.4433691Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-10T19:32:43.4616158Z ##[group]Checking out the ref
+2026-10-10T19:32:43.4621446Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:32:44.2540422Z Note: switching to 'c5f449c31cf93bd0155cae0332d6c4ffdd2aa161'.
+2026-10-10T19:32:44.2540753Z 
+2026-10-10T19:32:44.2540941Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-10T19:32:44.2541371Z changes and commit them, and you can discard any commits you make in this
+2026-10-10T19:32:44.2541798Z state without impacting any branches by switching back to a branch.
+2026-10-10T19:32:44.2542050Z 
+2026-10-10T19:32:44.2542217Z If you want to create a new branch to retain commits you create, you may
+2026-10-10T19:32:44.2542611Z do so (now or later) by using -c with the switch command. Example:
+2026-10-10T19:32:44.2542845Z 
+2026-10-10T19:32:44.2542966Z   git switch -c <new-branch-name>
+2026-10-10T19:32:44.2543120Z 
+2026-10-10T19:32:44.2543204Z Or undo this operation with:
+2026-10-10T19:32:44.2543350Z 
+2026-10-10T19:32:44.2543423Z   git switch -
+2026-10-10T19:32:44.2543533Z 
+2026-10-10T19:32:44.2543721Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-10T19:32:44.2544003Z 
+2026-10-10T19:32:44.2544202Z HEAD is now at c5f449c docs: bank certified dependency path normalization experiment
+2026-10-10T19:32:44.2670869Z ##[endgroup]
+2026-10-10T19:32:44.2875430Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-10T19:32:44.3033251Z c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:32:44.3266498Z ##[group]Run make -j2 nift.exe && make -C .build/e2-source -j2 nift.exe
+2026-10-10T19:32:44.3266803Z [36;1mmake -j2 nift.exe && make -C .build/e2-source -j2 nift.exe[0m
+2026-10-10T19:32:44.3269308Z shell: D:\a\_temp\setup-msys2\msys2.CMD {0}
+2026-10-10T19:32:44.3269459Z env:
+2026-10-10T19:32:44.3269613Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:44.3269861Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:32:44.3270152Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:44.3270491Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:44.3270703Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:32:44.3270873Z   MSYSTEM: UCRT64
+2026-10-10T19:32:44.3271250Z ##[endgroup]
+2026-10-10T19:32:44.9103845Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/nift.cpp -o src/nift.o
+2026-10-10T19:32:44.9264850Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectOwnership.cpp -o src/ProjectOwnership.o
+2026-10-10T19:32:45.1442689Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/PackageTransaction.cpp -o src/PackageTransaction.o
+2026-10-10T19:32:46.1365897Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/CLI.cpp -o src/CLI.o
+2026-10-10T19:32:49.6980433Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Process.cpp -o src/Process.o
+2026-10-10T19:32:51.7580490Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/JobControl.cpp -o src/JobControl.o
+2026-10-10T19:32:52.3226892Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/RuntimeValue.cpp -o src/RuntimeValue.o
+2026-10-10T19:32:54.7063733Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Value.cpp -o src/Value.o
+2026-10-10T19:32:55.3324508Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/FileSystem.cpp -o src/FileSystem.o
+2026-10-10T19:32:57.5258305Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/JsonFile.cpp -o src/JsonFile.o
+2026-10-10T19:32:58.9718089Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/JsonSchema.cpp -o src/JsonSchema.o
+2026-10-10T19:32:59.1585385Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c minifypp/src/Minify.cpp -o minifypp/src/Minify.o
+2026-10-10T19:33:02.5167021Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c markuppp/src/Markup.cpp -o markuppp/src/Markup.o
+2026-10-10T19:33:04.3413934Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c markuppp/src/AsciiDoc.cpp -o markuppp/src/AsciiDoc.o
+2026-10-10T19:33:06.3524119Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c markuppp/src/ReStructuredText.cpp -o markuppp/src/ReStructuredText.o
+2026-10-10T19:33:06.9199621Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectInfo.cpp -o src/ProjectInfo.o
+2026-10-10T19:33:08.7222492Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectRead.cpp -o src/ProjectRead.o
+2026-10-10T19:33:12.6970674Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectState.cpp -o src/ProjectState.o
+2026-10-10T19:33:16.9876679Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/WatchList.cpp -o src/WatchList.o
+2026-10-10T19:33:17.5084106Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/BuildProgress.cpp -o src/BuildProgress.o
+2026-10-10T19:33:18.6561109Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Automation.cpp -o src/Automation.o
+2026-10-10T19:33:20.2532690Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Hooks.cpp -o src/Hooks.o
+2026-10-10T19:33:20.5918056Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Ast.cpp -o src/Ast.o
+2026-10-10T19:33:24.1015329Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/blocks.c -o markuppp/vendor/cmark/blocks.o
+2026-10-10T19:33:24.4015929Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/buffer.c -o markuppp/vendor/cmark/buffer.o
+2026-10-10T19:33:24.5390586Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/cmark.c -o markuppp/vendor/cmark/cmark.o
+2026-10-10T19:33:24.6298788Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/cmark_ctype.c -o markuppp/vendor/cmark/cmark_ctype.o
+2026-10-10T19:33:24.7068757Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/houdini_href_e.c -o markuppp/vendor/cmark/houdini_href_e.o
+2026-10-10T19:33:24.7925798Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/houdini_html_e.c -o markuppp/vendor/cmark/houdini_html_e.o
+2026-10-10T19:33:24.8745332Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/houdini_html_u.c -o markuppp/vendor/cmark/houdini_html_u.o
+2026-10-10T19:33:25.0036250Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/html.c -o markuppp/vendor/cmark/html.o
+2026-10-10T19:33:25.1391768Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/inlines.c -o markuppp/vendor/cmark/inlines.o
+2026-10-10T19:33:25.5435989Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/iterator.c -o markuppp/vendor/cmark/iterator.o
+2026-10-10T19:33:25.6458681Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/node.c -o markuppp/vendor/cmark/node.o
+2026-10-10T19:33:25.8514378Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/references.c -o markuppp/vendor/cmark/references.o
+2026-10-10T19:33:25.9746919Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/render.c -o markuppp/vendor/cmark/render.o
+2026-10-10T19:33:26.1059567Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/scanners.c -o markuppp/vendor/cmark/scanners.o
+2026-10-10T19:33:26.7885071Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/utf8.c -o markuppp/vendor/cmark/utf8.o
+2026-10-10T19:33:27.0296175Z CC="cc" CXX="g++" CFLAGS="-O2 -fPIC -Wno-deprecated-declarations" bash scripts/build_vendored_libffi.sh ".build/libffi/x86_64-w64-mingw32-cc"
+2026-10-10T19:33:29.0637405Z BUILD vendored libffi (x86_64-w64-mingw32-cc)
+2026-10-10T19:34:08.7797482Z BUILD vendored libffi: done (39s)
+2026-10-10T19:34:08.7889061Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Parser.cpp -o src/Parser.o
+2026-10-10T19:34:08.8047100Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserAsyncPool.cpp -o src/ParserAsyncPool.o
+2026-10-10T19:34:09.2764890Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserExpression.cpp -o src/ParserExpression.o
+2026-10-10T19:34:16.9309961Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserHelpers.cpp -o src/ParserHelpers.o
+2026-10-10T19:34:21.6949027Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserScript.cpp -o src/ParserScript.o
+2026-10-10T19:34:29.8284824Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserTemplate.cpp -o src/ParserTemplate.o
+2026-10-10T19:34:42.8308963Z g++ -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -static -static-libgcc -static-libstdc++ src/nift.o src/ProjectOwnership.o src/PackageTransaction.o src/CLI.o src/Process.o src/JobControl.o src/RuntimeValue.o src/Value.o src/FileSystem.o src/JsonFile.o src/JsonSchema.o minifypp/src/Minify.o markuppp/src/Markup.o markuppp/src/AsciiDoc.o markuppp/src/ReStructuredText.o src/Parser.o src/ParserAsyncPool.o src/ParserExpression.o src/ParserHelpers.o src/ParserScript.o src/ParserTemplate.o src/ProjectInfo.o src/ProjectRead.o src/ProjectState.o src/WatchList.o src/BuildProgress.o src/Automation.o src/Hooks.o src/Ast.o markuppp/vendor/cmark/blocks.o markuppp/vendor/cmark/buffer.o markuppp/vendor/cmark/cmark.o markuppp/vendor/cmark/cmark_ctype.o markuppp/vendor/cmark/houdini_href_e.o markuppp/vendor/cmark/houdini_html_e.o markuppp/vendor/cmark/houdini_html_u.o markuppp/vendor/cmark/html.o markuppp/vendor/cmark/inlines.o markuppp/vendor/cmark/iterator.o markuppp/vendor/cmark/node.o markuppp/vendor/cmark/references.o markuppp/vendor/cmark/render.o markuppp/vendor/cmark/scanners.o markuppp/vendor/cmark/utf8.o .build/libffi/x86_64-w64-mingw32-cc/install/lib/libffi.a -o nift.exe
+2026-10-10T19:34:43.1466854Z make: Entering directory '/d/a/nift/nift/.build/e2-source'
+2026-10-10T19:34:43.7248763Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/nift.cpp -o src/nift.o
+2026-10-10T19:34:43.7489009Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectOwnership.cpp -o src/ProjectOwnership.o
+2026-10-10T19:34:43.8131334Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/PackageTransaction.cpp -o src/PackageTransaction.o
+2026-10-10T19:34:44.9441136Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/CLI.cpp -o src/CLI.o
+2026-10-10T19:34:49.2425143Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Process.cpp -o src/Process.o
+2026-10-10T19:34:51.6458869Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/JobControl.cpp -o src/JobControl.o
+2026-10-10T19:34:52.2652580Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/RuntimeValue.cpp -o src/RuntimeValue.o
+2026-10-10T19:34:54.8732345Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Value.cpp -o src/Value.o
+2026-10-10T19:34:55.6270371Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/FileSystem.cpp -o src/FileSystem.o
+2026-10-10T19:34:58.2532898Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/JsonFile.cpp -o src/JsonFile.o
+2026-10-10T19:34:59.9530830Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/JsonSchema.cpp -o src/JsonSchema.o
+2026-10-10T19:35:00.4907793Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c minifypp/src/Minify.cpp -o minifypp/src/Minify.o
+2026-10-10T19:35:04.3071900Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c markuppp/src/Markup.cpp -o markuppp/src/Markup.o
+2026-10-10T19:35:05.9600096Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c markuppp/src/AsciiDoc.cpp -o markuppp/src/AsciiDoc.o
+2026-10-10T19:35:08.3177877Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c markuppp/src/ReStructuredText.cpp -o markuppp/src/ReStructuredText.o
+2026-10-10T19:35:08.7400512Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectInfo.cpp -o src/ProjectInfo.o
+2026-10-10T19:35:10.6430514Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectRead.cpp -o src/ProjectRead.o
+2026-10-10T19:35:14.6116316Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ProjectState.cpp -o src/ProjectState.o
+2026-10-10T19:35:18.5975655Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/WatchList.cpp -o src/WatchList.o
+2026-10-10T19:35:18.8131935Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/BuildProgress.cpp -o src/BuildProgress.o
+2026-10-10T19:35:19.9425419Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Automation.cpp -o src/Automation.o
+2026-10-10T19:35:21.9089243Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Hooks.cpp -o src/Hooks.o
+2026-10-10T19:35:21.9449847Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Ast.cpp -o src/Ast.o
+2026-10-10T19:35:25.1247137Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/blocks.c -o markuppp/vendor/cmark/blocks.o
+2026-10-10T19:35:25.4223243Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/buffer.c -o markuppp/vendor/cmark/buffer.o
+2026-10-10T19:35:25.5463642Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/cmark.c -o markuppp/vendor/cmark/cmark.o
+2026-10-10T19:35:25.6202045Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/cmark_ctype.c -o markuppp/vendor/cmark/cmark_ctype.o
+2026-10-10T19:35:25.6904069Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/houdini_href_e.c -o markuppp/vendor/cmark/houdini_href_e.o
+2026-10-10T19:35:25.7752801Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/houdini_html_e.c -o markuppp/vendor/cmark/houdini_html_e.o
+2026-10-10T19:35:25.8634301Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/houdini_html_u.c -o markuppp/vendor/cmark/houdini_html_u.o
+2026-10-10T19:35:25.9846612Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/html.c -o markuppp/vendor/cmark/html.o
+2026-10-10T19:35:26.1024306Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/inlines.c -o markuppp/vendor/cmark/inlines.o
+2026-10-10T19:35:26.4811013Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/iterator.c -o markuppp/vendor/cmark/iterator.o
+2026-10-10T19:35:26.5921392Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/node.c -o markuppp/vendor/cmark/node.o
+2026-10-10T19:35:26.7759676Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/references.c -o markuppp/vendor/cmark/references.o
+2026-10-10T19:35:26.8790116Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/render.c -o markuppp/vendor/cmark/render.o
+2026-10-10T19:35:26.9979715Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/scanners.c -o markuppp/vendor/cmark/scanners.o
+2026-10-10T19:35:27.6385400Z cc -Imarkuppp/vendor/cmark -std=c99 -O2 -Wall -Wextra -pedantic -MMD -MP -c markuppp/vendor/cmark/utf8.c -o markuppp/vendor/cmark/utf8.o
+2026-10-10T19:35:27.8640459Z CC="cc" CXX="g++" CFLAGS="-O2 -fPIC -Wno-deprecated-declarations" bash scripts/build_vendored_libffi.sh ".build/libffi/x86_64-w64-mingw32-cc"
+2026-10-10T19:35:28.2848667Z BUILD vendored libffi (x86_64-w64-mingw32-cc)
+2026-10-10T19:36:03.9246169Z BUILD vendored libffi: done (35s)
+2026-10-10T19:36:03.9398478Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/Parser.cpp -o src/Parser.o
+2026-10-10T19:36:03.9552853Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserAsyncPool.cpp -o src/ParserAsyncPool.o
+2026-10-10T19:36:04.3618472Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserExpression.cpp -o src/ParserExpression.o
+2026-10-10T19:36:10.9690257Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserHelpers.cpp -o src/ParserHelpers.o
+2026-10-10T19:36:15.0439438Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserScript.cpp -o src/ParserScript.o
+2026-10-10T19:36:22.3357317Z g++ -Isrc -Iinclude -Iminifypp/include -Iminifypp/src -Imarkuppp/include -Imarkuppp/vendor/cmark -I.build/libffi/x86_64-w64-mingw32-cc/install/include -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -MMD -MP -c src/ParserTemplate.cpp -o src/ParserTemplate.o
+2026-10-10T19:36:33.6003808Z g++ -std=c++17 -O2 -Wall -Wextra -pedantic -pthread -static -static-libgcc -static-libstdc++ src/nift.o src/ProjectOwnership.o src/PackageTransaction.o src/CLI.o src/Process.o src/JobControl.o src/RuntimeValue.o src/Value.o src/FileSystem.o src/JsonFile.o src/JsonSchema.o minifypp/src/Minify.o markuppp/src/Markup.o markuppp/src/AsciiDoc.o markuppp/src/ReStructuredText.o src/Parser.o src/ParserAsyncPool.o src/ParserExpression.o src/ParserHelpers.o src/ParserScript.o src/ParserTemplate.o src/ProjectInfo.o src/ProjectRead.o src/ProjectState.o src/WatchList.o src/BuildProgress.o src/Automation.o src/Hooks.o src/Ast.o markuppp/vendor/cmark/blocks.o markuppp/vendor/cmark/buffer.o markuppp/vendor/cmark/cmark.o markuppp/vendor/cmark/cmark_ctype.o markuppp/vendor/cmark/houdini_href_e.o markuppp/vendor/cmark/houdini_html_e.o markuppp/vendor/cmark/houdini_html_u.o markuppp/vendor/cmark/html.o markuppp/vendor/cmark/inlines.o markuppp/vendor/cmark/iterator.o markuppp/vendor/cmark/node.o markuppp/vendor/cmark/references.o markuppp/vendor/cmark/render.o markuppp/vendor/cmark/scanners.o markuppp/vendor/cmark/utf8.o .build/libffi/x86_64-w64-mingw32-cc/install/lib/libffi.a -o nift.exe
+2026-10-10T19:36:33.8511356Z make: Leaving directory '/d/a/nift/nift/.build/e2-source'
+2026-10-10T19:36:33.8692909Z ##[group]Run if ($IsWindows) { $env:PATH = "C:\msys64\ucrt64\bin;$env:PATH"; $suffix = '.exe' } else { $suffix = '' }
+2026-10-10T19:36:33.8693454Z [36;1mif ($IsWindows) { $env:PATH = "C:\msys64\ucrt64\bin;$env:PATH"; $suffix = '.exe' } else { $suffix = '' }[0m
+2026-10-10T19:36:33.8693963Z [36;1mpython tests/sidecar_state_contracts.py --nift "./nift$suffix" --baseline "./.build/e2-source/nift$suffix" --output .build/sidecar-state.json[0m
+2026-10-10T19:36:33.8694360Z [36;1mif ($LASTEXITCODE) { exit $LASTEXITCODE }[0m
+2026-10-10T19:36:33.8694747Z [36;1mpython tests/sidecar_platform_contracts.py --nift "./nift$suffix" --output .build/sidecar-platform.json --export .build/sidecar-export.json[0m
+2026-10-10T19:36:33.8695132Z [36;1mif ($LASTEXITCODE) { exit $LASTEXITCODE }[0m
+2026-10-10T19:36:33.8695485Z [36;1mpython tests/consumer_dependency_snapshots.py --nift "./nift$suffix" --output .build/sidecar-snapshots.json[0m
+2026-10-10T19:36:33.8695868Z [36;1mif ($LASTEXITCODE) { exit $LASTEXITCODE }[0m
+2026-10-10T19:36:33.8696236Z [36;1mpython tests/shared_dependency_targeted_reproducer.py --nift "./nift$suffix" --require-clean --output .build/sidecar-targeted.json[0m
+2026-10-10T19:36:33.8696583Z [36;1mif ($LASTEXITCODE) { exit $LASTEXITCODE }[0m
+2026-10-10T19:36:33.8696966Z [36;1mpython tests/randomized_incremental_differential.py --nift "./nift$suffix" --seeds 0,1,2 --steps 32 --output .build/sidecar-randomized.json[0m
+2026-10-10T19:36:33.8697490Z [36;1mif ($LASTEXITCODE) { exit $LASTEXITCODE }[0m
+2026-10-10T19:36:33.8697797Z [36;1mGet-FileHash "./nift$suffix" -Algorithm SHA256 | Format-List | Out-File .build/sidecar-binary.txt[0m
+2026-10-10T19:36:33.8698150Z [36;1mgit rev-parse HEAD | Out-File .build/sidecar-source.txt[0m
+2026-10-10T19:36:39.2548135Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-10T19:36:39.2548395Z env:
+2026-10-10T19:36:39.2548612Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:36:39.2548951Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:36:39.2549244Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:36:39.2549513Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:36:39.2549779Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:36:39.2550030Z   MSYSTEM: UCRT64
+2026-10-10T19:36:39.2550175Z ##[endgroup]
+2026-10-10T19:36:49.4243929Z Candidate contracts PASS 40
+2026-10-10T19:36:49.8963849Z Native platform contracts PASS 7
+2026-10-10T19:37:00.8590575Z {"fanout": [{"consumers": 2, "dependency_edges": 4, "metadata_bytes": 1430}, {"consumers": 3, "dependency_edges": 6, "metadata_bytes": 2145}, {"consumers": 10, "dependency_edges": 20, "metadata_bytes": 7150}, {"consumers": 128, "dependency_edges": 256, "metadata_bytes": 92396}], "declared_filevalue_hook": true, "fingerprint_migration": true, "post_output_validation": true, "generated_variants": true, "conflicting_reads": true, "versions_migration_rename": true, "json_schema_hook_import": true, "barriers": [{"kind": "native", "passed": true}, {"kind": "external", "passed": true}, {"kind": "interrupt", "passed": true}], "passed": true, "elapsed_seconds": 10.898}
+2026-10-10T19:37:06.6946470Z NOT REPRODUCED 0 contractual failures of 27 cases
+2026-10-10T19:37:07.3971463Z Traceback (most recent call last):
+2026-10-10T19:37:07.4056326Z   File "D:\a\nift\nift\tests\randomized_incremental_differential.py", line 145, in campaign
+2026-10-10T19:37:07.4056846Z     if fresh.exists():shutil.rmtree(fresh)
+2026-10-10T19:37:07.4057139Z                       ~~~~~~~~~~~~~^^^^^^^
+2026-10-10T19:37:07.4057580Z   File "C:\hostedtoolcache\windows\Python\3.13.15\x64\Lib\shutil.py", line 790, in rmtree
+2026-10-10T19:37:07.4058017Z     return _rmtree_unsafe(path, onexc)
+2026-10-10T19:37:07.4058468Z   File "C:\hostedtoolcache\windows\Python\3.13.15\x64\Lib\shutil.py", line 629, in _rmtree_unsafe
+2026-10-10T19:37:07.4060796Z     onexc(os.unlink, fullname, err)
+2026-10-10T19:37:07.4061175Z     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-10T19:37:07.4061713Z   File "C:\hostedtoolcache\windows\Python\3.13.15\x64\Lib\shutil.py", line 625, in _rmtree_unsafe
+2026-10-10T19:37:07.4062180Z     os.unlink(fullname)
+2026-10-10T19:37:07.4062426Z     ~~~~~~~~~^^^^^^^^^^
+2026-10-10T19:37:07.4063016Z PermissionError: [WinError 5] Access is denied: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\nift-v411-diff-229k56bu\\oracle\\.nift\\public\\move\\x.info.json'
+2026-10-10T19:37:07.4063503Z 
+2026-10-10T19:37:07.4063689Z The above exception was the direct cause of the following exception:
+2026-10-10T19:37:07.4063952Z 
+2026-10-10T19:37:07.4064050Z Traceback (most recent call last):
+2026-10-10T19:37:07.4064479Z   File "D:\a\nift\nift\tests\randomized_incremental_differential.py", line 203, in <module>
+2026-10-10T19:37:07.4064888Z     if __name__=='__main__':main()
+2026-10-10T19:37:07.4065131Z                             ~~~~^^
+2026-10-10T19:37:07.4065498Z   File "D:\a\nift\nift\tests\randomized_incremental_differential.py", line 195, in main
+2026-10-10T19:37:07.4066446Z     result=campaign(str(pathlib.Path(a.nift).resolve()),[int(x) for x in a.seeds.split(',')],a.steps,a.modes.split(','),a.retain,a.operations.split(',') if a.operations else None)
+2026-10-10T19:37:07.4067249Z   File "D:\a\nift\nift\tests\randomized_incremental_differential.py", line 188, in campaign
+2026-10-10T19:37:07.4067851Z     raise CampaignFailure(context,exc) from exc
+2026-10-10T19:37:07.4068707Z CampaignFailure: mode=modified seed=0 step=1 history=['remove', 'fanout']: PermissionError: [WinError 5] Access is denied: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\nift-v411-diff-229k56bu\\oracle\\.nift\\public\\move\\x.info.json'; retention_error=None
+2026-10-10T19:37:07.4430510Z ##[error]Process completed with exit code 1.
+2026-10-10T19:37:07.4590745Z Post job cleanup.
+2026-10-10T19:37:07.5580138Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:37:07.5763688Z git version 2.55.0.windows.5
+2026-10-10T19:37:07.5803337Z Temporarily overriding HOME='D:\a\_temp\b333ef67-6be6-41e5-b089-816414013e88' before making global git config changes
+2026-10-10T19:37:07.5804163Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:37:07.5809826Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift\.build\e2-source
+2026-10-10T19:37:07.5997331Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:37:07.6179704Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:37:08.0080100Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:37:08.0243454Z http.https://github.com/.extraheader
+2026-10-10T19:37:08.0268511Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-10T19:37:08.0453857Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:37:08.4136942Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:37:08.4333868Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:37:08.8223522Z Post job cleanup.
+2026-10-10T19:37:08.9295876Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:37:08.9477775Z git version 2.55.0.windows.5
+2026-10-10T19:37:08.9515620Z Temporarily overriding HOME='D:\a\_temp\dfbc00f5-72f6-40d2-b979-ba7f203177f1' before making global git config changes
+2026-10-10T19:37:08.9516289Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:37:08.9523320Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift
+2026-10-10T19:37:08.9718869Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:37:08.9907952Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:37:09.3847246Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:37:09.4015420Z http.https://github.com/.extraheader
+2026-10-10T19:37:09.4041805Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-10T19:37:09.4232336Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:37:09.8804518Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:37:09.9002717Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:37:10.2876733Z Cleaning up orphan processes

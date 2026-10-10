@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "caught": 2,
+  "missed": 0,
+  "results": [
+    {
+      "name": "reread-certificate-bytes",
+      "caught": true,
+      "returncode": 1,
+      "diagnostic": "AssertionError"
+    },
+    {
+      "name": "reuse-missing-edge",
+      "caught": true,
+      "returncode": 1,
+      "diagnostic": "AssertionError: ('modified', [(0, 'Nift status\\n1 of 3 tracked files need rebuilding\\n\\na\\n  \u21b3 dependency removed: data/one.txt\\n  \u21b3 user dependency metadata is invalid\\n\\nrun nift build to rebuild this file\\n', ''), (0, 'Nift status\\n1 of 3 tracked files need rebuilding\\n\\na\\n  \u21b3 dependency removed: data/one.txt\\n\\nrun nift build to rebuild this file\\n', '')])"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "kind": "san",
+    "passed": true
+  },
+  {
+    "kind": "san-lifetime",
+    "passed": true
+  }
+]

@@ -1,0 +1,579 @@
+﻿2026-10-10T19:28:54.4481969Z Current runner version: '2.337.0'
+2026-10-10T19:28:54.4756308Z ##[group]Runner Image Provisioner
+2026-10-10T19:28:54.4757183Z Hosted Compute Agent
+2026-10-10T19:28:54.4757658Z Version: 20260901.588
+2026-10-10T19:28:54.4758152Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-10T19:28:54.4758780Z Build Date: 2026-09-01T19:56:44Z
+2026-10-10T19:28:54.4759437Z Worker ID: {f6421a06-afe7-4a26-8d64-ee7ccea2e42c}
+2026-10-10T19:28:54.4760030Z Azure Region: centralus
+2026-10-10T19:28:54.4760502Z ##[endgroup]
+2026-10-10T19:28:54.4761577Z ##[group]Operating System
+2026-10-10T19:28:54.4762738Z Microsoft Windows Server 2025
+2026-10-10T19:28:54.4763286Z 10.0.26100
+2026-10-10T19:28:54.4763704Z Datacenter
+2026-10-10T19:28:54.4764144Z ##[endgroup]
+2026-10-10T19:28:54.4764587Z ##[group]Runner Image
+2026-10-10T19:28:54.4765176Z Image: windows-2025-vs2026
+2026-10-10T19:28:54.4765705Z Version: 20260925.250.1
+2026-10-10T19:28:54.4767095Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260925.250/images/windows/Windows2025-VS2026-Readme.md
+2026-10-10T19:28:54.4768470Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260925.250
+2026-10-10T19:28:54.4769288Z ##[endgroup]
+2026-10-10T19:28:54.4770311Z ##[group]GITHUB_TOKEN Permissions
+2026-10-10T19:28:54.4772299Z Contents: read
+2026-10-10T19:28:54.4772766Z Metadata: read
+2026-10-10T19:28:54.4773204Z ##[endgroup]
+2026-10-10T19:28:54.4775105Z Secret source: Actions
+2026-10-10T19:28:54.4775829Z Cache mode: write
+2026-10-10T19:28:54.4776409Z Prepare workflow directory
+2026-10-10T19:28:54.5646016Z Prepare all required actions
+2026-10-10T19:28:54.5690587Z Getting action download info
+2026-10-10T19:28:54.8771555Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-10T19:28:55.0204733Z Download action repository 'actions/setup-python@v6' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-10T19:28:55.2148478Z Download action repository 'msys2/setup-msys2@v2' (SHA:ec48f7c5447b3140e2b088413ae3a55687bccb6e)
+2026-10-10T19:28:55.5682033Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-10T19:28:56.2310360Z Complete job name: native (windows, windows-latest)
+2026-10-10T19:28:56.6537716Z ##[group]Run actions/checkout@v5
+2026-10-10T19:28:56.6541805Z with:
+2026-10-10T19:28:56.6542839Z   repository: nift-dev/nift
+2026-10-10T19:28:56.6551445Z   token: ***
+2026-10-10T19:28:56.6552505Z   ssh-strict: true
+2026-10-10T19:28:56.6554519Z   ssh-user: git
+2026-10-10T19:28:56.6555597Z   persist-credentials: true
+2026-10-10T19:28:56.6556812Z   clean: true
+2026-10-10T19:28:56.6557952Z   sparse-checkout-cone-mode: true
+2026-10-10T19:28:56.6559153Z   fetch-depth: 1
+2026-10-10T19:28:56.6560189Z   fetch-tags: false
+2026-10-10T19:28:56.6565304Z   show-progress: true
+2026-10-10T19:28:56.6566682Z   lfs: false
+2026-10-10T19:28:56.6567616Z   submodules: false
+2026-10-10T19:28:56.6568671Z   set-safe-directory: true
+2026-10-10T19:28:56.6569862Z   allow-unsafe-pr-checkout: false
+2026-10-10T19:28:56.6571553Z ##[endgroup]
+2026-10-10T19:28:56.8682459Z Syncing repository: nift-dev/nift
+2026-10-10T19:28:56.8687347Z ##[group]Getting Git version info
+2026-10-10T19:28:56.8690487Z Working directory is 'D:\a\nift\nift'
+2026-10-10T19:28:56.9404336Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:28:57.3077720Z git version 2.55.0.windows.5
+2026-10-10T19:28:57.3141990Z ##[endgroup]
+2026-10-10T19:28:57.3162901Z Temporarily overriding HOME='D:\a\_temp\3169c03e-21b8-4bce-aebf-d7ce63d9a858' before making global git config changes
+2026-10-10T19:28:57.3164781Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:28:57.3174193Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift
+2026-10-10T19:28:57.4308049Z Deleting the contents of 'D:\a\nift\nift'
+2026-10-10T19:28:57.4314104Z ##[group]Initializing the repository
+2026-10-10T19:28:57.4324987Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\nift\nift
+2026-10-10T19:28:57.6105592Z Initialized empty Git repository in D:/a/nift/nift/.git/
+2026-10-10T19:28:57.6175995Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/nift-dev/nift
+2026-10-10T19:28:57.7643131Z ##[endgroup]
+2026-10-10T19:28:57.7644158Z ##[group]Disabling automatic garbage collection
+2026-10-10T19:28:57.7651604Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-10T19:28:57.9668897Z ##[endgroup]
+2026-10-10T19:28:57.9669642Z ##[group]Setting up auth
+2026-10-10T19:28:57.9682637Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:28:58.0569110Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:29:00.4745406Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:29:00.5170334Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:29:01.6256087Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:29:01.7335045Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:29:03.2758529Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-10T19:29:03.4560616Z ##[endgroup]
+2026-10-10T19:29:03.4564750Z ##[group]Fetching the repository
+2026-10-10T19:29:03.4576570Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +125df927903df0b62afc122afa62b4110f090fba:refs/remotes/origin/main
+2026-10-10T19:29:06.7828003Z From https://github.com/nift-dev/nift
+2026-10-10T19:29:06.7832007Z  * [new ref]         125df927903df0b62afc122afa62b4110f090fba -> origin/main
+2026-10-10T19:29:06.7927101Z ##[endgroup]
+2026-10-10T19:29:06.7927839Z ##[group]Determining the checkout info
+2026-10-10T19:29:06.7929186Z ##[endgroup]
+2026-10-10T19:29:06.7940336Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-10T19:29:06.9717593Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-10T19:29:07.1641100Z ##[group]Checking out the ref
+2026-10-10T19:29:07.1652848Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2026-10-10T19:29:08.3893553Z Updating files:  40% (1593/3911)
+2026-10-10T19:29:08.4060057Z Updating files:  41% (1604/3911)
+2026-10-10T19:29:08.4156055Z Updating files:  42% (1643/3911)
+2026-10-10T19:29:08.4288355Z Updating files:  43% (1682/3911)
+2026-10-10T19:29:08.4413242Z Updating files:  44% (1721/3911)
+2026-10-10T19:29:08.4567979Z Updating files:  45% (1760/3911)
+2026-10-10T19:29:08.4714435Z Updating files:  46% (1800/3911)
+2026-10-10T19:29:08.4834561Z Updating files:  47% (1839/3911)
+2026-10-10T19:29:08.4941704Z Updating files:  48% (1878/3911)
+2026-10-10T19:29:08.5042445Z Updating files:  49% (1917/3911)
+2026-10-10T19:29:08.5181994Z Updating files:  50% (1956/3911)
+2026-10-10T19:29:08.5300045Z Updating files:  51% (1995/3911)
+2026-10-10T19:29:08.5398038Z Updating files:  52% (2034/3911)
+2026-10-10T19:29:08.5519253Z Updating files:  53% (2073/3911)
+2026-10-10T19:29:08.5696439Z Updating files:  54% (2112/3911)
+2026-10-10T19:29:08.5768844Z Updating files:  55% (2152/3911)
+2026-10-10T19:29:08.5872178Z Updating files:  56% (2191/3911)
+2026-10-10T19:29:08.5982147Z Updating files:  57% (2230/3911)
+2026-10-10T19:29:08.6072016Z Updating files:  58% (2269/3911)
+2026-10-10T19:29:08.6170998Z Updating files:  59% (2308/3911)
+2026-10-10T19:29:08.6257376Z Updating files:  60% (2347/3911)
+2026-10-10T19:29:08.6411539Z Updating files:  61% (2386/3911)
+2026-10-10T19:29:08.6527145Z Updating files:  62% (2425/3911)
+2026-10-10T19:29:08.6606501Z Updating files:  63% (2464/3911)
+2026-10-10T19:29:08.6676319Z Updating files:  64% (2504/3911)
+2026-10-10T19:29:08.6840534Z Updating files:  65% (2543/3911)
+2026-10-10T19:29:08.7036263Z Updating files:  66% (2582/3911)
+2026-10-10T19:29:08.7147751Z Updating files:  67% (2621/3911)
+2026-10-10T19:29:08.7240849Z Updating files:  68% (2660/3911)
+2026-10-10T19:29:08.7328491Z Updating files:  69% (2699/3911)
+2026-10-10T19:29:08.7449673Z Updating files:  70% (2738/3911)
+2026-10-10T19:29:08.7514206Z Updating files:  71% (2777/3911)
+2026-10-10T19:29:08.7677129Z Updating files:  72% (2816/3911)
+2026-10-10T19:29:08.7803127Z Updating files:  73% (2856/3911)
+2026-10-10T19:29:08.7924042Z Updating files:  74% (2895/3911)
+2026-10-10T19:29:08.8047373Z Updating files:  75% (2934/3911)
+2026-10-10T19:29:08.8132941Z Updating files:  76% (2973/3911)
+2026-10-10T19:29:08.8203914Z Updating files:  77% (3012/3911)
+2026-10-10T19:29:08.8302937Z Updating files:  78% (3051/3911)
+2026-10-10T19:29:08.8385683Z Updating files:  79% (3090/3911)
+2026-10-10T19:29:08.8464424Z Updating files:  80% (3129/3911)
+2026-10-10T19:29:08.8546676Z Updating files:  81% (3168/3911)
+2026-10-10T19:29:08.8658214Z Updating files:  82% (3208/3911)
+2026-10-10T19:29:08.8704462Z Updating files:  83% (3247/3911)
+2026-10-10T19:29:08.8773066Z Updating files:  84% (3286/3911)
+2026-10-10T19:29:08.8855463Z Updating files:  85% (3325/3911)
+2026-10-10T19:29:08.8929143Z Updating files:  86% (3364/3911)
+2026-10-10T19:29:08.9075384Z Updating files:  87% (3403/3911)
+2026-10-10T19:29:08.9228818Z Updating files:  88% (3442/3911)
+2026-10-10T19:29:08.9341367Z Updating files:  89% (3481/3911)
+2026-10-10T19:29:08.9434186Z Updating files:  90% (3520/3911)
+2026-10-10T19:29:08.9531135Z Updating files:  91% (3560/3911)
+2026-10-10T19:29:08.9619705Z Updating files:  92% (3599/3911)
+2026-10-10T19:29:08.9718096Z Updating files:  93% (3638/3911)
+2026-10-10T19:29:08.9783832Z Updating files:  94% (3677/3911)
+2026-10-10T19:29:08.9855823Z Updating files:  95% (3716/3911)
+2026-10-10T19:29:08.9924078Z Updating files:  96% (3755/3911)
+2026-10-10T19:29:09.0007837Z Updating files:  97% (3794/3911)
+2026-10-10T19:29:09.0079652Z Updating files:  98% (3833/3911)
+2026-10-10T19:29:09.0133846Z Updating files:  99% (3872/3911)
+2026-10-10T19:29:09.0134453Z Updating files: 100% (3911/3911)
+2026-10-10T19:29:09.0134891Z Updating files: 100% (3911/3911), done.
+2026-10-10T19:29:09.0282640Z Switched to a new branch 'main'
+2026-10-10T19:29:09.0330573Z branch 'main' set up to track 'origin/main'.
+2026-10-10T19:29:09.0472976Z ##[endgroup]
+2026-10-10T19:29:09.0879364Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-10T19:29:09.1137181Z 125df927903df0b62afc122afa62b4110f090fba
+2026-10-10T19:29:09.1621116Z ##[group]Run actions/setup-python@v6
+2026-10-10T19:29:09.1621576Z with:
+2026-10-10T19:29:09.1621886Z   python-version: 3.13
+2026-10-10T19:29:09.1622181Z   check-latest: false
+2026-10-10T19:29:09.1624253Z   token: ***
+2026-10-10T19:29:09.1624564Z   update-environment: true
+2026-10-10T19:29:09.1624862Z   allow-prereleases: false
+2026-10-10T19:29:09.1625128Z   freethreaded: false
+2026-10-10T19:29:09.1625420Z ##[endgroup]
+2026-10-10T19:29:09.3725069Z ##[group]Installed versions
+2026-10-10T19:29:09.4871486Z Successfully set up CPython (3.13.15)
+2026-10-10T19:29:09.4872439Z ##[endgroup]
+2026-10-10T19:29:09.5262851Z ##[group]Run msys2/setup-msys2@v2
+2026-10-10T19:29:09.5263243Z with:
+2026-10-10T19:29:09.5263491Z   msystem: UCRT64
+2026-10-10T19:29:09.5263789Z   update: true
+2026-10-10T19:29:09.5264093Z   install: make diffutils mingw-w64-ucrt-x86_64-gcc
+2026-10-10T19:29:09.5264411Z   path-type: minimal
+2026-10-10T19:29:09.5264881Z   release: true
+2026-10-10T19:29:09.5265153Z   platform-check-severity: fatal
+2026-10-10T19:29:09.5265489Z   cache: true
+2026-10-10T19:29:09.5265733Z env:
+2026-10-10T19:29:09.5266041Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:09.5266528Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:29:09.5266973Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:09.5267392Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:09.5267802Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:09.5268276Z ##[endgroup]
+2026-10-10T19:29:09.6571886Z ##[group]Downloading MSYS2...
+2026-10-10T19:29:10.2790544Z ##[endgroup]
+2026-10-10T19:29:10.2791288Z ##[group]Extracting MSYS2...
+2026-10-10T19:29:10.2802734Z [command]C:\hostedtoolcache\windows\msys2-installer\0.0.20260927\x64\base.exe -y
+2026-10-10T19:29:10.6228122Z 
+2026-10-10T19:29:10.6230102Z 7-Zip SFX 26.02 ZS v1.5.7 R1 (x64) : Copyright (c) 1999- Igor Pavlov, 2016- Tino Reichardt, 2022- Sergey G. Brester : 2026-06-27
+2026-10-10T19:29:10.6231556Z 
+2026-10-10T19:29:10.6232054Z Extracting archive: C:\hostedtoolcache\windows\msys2-installer\0.0.20260927\x64\base.exe
+2026-10-10T19:29:10.6232709Z --
+2026-10-10T19:29:10.6233186Z Path = C:\hostedtoolcache\windows\msys2-installer\0.0.20260927\x64\base.exe
+2026-10-10T19:29:10.6233692Z Type = 7z
+2026-10-10T19:29:10.6233906Z 
+2026-10-10T19:29:10.8139638Z   0%
+2026-10-10T19:29:10.8140010Z     
+2026-10-10T19:29:11.0156411Z   0% 249 - msys64\usr\share\locale\eo
+2026-10-10T19:29:11.0156980Z                                      
+2026-10-10T19:29:11.2189923Z   1% 1326 - msys64\usr\lib\terminfo\63\c301
+2026-10-10T19:29:11.2190704Z                                            
+2026-10-10T19:29:11.4222207Z   1% 2333 - msys64\usr\lib\terminfo\6e\ndr9500-mc
+2026-10-10T19:29:11.4223210Z                                                  
+2026-10-10T19:29:11.6251942Z   2% 3313 - msys64\usr\lib\terminfo\77\wsvt25
+2026-10-10T19:29:11.6252513Z                                              
+2026-10-10T19:29:11.8296843Z   2% 4032 - msys64\usr\share\bash-completion\completions-core\find.bash
+2026-10-10T19:29:11.8297718Z                                                                        
+2026-10-10T19:29:12.0478668Z   4% 4972 - msys64\usr\share\doc\cygwin-api\compatibility.html
+2026-10-10T19:29:12.0484100Z                                                               
+2026-10-10T19:29:12.2348565Z   9% 5457 - msys64\usr\share\locale\bg\LC_MESSAGES\grep.mo
+2026-10-10T19:29:12.2349284Z                                                           
+2026-10-10T19:29:12.4372804Z  17% 5725 - msys64\usr\share\locale\ga\LC_MESSAGES\coreutils.mo
+2026-10-10T19:29:12.4373372Z                                                                
+2026-10-10T19:29:12.6408594Z  31% 6218 - msys64\usr\share\locale\tr\LC_MESSAGES\pacman-scripts.mo
+2026-10-10T19:29:12.6409487Z                                                                     
+2026-10-10T19:29:12.8433214Z  36% 7013 - msys64\usr\share\man\man3\add_wchnstr.3x.gz
+2026-10-10T19:29:12.8433829Z                                                        
+2026-10-10T19:29:13.0465645Z  37% 7928 - msys64\usr\share\man\man3\ins_nwstr.3x.gz
+2026-10-10T19:29:13.0466262Z                                                      
+2026-10-10T19:29:13.2506821Z  38% 8860 - msys64\usr\share\man\pt_BR\man1\xzdec.1.gz
+2026-10-10T19:29:13.2507416Z                                                       
+2026-10-10T19:29:13.8445181Z  44% 9779 - msys64\usr\share\terminfo\64\d470c
+2026-10-10T19:29:13.8455690Z                                               
+2026-10-10T19:29:14.0309693Z  45% 10492 - msys64\usr\share\terminfo\6e\ncr260intan
+2026-10-10T19:29:14.0310270Z                                                      
+2026-10-10T19:29:14.2350044Z  45% 11251 - msys64\usr\share\terminfo\74\tvi912b-unk-vb
+2026-10-10T19:29:14.2351056Z                                                         
+2026-10-10T19:29:14.4377867Z  45% 12153 - msys64\usr\share\zoneinfo\America\Port_of_Spain
+2026-10-10T19:29:14.4378688Z                                                             
+2026-10-10T19:29:14.6410390Z  46% 12885 - msys64\usr\share\zoneinfo\posix\Atlantic\Jan_Mayen
+2026-10-10T19:29:14.6411151Z                                                                
+2026-10-10T19:29:14.8500975Z  46% 13806 - msys64\var\lib\pacman\local\bsdtar-3.8.9-1\mtree
+2026-10-10T19:29:14.8501625Z                                                              
+2026-10-10T19:29:15.0480767Z  49% 14126 - msys64\usr\bin\cat.exe
+2026-10-10T19:29:15.0482038Z                                    
+2026-10-10T19:29:15.2535960Z  70% 14336 - msys64\usr\bin\msys-stdc++-6.dll
+2026-10-10T19:29:15.2538364Z                                              
+2026-10-10T19:29:15.2538927Z Everything is Ok
+2026-10-10T19:29:15.2566995Z ##[endgroup]
+2026-10-10T19:29:15.2567917Z ##[group]Disable Key Refresh...
+2026-10-10T19:29:15.2583943Z ##[endgroup]
+2026-10-10T19:29:15.2600423Z ##[group]Restoring package cache...
+2026-10-10T19:29:15.5071942Z Cache hit for restore-key: msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:29:16.8642603Z Received 101047739 of 101047739 (100.0%), 78.6 MBs/sec
+2026-10-10T19:29:16.8646103Z Cache Size: ~96 MB (101047739 B)
+2026-10-10T19:29:16.8741957Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/05c3107b-11e7-469f-a446-598b49552ecc/cache.tzst -P -C D:/a/nift/nift --force-local --use-compress-program "zstd -d"
+2026-10-10T19:29:17.2348537Z Cache restored successfully
+2026-10-10T19:29:17.2429534Z Cache restore for msys2-pkgs-upd:true-conf:90546b23, got msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:29:17.2430952Z Cache restore for msys2-pkgs-upd:true-conf:90546b23, got msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:29:17.2432235Z ##[endgroup]
+2026-10-10T19:29:17.2432850Z ##[group]Starting MSYS2 for the first time...
+2026-10-10T19:29:17.3281398Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'uname' '-a'"
+2026-10-10T19:29:17.3886096Z [1;32mMSYS2 is starting for the first time. Executing the initial setup.[1;0m
+2026-10-10T19:29:17.4889819Z Copying skeleton files.
+2026-10-10T19:29:17.4890567Z These files are for the users to personalise their msys2 experience.
+2026-10-10T19:29:17.4890968Z 
+2026-10-10T19:29:17.4891305Z They will never be overwritten nor automatically updated.
+2026-10-10T19:29:17.4891668Z 
+2026-10-10T19:29:17.5395275Z './.bashrc' -> '/home/runneradmin/.bashrc'
+2026-10-10T19:29:17.5556722Z './.bash_profile' -> '/home/runneradmin/.bash_profile'
+2026-10-10T19:29:17.5727904Z './.profile' -> '/home/runneradmin/.profile'
+2026-10-10T19:29:17.6353073Z 'C:\Windows\system32\drivers\etc\hosts' -> '/etc/hosts'
+2026-10-10T19:29:17.6855354Z 'C:\Windows\system32\drivers\etc\protocol' -> '/etc/protocols'
+2026-10-10T19:29:17.7341062Z 'C:\Windows\system32\drivers\etc\services' -> '/etc/services'
+2026-10-10T19:29:17.7835270Z 'C:\Windows\system32\drivers\etc\networks' -> '/etc/networks'
+2026-10-10T19:29:17.9562433Z gpg: /etc/pacman.d/gnupg/trustdb.gpg: trustdb created
+2026-10-10T19:29:17.9628315Z gpg: no ultimately trusted keys found
+2026-10-10T19:29:18.2445054Z gpg: starting migration from earlier GnuPG versions
+2026-10-10T19:29:18.3085444Z gpg: porting secret keys from '/etc/pacman.d/gnupg/secring.gpg' to gpg-agent
+2026-10-10T19:29:18.3088919Z gpg: migration succeeded
+2026-10-10T19:29:18.3307292Z ==> Generating pacman master key. This may take some time.
+2026-10-10T19:29:18.3484370Z gpg: Generating pacman keyring master key...
+2026-10-10T19:29:19.4453535Z gpg: directory '/etc/pacman.d/gnupg/openpgp-revocs.d' created
+2026-10-10T19:29:19.4661472Z gpg: revocation certificate stored as '/etc/pacman.d/gnupg/openpgp-revocs.d/3B14EC9A2DFF334A78AF9561E188E8AABD174433.rev'
+2026-10-10T19:29:19.4666431Z gpg: Done
+2026-10-10T19:29:19.4837059Z ==> Updating trust database...
+2026-10-10T19:29:19.5195413Z gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+2026-10-10T19:29:19.5195966Z gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+2026-10-10T19:29:19.6515140Z ==> Appending keys from msys2.gpg...
+2026-10-10T19:29:20.1802839Z ==> Locally signing trusted keys in keyring...
+2026-10-10T19:29:20.6847986Z   -> Locally signed 5 keys.
+2026-10-10T19:29:20.6999516Z ==> Importing owner trust values...
+2026-10-10T19:29:20.7185973Z gpg: setting ownertrust to 4
+2026-10-10T19:29:20.7186589Z gpg: setting ownertrust to 4
+2026-10-10T19:29:20.7187026Z gpg: setting ownertrust to 4
+2026-10-10T19:29:20.7187421Z gpg: setting ownertrust to 4
+2026-10-10T19:29:20.7187860Z gpg: setting ownertrust to 4
+2026-10-10T19:29:20.7455425Z ==> Disabling revoked keys in keyring...
+2026-10-10T19:29:21.0138973Z   -> Disabled 4 keys.
+2026-10-10T19:29:21.0293713Z ==> Updating trust database...
+2026-10-10T19:29:21.0666074Z gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+2026-10-10T19:29:21.0687802Z gpg: depth: 0  valid:   1  signed:   5  trust: 0-, 0q, 0n, 0m, 0f, 1u
+2026-10-10T19:29:21.0712573Z gpg: depth: 1  valid:   5  signed:   7  trust: 0-, 0q, 0n, 5m, 0f, 0u
+2026-10-10T19:29:21.0723166Z gpg: depth: 2  valid:   4  signed:   2  trust: 4-, 0q, 0n, 0m, 0f, 0u
+2026-10-10T19:29:21.0726162Z gpg: next trustdb check due at 2027-02-10
+2026-10-10T19:29:21.1114625Z pacman-key (pacman) 6.1.0
+2026-10-10T19:29:21.1115282Z Copyright (c) 2010-2024 Pacman Development Team <pacman-dev@lists.archlinux.org>.
+2026-10-10T19:29:21.1115858Z 
+2026-10-10T19:29:21.1269419Z This is free software; see the source for copying conditions.
+2026-10-10T19:29:21.1270322Z There is NO WARRANTY, to the extent permitted by law.
+2026-10-10T19:29:21.3340620Z [1;32mInitial setup complete. MSYS2 is now ready to use.[1;0m
+2026-10-10T19:29:21.3509637Z MINGW64_NT-10.0-26100 runnervmfi6oq 3.6.10-c770e1b9.x86_64 2026-09-26 06:38 UTC x86_64 Msys
+2026-10-10T19:29:21.3566602Z ##[endgroup]
+2026-10-10T19:29:21.3567064Z ##[group]Disable CheckSpace...
+2026-10-10T19:29:21.4140163Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'sed' '-i' 's/^CheckSpace/#CheckSpace/g' '/etc/pacman.conf'"
+2026-10-10T19:29:21.6129106Z ##[endgroup]
+2026-10-10T19:29:21.6129623Z ##[group]Updating packages...
+2026-10-10T19:29:21.6707436Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Syuu' '--overwrite' '*'"
+2026-10-10T19:29:22.3594563Z :: Synchronizing package databases...
+2026-10-10T19:29:23.6126792Z  clangarm64 downloading...
+2026-10-10T19:29:23.6127626Z  mingw32 downloading...
+2026-10-10T19:29:23.6128027Z  mingw64 downloading...
+2026-10-10T19:29:23.6128427Z  ucrt64 downloading...
+2026-10-10T19:29:23.6128846Z  clang64 downloading...
+2026-10-10T19:29:23.6129288Z  msys downloading...
+2026-10-10T19:29:24.0843420Z :: Starting core system upgrade...
+2026-10-10T19:29:24.2961075Z warning: terminate other MSYS2 programs before proceeding
+2026-10-10T19:29:24.2961560Z resolving dependencies...
+2026-10-10T19:29:24.2961892Z looking for conflicting packages...
+2026-10-10T19:29:24.3031594Z 
+2026-10-10T19:29:24.3032069Z Packages (1) msys2-runtime-3.6.10-6
+2026-10-10T19:29:24.3032354Z 
+2026-10-10T19:29:24.3032547Z Total Installed Size:  6.31 MiB
+2026-10-10T19:29:24.3033007Z Net Upgrade Size:      0.00 MiB
+2026-10-10T19:29:24.3033236Z 
+2026-10-10T19:29:24.3034926Z :: Proceed with installation? [Y/n] 
+2026-10-10T19:29:24.3035669Z checking keyring...
+2026-10-10T19:29:24.3605760Z checking package integrity...
+2026-10-10T19:29:24.5155052Z loading package files...
+2026-10-10T19:29:24.5181235Z checking for file conflicts...
+2026-10-10T19:29:24.5181869Z :: Processing package changes...
+2026-10-10T19:29:24.5182426Z upgrading msys2-runtime...
+2026-10-10T19:29:24.6337057Z :: To complete this update all MSYS2 processes including this terminal will be closed. Confirm to proceed [Y/n] 
+2026-10-10T19:29:24.9327426Z ##[endgroup]
+2026-10-10T19:29:24.9328153Z ##[group]Killing remaining tasks...
+2026-10-10T19:29:24.9913003Z [command]C:\Windows\system32\taskkill.exe /F /FI "MODULES eq msys-2.0.dll"
+2026-10-10T19:29:25.0719403Z 
+2026-10-10T19:29:25.0720452Z INFO: No tasks running with the specified criteria.
+2026-10-10T19:29:25.0759805Z ##[endgroup]
+2026-10-10T19:29:25.0760341Z ##[group]Final system upgrade...
+2026-10-10T19:29:25.1347865Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Syuu' '--overwrite' '*'"
+2026-10-10T19:29:25.8117585Z :: Synchronizing package databases...
+2026-10-10T19:29:26.7089649Z  clangarm64 downloading...
+2026-10-10T19:29:26.7090410Z  mingw32 downloading...
+2026-10-10T19:29:26.7090889Z  mingw64 downloading...
+2026-10-10T19:29:26.7091256Z  ucrt64 downloading...
+2026-10-10T19:29:26.7091737Z  clang64 downloading...
+2026-10-10T19:29:26.7092083Z  msys downloading...
+2026-10-10T19:29:27.1635167Z :: Starting core system upgrade...
+2026-10-10T19:29:27.3763999Z  there is nothing to do
+2026-10-10T19:29:27.3764654Z :: Starting full system upgrade...
+2026-10-10T19:29:27.4213688Z resolving dependencies...
+2026-10-10T19:29:27.4279012Z looking for conflicting packages...
+2026-10-10T19:29:27.4296665Z 
+2026-10-10T19:29:27.4297725Z Packages (5) libexpat-2.9.0-1  libopenssl-3.6.5-1  libpcre2_8-10.49-1  openssl-3.6.5-1  tzcode-2026e-1
+2026-10-10T19:29:27.4298373Z 
+2026-10-10T19:29:27.4298593Z Total Installed Size:  9.36 MiB
+2026-10-10T19:29:27.4299175Z Net Upgrade Size:      0.01 MiB
+2026-10-10T19:29:27.4299424Z 
+2026-10-10T19:29:27.4304450Z :: Proceed with installation? [Y/n] 
+2026-10-10T19:29:27.4305087Z checking keyring...
+2026-10-10T19:29:27.4880144Z checking package integrity...
+2026-10-10T19:29:28.1137892Z loading package files...
+2026-10-10T19:29:28.1327053Z checking for file conflicts...
+2026-10-10T19:29:28.1349512Z :: Processing package changes...
+2026-10-10T19:29:28.1350637Z upgrading libexpat...
+2026-10-10T19:29:28.1388781Z upgrading libopenssl...
+2026-10-10T19:29:28.1628722Z upgrading libpcre2_8...
+2026-10-10T19:29:28.1673911Z upgrading openssl...
+2026-10-10T19:29:28.2443639Z upgrading tzcode...
+2026-10-10T19:29:29.6643344Z ##[endgroup]
+2026-10-10T19:29:29.6644030Z ##[group]Installing additional packages through pacman...
+2026-10-10T19:29:29.7230693Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-S' '--needed' '--overwrite' '*' 'make' 'diffutils' 'mingw-w64-ucrt-x86_64-gcc'"
+2026-10-10T19:29:30.6203143Z resolving dependencies...
+2026-10-10T19:29:30.6276481Z looking for conflicting packages...
+2026-10-10T19:29:30.6300946Z 
+2026-10-10T19:29:30.6304296Z Packages (21) mingw-w64-ucrt-x86_64-binutils-2.47-4  mingw-w64-ucrt-x86_64-cc-libs-16.2.0-5  mingw-w64-ucrt-x86_64-crt-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-gettext-runtime-1.0-1  mingw-w64-ucrt-x86_64-gmp-6.3.0-2  mingw-w64-ucrt-x86_64-headers-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-isl-0.28-1  mingw-w64-ucrt-x86_64-libgcc-16.2.0-5  mingw-w64-ucrt-x86_64-libiconv-1.19-1  mingw-w64-ucrt-x86_64-libstdc++-16.2.0-5  mingw-w64-ucrt-x86_64-libwinpthread-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-mpc-1.4.1-1  mingw-w64-ucrt-x86_64-mpfr-4.2.2-3  mingw-w64-ucrt-x86_64-tzdata-2026e-1  mingw-w64-ucrt-x86_64-windows-default-manifest-20260815-1  mingw-w64-ucrt-x86_64-winpthreads-14.0.0.r426.g4564ee4b5-1  mingw-w64-ucrt-x86_64-zlib-1.3.2-2  mingw-w64-ucrt-x86_64-zstd-1.5.7-2  diffutils-3.12-1  make-4.4.1-3  mingw-w64-ucrt-x86_64-gcc-16.2.0-5
+2026-10-10T19:29:30.6306714Z 
+2026-10-10T19:29:30.6306837Z Total Installed Size:  474.72 MiB
+2026-10-10T19:29:30.6307051Z 
+2026-10-10T19:29:30.6324287Z :: Proceed with installation? [Y/n] 
+2026-10-10T19:29:30.6324728Z checking keyring...
+2026-10-10T19:29:30.6860806Z checking package integrity...
+2026-10-10T19:29:34.2708989Z loading package files...
+2026-10-10T19:29:34.3434891Z checking for file conflicts...
+2026-10-10T19:29:34.5747840Z :: Processing package changes...
+2026-10-10T19:29:34.5748494Z installing make...
+2026-10-10T19:29:34.6073671Z installing diffutils...
+2026-10-10T19:29:34.6376884Z installing mingw-w64-ucrt-x86_64-libwinpthread...
+2026-10-10T19:29:34.6436224Z installing mingw-w64-ucrt-x86_64-libgcc...
+2026-10-10T19:29:34.6486921Z installing mingw-w64-ucrt-x86_64-tzdata...
+2026-10-10T19:29:35.8867713Z installing mingw-w64-ucrt-x86_64-libstdc++...
+2026-10-10T19:29:35.8964003Z installing mingw-w64-ucrt-x86_64-cc-libs...
+2026-10-10T19:29:35.8982562Z installing mingw-w64-ucrt-x86_64-libiconv...
+2026-10-10T19:29:35.9199001Z installing mingw-w64-ucrt-x86_64-gettext-runtime...
+2026-10-10T19:29:36.0153539Z installing mingw-w64-ucrt-x86_64-zlib...
+2026-10-10T19:29:36.0224324Z installing mingw-w64-ucrt-x86_64-zstd...
+2026-10-10T19:29:36.0395214Z installing mingw-w64-ucrt-x86_64-binutils...
+2026-10-10T19:29:36.2916847Z installing mingw-w64-ucrt-x86_64-headers...
+2026-10-10T19:29:37.6850577Z installing mingw-w64-ucrt-x86_64-crt...
+2026-10-10T19:29:38.2158131Z installing mingw-w64-ucrt-x86_64-gmp...
+2026-10-10T19:29:38.2289158Z installing mingw-w64-ucrt-x86_64-isl...
+2026-10-10T19:29:38.3263419Z installing mingw-w64-ucrt-x86_64-mpfr...
+2026-10-10T19:29:38.3446949Z installing mingw-w64-ucrt-x86_64-mpc...
+2026-10-10T19:29:38.3505327Z installing mingw-w64-ucrt-x86_64-windows-default-manifest...
+2026-10-10T19:29:38.3527933Z installing mingw-w64-ucrt-x86_64-winpthreads...
+2026-10-10T19:29:38.3605200Z installing mingw-w64-ucrt-x86_64-gcc...
+2026-10-10T19:29:39.4401234Z Optional dependencies for mingw-w64-ucrt-x86_64-gcc
+2026-10-10T19:29:39.4401820Z     mingw-w64-ucrt-x86_64-libatomic
+2026-10-10T19:29:39.4402344Z     mingw-w64-ucrt-x86_64-libgomp: OpenMP
+2026-10-10T19:29:39.4402801Z     mingw-w64-ucrt-x86_64-libquadmath: Quad Math
+2026-10-10T19:29:39.4434670Z :: Running post-transaction hooks...
+2026-10-10T19:29:39.4435375Z (1/1) Updating the info directory file...
+2026-10-10T19:29:39.8965314Z ##[endgroup]
+2026-10-10T19:29:39.8965889Z ##[group]Saving package cache...
+2026-10-10T19:29:39.9664403Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'paccache' '-r' '-f' '-u' '-k0'"
+2026-10-10T19:29:40.7909174Z ==> no candidate packages found for pruning
+2026-10-10T19:29:40.8556166Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'paccache' '-r' '-f' '-k1'"
+2026-10-10T19:29:41.1858616Z ==> no candidate packages found for pruning
+2026-10-10T19:29:41.4809245Z Cache unchanged, skipping save for msys2-pkgs-upd:true-conf:90546b23-files:1c135a18088804048aba2efa5081cec4c476fd3fcb00ac5a63b7893b3df9025f
+2026-10-10T19:29:41.5447133Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Scc'"
+2026-10-10T19:29:42.2458333Z 
+2026-10-10T19:29:42.2459160Z Cache directory: /var/cache/pacman/pkg/
+2026-10-10T19:29:42.2779111Z :: Do you want to remove ALL files from cache? [Y/n] 
+2026-10-10T19:29:42.2780273Z removing all files from cache...
+2026-10-10T19:29:42.2781725Z 
+2026-10-10T19:29:42.2781988Z Database directory: /var/lib/pacman/
+2026-10-10T19:29:42.2799824Z :: Do you want to remove unused repositories? [Y/n] 
+2026-10-10T19:29:42.2800229Z removing unused sync repositories...
+2026-10-10T19:29:42.2864325Z ##[endgroup]
+2026-10-10T19:29:42.3176637Z ##[group]Run actions/checkout@v5
+2026-10-10T19:29:42.3177012Z with:
+2026-10-10T19:29:42.3177329Z   ref: c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:29:42.3177710Z   path: .build/e2-source
+2026-10-10T19:29:42.3177989Z   repository: nift-dev/nift
+2026-10-10T19:29:42.3180474Z   token: ***
+2026-10-10T19:29:42.3180725Z   ssh-strict: true
+2026-10-10T19:29:42.3181009Z   ssh-user: git
+2026-10-10T19:29:42.3181275Z   persist-credentials: true
+2026-10-10T19:29:42.3181715Z   clean: true
+2026-10-10T19:29:42.3182200Z   sparse-checkout-cone-mode: true
+2026-10-10T19:29:42.3182490Z   fetch-depth: 1
+2026-10-10T19:29:42.3182769Z   fetch-tags: false
+2026-10-10T19:29:42.3183073Z   show-progress: true
+2026-10-10T19:29:42.3183341Z   lfs: false
+2026-10-10T19:29:42.3183596Z   submodules: false
+2026-10-10T19:29:42.3183844Z   set-safe-directory: true
+2026-10-10T19:29:42.3184205Z   allow-unsafe-pr-checkout: false
+2026-10-10T19:29:42.3184492Z env:
+2026-10-10T19:29:42.3184914Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:42.3185376Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:29:42.3185838Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:42.3186295Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:42.3186796Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:42.3187160Z   MSYSTEM: UCRT64
+2026-10-10T19:29:42.3187418Z ##[endgroup]
+2026-10-10T19:29:42.4312146Z Syncing repository: nift-dev/nift
+2026-10-10T19:29:42.4317441Z ##[group]Getting Git version info
+2026-10-10T19:29:42.4318236Z Working directory is 'D:\a\nift\nift\.build\e2-source'
+2026-10-10T19:29:42.4921567Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:29:42.5169024Z git version 2.55.0.windows.5
+2026-10-10T19:29:42.5209918Z ##[endgroup]
+2026-10-10T19:29:42.5225188Z Temporarily overriding HOME='D:\a\_temp\3f07e820-fc5f-461e-aac3-1fd10d8ae426' before making global git config changes
+2026-10-10T19:29:42.5225883Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:29:42.5234489Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift\.build\e2-source
+2026-10-10T19:29:42.5507063Z ##[group]Initializing the repository
+2026-10-10T19:29:42.5516304Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\nift\nift\.build\e2-source
+2026-10-10T19:29:42.5800413Z Initialized empty Git repository in D:/a/nift/nift/.build/e2-source/.git/
+2026-10-10T19:29:42.5844208Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/nift-dev/nift
+2026-10-10T19:29:42.6113625Z ##[endgroup]
+2026-10-10T19:29:42.6114151Z ##[group]Disabling automatic garbage collection
+2026-10-10T19:29:42.6122397Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-10T19:29:42.6377965Z ##[endgroup]
+2026-10-10T19:29:42.6378520Z ##[group]Setting up auth
+2026-10-10T19:29:42.6389458Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:29:42.6653107Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:29:43.1486247Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:29:43.1750720Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:29:43.6863409Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:29:43.7143444Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:29:44.2262656Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-10T19:29:44.2552462Z ##[endgroup]
+2026-10-10T19:29:44.2552982Z ##[group]Fetching the repository
+2026-10-10T19:29:44.2563562Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:29:46.3524508Z From https://github.com/nift-dev/nift
+2026-10-10T19:29:46.3525216Z  * branch            c5f449c31cf93bd0155cae0332d6c4ffdd2aa161 -> FETCH_HEAD
+2026-10-10T19:29:46.3567182Z ##[endgroup]
+2026-10-10T19:29:46.3567685Z ##[group]Determining the checkout info
+2026-10-10T19:29:46.3568912Z ##[endgroup]
+2026-10-10T19:29:46.3577116Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-10T19:29:46.3867651Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-10T19:29:46.4132563Z ##[group]Checking out the ref
+2026-10-10T19:29:46.4140723Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:29:47.4464793Z Updating files:  80% (3155/3908)
+2026-10-10T19:29:47.4538183Z Updating files:  81% (3166/3908)
+2026-10-10T19:29:47.4634227Z Updating files:  82% (3205/3908)
+2026-10-10T19:29:47.4678585Z Updating files:  83% (3244/3908)
+2026-10-10T19:29:47.4729942Z Updating files:  84% (3283/3908)
+2026-10-10T19:29:47.4792718Z Updating files:  85% (3322/3908)
+2026-10-10T19:29:47.4857697Z Updating files:  86% (3361/3908)
+2026-10-10T19:29:47.4998779Z Updating files:  87% (3400/3908)
+2026-10-10T19:29:47.5127642Z Updating files:  88% (3440/3908)
+2026-10-10T19:29:47.5194004Z Updating files:  89% (3479/3908)
+2026-10-10T19:29:47.5272223Z Updating files:  90% (3518/3908)
+2026-10-10T19:29:47.5345224Z Updating files:  91% (3557/3908)
+2026-10-10T19:29:47.5422337Z Updating files:  92% (3596/3908)
+2026-10-10T19:29:47.5498099Z Updating files:  93% (3635/3908)
+2026-10-10T19:29:47.5545848Z Updating files:  94% (3674/3908)
+2026-10-10T19:29:47.5597813Z Updating files:  95% (3713/3908)
+2026-10-10T19:29:47.5647187Z Updating files:  96% (3752/3908)
+2026-10-10T19:29:47.5700508Z Updating files:  97% (3791/3908)
+2026-10-10T19:29:47.5749179Z Updating files:  98% (3830/3908)
+2026-10-10T19:29:47.5803208Z Updating files:  99% (3869/3908)
+2026-10-10T19:29:47.5803727Z Updating files: 100% (3908/3908)
+2026-10-10T19:29:47.5804244Z Updating files: 100% (3908/3908), done.
+2026-10-10T19:29:47.5922834Z Note: switching to 'c5f449c31cf93bd0155cae0332d6c4ffdd2aa161'.
+2026-10-10T19:29:47.5923286Z 
+2026-10-10T19:29:47.5923511Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-10T19:29:47.5924029Z changes and commit them, and you can discard any commits you make in this
+2026-10-10T19:29:47.5924553Z state without impacting any branches by switching back to a branch.
+2026-10-10T19:29:47.5924829Z 
+2026-10-10T19:29:47.5925016Z If you want to create a new branch to retain commits you create, you may
+2026-10-10T19:29:47.5925519Z do so (now or later) by using -c with the switch command. Example:
+2026-10-10T19:29:47.5925766Z 
+2026-10-10T19:29:47.5925900Z   git switch -c <new-branch-name>
+2026-10-10T19:29:47.5926166Z 
+2026-10-10T19:29:47.5926263Z Or undo this operation with:
+2026-10-10T19:29:47.5926447Z 
+2026-10-10T19:29:47.5926576Z   git switch -
+2026-10-10T19:29:47.5926689Z 
+2026-10-10T19:29:47.5926934Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-10T19:29:47.5927245Z 
+2026-10-10T19:29:47.5927457Z HEAD is now at c5f449c docs: bank certified dependency path normalization experiment
+2026-10-10T19:29:47.6079384Z ##[endgroup]
+2026-10-10T19:29:47.6374355Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-10T19:29:47.6613677Z c5f449c31cf93bd0155cae0332d6c4ffdd2aa161
+2026-10-10T19:29:47.6949905Z ##[group]Run make -j2 nift && make -C .build/e2-source -j2 nift
+2026-10-10T19:29:47.6950518Z [36;1mmake -j2 nift && make -C .build/e2-source -j2 nift[0m
+2026-10-10T19:29:47.6954482Z shell: D:\a\_temp\setup-msys2\msys2.CMD {0}
+2026-10-10T19:29:47.6954817Z env:
+2026-10-10T19:29:47.6955205Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:47.6955679Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-10T19:29:47.6956309Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:47.6956751Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:47.6957187Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-10T19:29:47.6957562Z   MSYSTEM: UCRT64
+2026-10-10T19:29:47.6957814Z ##[endgroup]
+2026-10-10T19:29:48.4954223Z make: *** No rule to make target 'nift'.  Stop.
+2026-10-10T19:29:48.5594726Z ##[error]Process completed with exit code 2.
+2026-10-10T19:29:48.5846843Z Post job cleanup.
+2026-10-10T19:29:48.7419663Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:29:48.7675368Z git version 2.55.0.windows.5
+2026-10-10T19:29:48.7748355Z Temporarily overriding HOME='D:\a\_temp\3c82846d-1219-4854-83fb-38e283c47ebf' before making global git config changes
+2026-10-10T19:29:48.7749443Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:29:48.7760559Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift\.build\e2-source
+2026-10-10T19:29:48.8056644Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:29:48.8328588Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:29:49.3144620Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:29:49.3373858Z http.https://github.com/.extraheader
+2026-10-10T19:29:49.3417975Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-10T19:29:49.3685997Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:29:49.8689953Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:29:49.8957774Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:29:50.4267816Z Post job cleanup.
+2026-10-10T19:29:50.5897717Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-10T19:29:50.6145876Z git version 2.55.0.windows.5
+2026-10-10T19:29:50.6206942Z Temporarily overriding HOME='D:\a\_temp\3ff1d0f7-232d-4660-b57e-05308a28c58b' before making global git config changes
+2026-10-10T19:29:50.6207703Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T19:29:50.6217086Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\nift\nift
+2026-10-10T19:29:50.6492194Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T19:29:50.6759532Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-10T19:29:51.1524563Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T19:29:51.1753414Z http.https://github.com/.extraheader
+2026-10-10T19:29:51.1799396Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-10T19:29:51.2065410Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-10T19:29:51.7075255Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T19:29:51.7347162Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-10T19:29:52.2344716Z Cleaning up orphan processes

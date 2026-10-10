@@ -1,0 +1,770 @@
+[
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 1481.548509,
+    "cpu_ms": 1480.699
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 1063.941008,
+    "cpu_ms": 1063.2920000000001
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 1069.643412,
+    "cpu_ms": 1069.0640000000005
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 1503.15953,
+    "cpu_ms": 1502.3539999999996
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 1462.638967,
+    "cpu_ms": 1461.7700000000004
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 1067.536406,
+    "cpu_ms": 1067.0349999999996
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 997.891496,
+    "cpu_ms": 997.1739999999993
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 1567.079551,
+    "cpu_ms": 1565.976
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 1395.822607,
+    "cpu_ms": 1395.0139999999997
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 1080.444816,
+    "cpu_ms": 1079.8830000000005
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 1060.453971,
+    "cpu_ms": 1059.470000000001
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 1647.771783,
+    "cpu_ms": 1647.0559999999991
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 1517.807959,
+    "cpu_ms": 1516.8580000000009
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 1083.26408,
+    "cpu_ms": 1082.2500000000018
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 1036.12178,
+    "cpu_ms": 1035.5539999999994
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 1473.919214,
+    "cpu_ms": 1473.3280000000022
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 1568.889788,
+    "cpu_ms": 1567.62
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 1061.972477,
+    "cpu_ms": 1061.2300000000018
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 1055.178872,
+    "cpu_ms": 1053.2740000000001
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 1463.870027,
+    "cpu_ms": 1460.8340000000019
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 1649.427748,
+    "cpu_ms": 1648.113000000002
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 1029.594269,
+    "cpu_ms": 1028.3979999999974
+  },
+  {
+    "threads": 1,
+    "binary": "e3b",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 1037.061154,
+    "cpu_ms": 1036.3400000000026
+  },
+  {
+    "threads": 1,
+    "binary": "e2",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 1485.55955,
+    "cpu_ms": 1484.9439999999986
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 871.462943,
+    "cpu_ms": 1618.9249999999938
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 686.084989,
+    "cpu_ms": 1254.216000000003
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 647.40048,
+    "cpu_ms": 1171.5850000000003
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 844.885304,
+    "cpu_ms": 1575.7399999999998
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 891.395073,
+    "cpu_ms": 1661.9650000000022
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 701.059959,
+    "cpu_ms": 1279.2249999999967
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 699.201791,
+    "cpu_ms": 1270.5500000000072
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 860.960975,
+    "cpu_ms": 1601.5300000000004
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 879.846881,
+    "cpu_ms": 1635.8309999999997
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 643.776524,
+    "cpu_ms": 1167.5429999999985
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 698.215362,
+    "cpu_ms": 1279.1899999999998
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 850.705484,
+    "cpu_ms": 1582.2700000000011
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 905.793591,
+    "cpu_ms": 1691.552999999999
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 747.058901,
+    "cpu_ms": 1359.8679999999988
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 691.848234,
+    "cpu_ms": 1261.478000000004
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 893.401188,
+    "cpu_ms": 1659.6500000000062
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 876.635116,
+    "cpu_ms": 1639.3010000000104
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 638.170131,
+    "cpu_ms": 1166.5189999999939
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 646.997494,
+    "cpu_ms": 1177.7909999999993
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 886.192482,
+    "cpu_ms": 1654.1500000000015
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 966.944686,
+    "cpu_ms": 1801.860000000005
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 669.244151,
+    "cpu_ms": 1216.6589999999928
+  },
+  {
+    "threads": 2,
+    "binary": "e3b",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 663.184309,
+    "cpu_ms": 1211.3980000000026
+  },
+  {
+    "threads": 2,
+    "binary": "e2",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 899.881933,
+    "cpu_ms": 1680.9060000000072
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 838.191226,
+    "cpu_ms": 2895.3419999999996
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 598.290223,
+    "cpu_ms": 1995.1000000000079
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 609.153959,
+    "cpu_ms": 2030.0670000000096
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 780.704957,
+    "cpu_ms": 2711.031999999996
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 803.258969,
+    "cpu_ms": 2798.0359999999964
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 661.503429,
+    "cpu_ms": 1952.5450000000078
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 573.276997,
+    "cpu_ms": 1909.2599999999961
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 775.330425,
+    "cpu_ms": 2693.776
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 869.615577,
+    "cpu_ms": 2998.845000000003
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 595.933615,
+    "cpu_ms": 1979.4149999999888
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 575.636062,
+    "cpu_ms": 1912.3379999999984
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 797.408352,
+    "cpu_ms": 2759.4140000000066
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 822.5304,
+    "cpu_ms": 2852.159999999998
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 632.074825,
+    "cpu_ms": 2078.3249999999994
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 619.211716,
+    "cpu_ms": 2038.657999999998
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 788.396687,
+    "cpu_ms": 2739.65299999999
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 769.12264,
+    "cpu_ms": 2681.1700000000087
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 579.482969,
+    "cpu_ms": 1930.0640000000017
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 578.345301,
+    "cpu_ms": 1916.5829999999887
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 771.653183,
+    "cpu_ms": 2696.550000000002
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 775.268432,
+    "cpu_ms": 2692.750999999987
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 627.188374,
+    "cpu_ms": 1976.544000000004
+  },
+  {
+    "threads": 4,
+    "binary": "e3b",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 600.056879,
+    "cpu_ms": 1994.5440000000049
+  },
+  {
+    "threads": 4,
+    "binary": "e2",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 780.582211,
+    "cpu_ms": 2724.7580000000085
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 815.318073,
+    "cpu_ms": 2811.9219999999955
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 0,
+    "warmup": true,
+    "wall_ms": 575.557365,
+    "cpu_ms": 1913.6249999999961
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 564.052624,
+    "cpu_ms": 1878.0009999999834
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 1,
+    "warmup": true,
+    "wall_ms": 771.317736,
+    "cpu_ms": 2686.407000000017
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 777.534626,
+    "cpu_ms": 2696.1319999999914
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 2,
+    "warmup": false,
+    "wall_ms": 572.96618,
+    "cpu_ms": 1930.0180000000041
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 571.7937,
+    "cpu_ms": 1919.3950000000227
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 3,
+    "warmup": false,
+    "wall_ms": 795.8001,
+    "cpu_ms": 2798.30699999998
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 833.557951,
+    "cpu_ms": 2900.389000000004
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 4,
+    "warmup": false,
+    "wall_ms": 590.043253,
+    "cpu_ms": 1951.755999999989
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 583.272491,
+    "cpu_ms": 1940.7209999999823
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 5,
+    "warmup": false,
+    "wall_ms": 778.69884,
+    "cpu_ms": 2714.328000000009
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 772.073927,
+    "cpu_ms": 2689.7129999999834
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 6,
+    "warmup": false,
+    "wall_ms": 574.190923,
+    "cpu_ms": 1912.5389999999811
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 581.212997,
+    "cpu_ms": 1937.6680000000165
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 7,
+    "warmup": false,
+    "wall_ms": 812.011107,
+    "cpu_ms": 2791.9180000000238
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 818.514816,
+    "cpu_ms": 2846.800999999985
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 8,
+    "warmup": false,
+    "wall_ms": 585.071035,
+    "cpu_ms": 1960.063000000005
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 576.58708,
+    "cpu_ms": 1928.658999999982
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 9,
+    "warmup": false,
+    "wall_ms": 781.26695,
+    "cpu_ms": 2735.6259999999966
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 773.345737,
+    "cpu_ms": 2696.9490000000037
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 10,
+    "warmup": false,
+    "wall_ms": 573.128743,
+    "cpu_ms": 1915.581000000003
+  },
+  {
+    "threads": 8,
+    "binary": "e3b",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 571.762122,
+    "cpu_ms": 1910.5909999999824
+  },
+  {
+    "threads": 8,
+    "binary": "e2",
+    "round": 11,
+    "warmup": false,
+    "wall_ms": 772.778484,
+    "cpu_ms": 2698.3280000000036
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "linux": {
+    "source_sha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "binary_sha256": "c403a2885fa5a8d04e8830eef4df5419fd11ebe86ce9933a234f886f1fe45824",
+    "sidecar_contracts": 40,
+    "platform_contracts": 6,
+    "randomized": {
+      "passed": true,
+      "seeds": 9,
+      "operations": 288,
+      "builds": 645,
+      "clean_oracles": 288
+    },
+    "randomized_native_skips": {},
+    "actual_foreign_provenance_cases": 3,
+    "crossover_passed": true
+  },
+  "macos": {
+    "source_sha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "binary_sha256": "a9a2a19ff00bfe3b2b73adc1554676e6dd0d3582e1189af9f91fe6ae99db88b4",
+    "sidecar_contracts": 40,
+    "platform_contracts": 6,
+    "randomized": {
+      "passed": true,
+      "seeds": 9,
+      "operations": 288,
+      "builds": 645,
+      "clean_oracles": 288
+    },
+    "randomized_native_skips": {},
+    "actual_foreign_provenance_cases": 3,
+    "crossover_passed": true
+  },
+  "windows": {
+    "source_sha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "binary_sha256": "ebd5906a94009150fe2c4d77ca6d8c4090f451924f4cd2b6fb1faf1451f572b7",
+    "sidecar_contracts": 40,
+    "platform_contracts": 7,
+    "randomized": {
+      "passed": true,
+      "seeds": 9,
+      "operations": 288,
+      "builds": 540,
+      "clean_oracles": 243
+    },
+    "randomized_native_skips": {
+      "native-symlink-unavailable": 30,
+      "posix-interruption-unavailable": 15
+    },
+    "actual_foreign_provenance_cases": 6,
+    "crossover_passed": true
+  }
+}

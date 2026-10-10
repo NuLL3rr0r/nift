@@ -1,0 +1,48 @@
+100 noop [('e2', 7.076), ('e3b', 7.468)]
+100 page [('e2', 6.932), ('e3b', 8.676)]
+100 template [('e2', 12.808), ('e3b', 11.198)]
+100 partial [('e2', 16.199), ('e3b', 17.355)]
+100 data [('e2', 15.361), ('e3b', 16.739)]
+100 generated [('e2', 19.106), ('e3b', 18.754)]
+100 sidecar-unchanged PASS
+100 sidecar-whitespace PASS
+100 sidecar-add PASS
+100 sidecar-remove PASS
+100 sidecar-replace PASS
+100 sidecar-malformed PASS
+100 sidecar-invalid-parent PASS
+100 sidecar-invalid-escape PASS
+100 sidecar-delete PASS
+100 sidecar-new PASS
+1000 noop [('e2', 37.462), ('e3b', 39.33)]
+1000 page [('e2', 40.16), ('e3b', 43.316)]
+1000 template [('e2', 64.181), ('e3b', 65.841)]
+1000 partial [('e2', 162.023), ('e3b', 131.573)]
+1000 data [('e2', 130.955), ('e3b', 130.822)]
+1000 generated [('e2', 157.49), ('e3b', 160.137)]
+1000 sidecar-unchanged PASS
+1000 sidecar-whitespace PASS
+1000 sidecar-add PASS
+1000 sidecar-remove PASS
+1000 sidecar-replace PASS
+1000 sidecar-malformed PASS
+1000 sidecar-invalid-parent PASS
+1000 sidecar-invalid-escape PASS
+1000 sidecar-delete PASS
+1000 sidecar-new PASS
+5000 noop [('e2', 181.422), ('e3b', 187.237)]
+5000 page [('e2', 186.473), ('e3b', 186.069)]
+5000 template [('e2', 306.418), ('e3b', 303.745)]
+5000 partial [('e2', 726.713), ('e3b', 703.914)]
+5000 data [('e2', 820.853), ('e3b', 773.022)]
+5000 generated [('e2', 958.863), ('e3b', 995.131)]
+5000 sidecar-unchanged PASS
+5000 sidecar-whitespace PASS
+5000 sidecar-add PASS
+5000 sidecar-remove PASS
+5000 sidecar-replace PASS
+5000 sidecar-malformed PASS
+5000 sidecar-invalid-parent PASS
+5000 sidecar-invalid-escape PASS
+5000 sidecar-delete PASS
+5000 sidecar-new PASS

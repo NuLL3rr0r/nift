@@ -1,0 +1,90 @@
+[
+  {
+    "conclusion": "success",
+    "databaseId": 38082346472,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Gate 6A-R vendored libffi"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38082338889,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "v4.4/v4.5 cross-platform"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081745558,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "packaging matrix (build-only, non-publishing)"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081733315,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Hosted certification diagnostic"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081731159,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Process hardening contracts"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081729398,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Gate 6B bytes value semantics"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081727227,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Init targets"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081724917,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Performance regression guards"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081722798,
+    "event": "workflow_dispatch",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Checkpoint 10 cross-platform equivalence"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081660597,
+    "event": "push",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "E3B native sidecar certification"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 38081660545,
+    "event": "push",
+    "headSha": "7d36fd91133bc41f8a01ad2f046835367f2cc901",
+    "status": "completed",
+    "workflowName": "Test integrity guards"
+  }
+]

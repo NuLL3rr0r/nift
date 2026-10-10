@@ -1,0 +1,5 @@
+
+Algorithm : SHA256
+Hash      : A9A2A19FF00BFE3B2B73ADC1554676E6DD0D3582E1189AF9F91FE6AE99DB88B4
+Path      : /Users/runner/work/nift/nift/nift
+

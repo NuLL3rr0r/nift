@@ -1,0 +1,1 @@
+PASS: plain make builds only the reduced CLI (no src/embed objects, no libnift_c, no bindings); no writes to the caller checkout

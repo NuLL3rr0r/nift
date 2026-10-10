@@ -1,0 +1,5 @@
+{
+  "reviewed_test_ast_unchanged": true,
+  "only_change": "put returned subprocess call on a separate line for integrity scanner recognition",
+  "assertions_unchanged": true
+}

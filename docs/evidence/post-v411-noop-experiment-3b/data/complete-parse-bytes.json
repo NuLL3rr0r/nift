@@ -1,0 +1,8 @@
+{
+  "tracking_source_bytes": 2373266,
+  "e2_decoder_bytes": 10191751,
+  "e3b_decoder_bytes": 13934239,
+  "e2_all_parser_bytes": 12565017,
+  "e3b_all_parser_bytes": 16307505,
+  "all_parser_increase_percent": 29.784981588166573
+}

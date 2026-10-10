@@ -1,0 +1,2 @@
+checkpoint 10 corpus: PASS (18 portable cases)
+evidence=/tmp/nift-sidecar-experiment/linux-checkpoint.json

@@ -1,0 +1,223 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "group": "hooks",
+      "mode": "modified",
+      "case": "ABA",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "modified",
+      "case": "BAB",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "modified",
+      "case": "multiple",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "modified",
+      "case": "stableB",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "modified",
+      "case": "changed-final",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hash",
+      "case": "ABA",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hash",
+      "case": "BAB",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hash",
+      "case": "multiple",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hash",
+      "case": "stableB",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hash",
+      "case": "changed-final",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hybrid",
+      "case": "ABA",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hybrid",
+      "case": "BAB",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hybrid",
+      "case": "multiple",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hybrid",
+      "case": "stableB",
+      "passed": true
+    },
+    {
+      "group": "hooks",
+      "mode": "hybrid",
+      "case": "changed-final",
+      "passed": true
+    },
+    {
+      "group": "eligibility",
+      "mode": "modified",
+      "case": "missing-edge",
+      "passed": true
+    },
+    {
+      "group": "eligibility",
+      "mode": "hash",
+      "case": "missing-edge",
+      "passed": true
+    },
+    {
+      "group": "eligibility",
+      "mode": "hybrid",
+      "case": "missing-edge",
+      "passed": true
+    },
+    {
+      "group": "bytes",
+      "case": "crlf",
+      "passed": true
+    },
+    {
+      "group": "bytes",
+      "case": "escape",
+      "passed": true
+    },
+    {
+      "group": "bytes",
+      "case": "unicode",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "old-e2",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "missing-version",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "missing-present",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "missing-bytes",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "missing-indices",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "missing-platform",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "state-type",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "present-type",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "indices-type",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "version",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "encoding",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "index-type",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "index-fraction",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "index-negative",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "index-range",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "duplicate",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "platform",
+      "passed": true
+    },
+    {
+      "group": "migration-corruption",
+      "case": "special-role",
+      "passed": true
+    },
+    {
+      "group": "migration",
+      "case": "old-success",
+      "passed": true
+    }
+  ]
+}
