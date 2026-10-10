@@ -13,6 +13,7 @@
 #include <unordered_set>
 
 class WatchList;
+namespace niftid { struct Catalogue; }
 namespace filesystem { struct DependencyStatus; }
 namespace json { class Document; }
 namespace nift { class RuntimeValue; }
@@ -61,7 +62,7 @@ public:
 
     std::vector<std::string> build_reasons(const TrackedInfo& info) const;
     bool needs_build(const TrackedInfo& info, std::string* reason = nullptr) const;
-    bool build_one(TrackedInfo& info, std::optional<BuildError>* out_error = nullptr);
+    bool build_one(TrackedInfo& info, std::optional<BuildError>* out_error = nullptr, std::vector<std::string>* identities = nullptr);
     int build_all(bool force, bool explain = false, bool repair = false);
     int build_names(const std::vector<std::string>& names, bool force, bool explain = false);
 
@@ -111,6 +112,10 @@ private:
     void invalidate_content_model() const;
     void invalidate_hierarchy() const;
 
+    std::unique_ptr<niftid::Catalogue> identity_catalogue_;
+    bool identity_reload_pending_ = false;
+    void reload_identity_catalogue();
+    bool metadata_path_is_safe_prepared(unsigned id) const;
     WatchList* watch_ = nullptr;
     mutable std::mutex project_value_mutex_;
     mutable std::shared_ptr<const nift::RuntimeValue> runtime_project_value_;

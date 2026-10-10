@@ -64,6 +64,9 @@ struct DependencyStatus {
     DependencyTime mtime;
     std::error_code error;
 };
+DependencyStatus dependency_status_native(const std::filesystem::path::value_type* path);
+enum class NativeLeafState { Plain, Missing, Symlink, Reparse, Error };
+NativeLeafState dependency_leaf_native(const std::filesystem::path::value_type* path);
 DependencyStatus dependency_status(const std::filesystem::path& path);
 
 std::uint64_t hash_bytes(const std::string& contents);

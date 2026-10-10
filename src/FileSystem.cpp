@@ -655,12 +655,12 @@ bool path_within(const fs::path& base, const fs::path& candidate) {
     return *canonical_relative.begin() != "..";
 }
 
-DependencyStatus dependency_status(const fs::path& path) {
+DependencyStatus dependency_status_native(const fs::path::value_type* path) {
     DependencyStatus result;
 #ifdef _WIN32
     // Omit OPEN_REPARSE_POINT: observe the target, not the symlink/junction leaf.
     // BACKUP_SEMANTICS also permits directory dependencies. Sharing mirrors stat.
-    HANDLE handle = CreateFileW(path.c_str(), FILE_READ_ATTRIBUTES,
+    HANDLE handle = CreateFileW(path, FILE_READ_ATTRIBUTES,
         FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr,
         OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
     if (handle == INVALID_HANDLE_VALUE) {
@@ -680,7 +680,7 @@ DependencyStatus dependency_status(const fs::path& path) {
     result.mtime.nanoseconds = static_cast<std::uint32_t>((ticks % 10000000ull) * 100ull);
 #else
     struct stat info{};
-    if (::stat(path.c_str(), &info) != 0) {
+    if (::stat(path, &info) != 0) {
         result.error = std::error_code(errno, std::generic_category());
         return result;
     }
@@ -694,6 +694,27 @@ DependencyStatus dependency_status(const fs::path& path) {
 #endif
     result.exists = true;
     return result;
+}
+
+DependencyStatus dependency_status(const fs::path& path) {
+    return dependency_status_native(path.c_str());
+}
+NativeLeafState dependency_leaf_native(const fs::path::value_type* path) {
+#ifdef _WIN32
+    const DWORD attributes=::GetFileAttributesW(path);
+    if(attributes==INVALID_FILE_ATTRIBUTES) {
+        const DWORD error=::GetLastError();
+        return error==ERROR_FILE_NOT_FOUND||error==ERROR_PATH_NOT_FOUND
+            ? NativeLeafState::Missing : NativeLeafState::Error;
+    }
+    // Reparse leaves are handled by the exact existing fs::symlink_status /
+    // physical containment helper; no assumption that all tags are symlinks.
+    return attributes&FILE_ATTRIBUTE_REPARSE_POINT ? NativeLeafState::Reparse : NativeLeafState::Plain;
+#else
+    struct stat info{};
+    if(::lstat(path,&info)!=0)return errno==ENOENT ? NativeLeafState::Missing : NativeLeafState::Error;
+    return S_ISLNK(info.st_mode) ? NativeLeafState::Symlink : NativeLeafState::Plain;
+#endif
 }
 
 fs::file_time_type modified_time(const fs::path& path) {

@@ -1,3 +1,4 @@
+#include "IdentityPublication.h"
 #include <condition_variable>
 #include "ProjectInfo.h"
 #include "RuntimeJson.h"
@@ -85,7 +86,9 @@ bool ProjectInfo::open() {
         console::error("not a Nift project");
         return false;
     }
-    return load_config() && load_tracking() && watch_->load(root);
+    bool ok=load_config() && load_tracking() && watch_->load(root);
+    if(ok)reload_identity_catalogue();
+    return ok;
 }
 
 bool ProjectInfo::load_config() {
@@ -553,6 +556,7 @@ void ProjectInfo::invalidate_output_caches(const fs::path& output) {
 }
 
 void ProjectInfo::reset_build_caches() {
+    if(identity_reload_pending_)reload_identity_catalogue();
     {
         std::lock_guard<std::mutex> lock(hash_mutex_);
         current_hash_cache_.clear();
@@ -588,6 +592,38 @@ void ProjectInfo::refresh_hash_once(const fs::path& dependency) {
         if (!refreshed_hashes_.insert(key).second) return;
     }
     filesystem::write_stored_hash(root, normalized);
+}
+
+void ProjectInfo::reload_identity_catalogue() {
+    identity_reload_pending_=false;
+    identity_catalogue_.reset();
+    if(config.incremental_mode!="modified")return;
+    try {
+        auto catalogue=std::make_unique<niftid::Catalogue>();
+        if(catalogue->load(root))identity_catalogue_=std::move(catalogue);
+    } catch (...) { /* Optional acceleration, never a consumer error. */ }
+}
+bool ProjectInfo::metadata_path_is_safe_prepared(unsigned id) const {
+    const auto& c=*identity_catalogue_;
+    const auto slot=c.parent_slots[c.records[id].parent];
+    bool safe;
+    { std::lock_guard<std::mutex> lock(metadata_path_mutex_);
+      auto it=metadata_parent_safety_cache_.find(c.parent_keys[slot]);
+      if(it!=metadata_parent_safety_cache_.end())safe=it->second;
+      else {safe=filesystem::path_within(root,c.parent_paths[slot]);metadata_parent_safety_cache_.emplace(c.parent_keys[slot],safe);}
+    }
+    if(!safe)return false;
+    const auto leaf=filesystem::dependency_leaf_native(c.path(id));
+#ifdef _WIN32
+    // Only an ordinary leaf can skip the existing Windows helper. Missing,
+    // inaccessible and every reparse form retain its exact no-follow policy.
+    if(leaf!=filesystem::NativeLeafState::Plain)
+        return metadata_path_is_safe(fs::path(c.path(id)),root.lexically_normal());
+#else
+    if(leaf==filesystem::NativeLeafState::Error)return false;
+    if(leaf==filesystem::NativeLeafState::Symlink)return filesystem::path_within(root,fs::path(c.path(id)));
+#endif
+    return true;
 }
 
 bool ProjectInfo::metadata_path_is_safe(const fs::path& normalized, const fs::path& normalized_root) const {
@@ -742,6 +778,16 @@ std::vector<std::string> ProjectInfo::build_reasons(const TrackedInfo& info) con
             continue;
         }
 
+        if(config.incremental_mode=="modified" && identity_catalogue_ && value.string!=".nift/project.fingerprint" && value.string!=".nift/hierarchy.fingerprint") {
+            auto id=identity_catalogue_->find(value.string);
+            if(id!=niftid::invalid) {
+                if(!metadata_path_is_safe_prepared(id)) {saved_edges_clean=false;reasons.push_back("page build metadata has an invalid dependency");continue;}
+                const auto status=filesystem::dependency_status_native(identity_catalogue_->path(id));
+                if(!status.exists || status.error) {saved_edges_clean=false;reasons.push_back("dependency removed: "+value.string);}
+                else if(!page_info_status.exists || page_info_status.error || status.mtime>=page_info_status.mtime) {saved_edges_clean=false;reasons.push_back("dependency changed: "+value.string);}
+                continue;
+            }
+        }
         const fs::path dependency = (root / value.string).lexically_normal();
         if (!metadata_path_is_safe(dependency, normalized_root)) {
             saved_edges_clean=false;
@@ -999,7 +1045,7 @@ bool ProjectInfo::write_page_info(const TrackedInfo& info, const std::set<std::s
     return filesystem::write_readonly_file(info_path(info), output);
 }
 
-bool ProjectInfo::build_one(TrackedInfo& info, std::optional<BuildError>* out_error) {
+bool ProjectInfo::build_one(TrackedInfo& info, std::optional<BuildError>* out_error, std::vector<std::string>* identities) {
     std::map<std::string,std::string> snapshots;
     const bool hashing = config.incremental_mode != "modified";
     std::set<std::string> declared;
@@ -1189,6 +1235,14 @@ bool ProjectInfo::build_one(TrackedInfo& info, std::optional<BuildError>* out_er
         return false;
     }
 
+    if(identities) try {
+        identities->insert(identities->end(),result.dependencies.begin(),result.dependencies.end());
+        identities->push_back(relative(info_path(info)));
+        identities->push_back(relative(content_path(info)));
+        identities->push_back(relative(output_path(info)));
+        if(!info.template_path.empty())identities->push_back(relative(root/info.template_path));
+        identities->push_back(relative(sidecar_path));
+    } catch (...) { identities->clear(); /* Optional discovery cannot fail a consumer. */ }
     if (has_build_dependencies)
         for (std::size_t page = 1; page <= std::max({std::size_t(1),previous_pagination_pages,new_pagination_pages}); ++page)
             invalidate_output_caches(pagination_output_path(info,page));
@@ -1236,6 +1290,7 @@ int ProjectInfo::build_many(const std::vector<BuildJob>& initial_jobs, bool targ
     std::atomic<std::size_t> completed{0};
     std::vector<unsigned char> succeeded(jobs.size(), 0);
     std::vector<std::optional<BuildError>> errors(jobs.size());
+    std::vector<std::vector<std::string>> discovered(config.incremental_mode=="modified"?jobs.size():0);
     BuildProgress progress(jobs.size(), completed);
 
     std::vector<std::vector<std::size_t>> dependents;
@@ -1301,7 +1356,7 @@ int ProjectInfo::build_many(const std::vector<BuildJob>& initial_jobs, bool targ
             // worker owns its slots, so no shared buffer needs locking). They
             // are emitted only after progress has stopped, so no diagnostic
             // can ever be written into an active progress line.
-            succeeded[index] = build_one(*jobs[index].info, &errors[index]) ? 1 : 0;
+            succeeded[index] = build_one(*jobs[index].info, &errors[index],discovered.empty()?nullptr:&discovered[index]) ? 1 : 0;
             complete_job(index);
         }
     };
@@ -1314,6 +1369,7 @@ int ProjectInfo::build_many(const std::vector<BuildJob>& initial_jobs, bool targ
     // Deterministic shutdown: stop the renderer, join it, erase the transient
     // line and flush — only then may diagnostics and the summary be written.
     progress.finish();
+    if(!discovered.empty()&&niftid::publish(root,identity_catalogue_.get(),discovered))identity_reload_pending_=true;
     if(scheduler_stats)std::cerr<<"BUILD_DAG nodes="<<pending.size()<<" edges="<<edge_count<<" peak_ready="<<peak_ready<<" peak_active="<<peak_active<<" blocked="<<blocked_count<<" wakeups="<<wakeups<<" lock_wait_ns="<<lock_wait_ns<<" plan_ns="<<planning_ns<<'\n';
 
     if(scheduler_stats&&!queue_samples.empty()) {
