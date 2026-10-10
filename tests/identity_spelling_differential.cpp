@@ -13,7 +13,7 @@ void test(const std::string&s) {
 #endif
  fs::path p(s);
  bool original=!s.empty() && s.size()<=65536 && s.find('\0')==s.npos && s.front()!='/' && s.back()!='/' && !p.is_absolute() && p.lexically_normal().generic_string()==s;
- for(auto&c:p)if(c=="..")original=false;
+ for(const auto&c:p)if(c=="..")original=false;
  if(original)++older_accepts;
  if(!fast){++fallback;return;}++accepted;
  assert(original);

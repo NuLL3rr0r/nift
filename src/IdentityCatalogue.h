@@ -13,7 +13,7 @@ namespace niftid {
 namespace fs=std::filesystem;
 constexpr uint32_t invalid=UINT32_MAX;
 inline uint64_t hash(std::string_view s){uint64_t h=14695981039346656037ull;for(unsigned char c:s){h^=c;h*=1099511628211ull;}return h;}
-inline std::string read(const fs::path&p){std::ifstream f(p,std::ios::binary|std::ios::ate);if(!f)return {};auto n=f.tellg();if(n<=0||n>4*1024*1024)return {};std::string b(static_cast<size_t>(n),'\0');f.seekg(0);f.read(b.data(),b.size());return f?b:std::string{};}
+inline std::string read(const fs::path&p){std::error_code error;if(!fs::is_regular_file(p,error)||error)return {};std::ifstream f(p,std::ios::binary|std::ios::ate);if(!f)return {};auto n=f.tellg();if(n<=0||n>4*1024*1024)return {};std::string b(static_cast<size_t>(n),'\0');f.seekg(0);f.read(b.data(),b.size());return f?b:std::string{};}
 struct Reader{std::string_view b;size_t p=0;bool ok=true;uint32_t u32(){if(p+4>b.size()){ok=false;return 0;}uint32_t x=0;for(int i=0;i<4;i++)x|=uint32_t(static_cast<unsigned char>(b[p++]))<<(8*i);return x;}uint64_t u64(){auto a=u32();return uint64_t(a)|(uint64_t(u32())<<32);}bool magic(std::string_view s){if(b.substr(p,s.size())!=s){ok=false;return false;}p+=s.size();return true;}};
 struct Record{uint32_t off,len,parent,flags,native;};
 struct Catalogue{

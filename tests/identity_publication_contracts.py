@@ -52,6 +52,21 @@ with tempfile.TemporaryDirectory(prefix='nift-identity-publication-') as tempora
  (root/'content/b.html').write_text('fixed');build(root,'--repair');record('repair after failed build converges')
  # Malformed, unsupported-platform, coherent absolute and parent corruption.
  directory=root/'.nift/identity-stage1';good=(directory/'manifest.bin').read_bytes();good_files={f.name:f.read_bytes() for f in directory.glob('*.bin')}
+ # Optional cache files cannot open blocking FIFO/device/directory streams.
+ generation=struct.unpack_from('<Q',good,16)[0]
+ for filename in ['manifest.bin',f'shard-{generation}-0.bin']:
+  active=directory/filename;backup=directory/(filename+'.test-backup');active.rename(backup)
+  try:
+   active.mkdir();load(root,False);equal_status(root,'nonregular directory '+filename+' fallback');active.rmdir()
+   if os.name!='nt':
+    os.mkfifo(active)
+    r=subprocess.run([probe,'load',str(root)],cwd=root,capture_output=True,text=True,timeout=5);assert r.returncode==2
+    equal_status(root,'nonregular FIFO '+filename+' fallback');active.unlink()
+  finally:
+   if active.exists():
+    if active.is_dir():active.rmdir()
+    else:active.unlink()
+   backup.rename(active)
  for name,mutation in [('corrupt',lambda b:b'bad'),('unsupported version',lambda b:b[:8]+struct.pack('<I',2)+b[12:]),('wrong platform',lambda b:b[:12]+struct.pack('<I',2 if os.name!='nt' else 1)+b[16:])]:
   (directory/'manifest.bin').write_bytes(mutation(good));load(root,False);equal_status(root,name+' -> E3B fallback');(directory/'manifest.bin').write_bytes(good)
  m=bytearray(good);generation=struct.unpack_from('<Q',m,16)[0];f=directory/f'shard-{generation}-0.bin';original=f.read_bytes();b=bytearray(original);count=struct.unpack_from('<I',b,12)[0];arena=20+count*16

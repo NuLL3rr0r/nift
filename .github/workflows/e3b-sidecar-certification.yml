@@ -65,6 +65,7 @@ jobs:
           python tests/run_identity_certification.py --e3b "./.build/e3b-source/nift$suffix" --e2 "./.build/e2-source/nift$suffix"
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
           name: sidecar-native-${{ matrix.id }}
           path: |
@@ -115,6 +116,7 @@ jobs:
           python tests/sidecar_platform_contracts.py --nift "./nift$suffix" --imports .build/sidecar-imports --output .build/sidecar-crossover.json --export .build/sidecar-export.json
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
           name: sidecar-crossover-${{ matrix.id }}
           path: .build/sidecar-crossover.json
