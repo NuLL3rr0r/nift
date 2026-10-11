@@ -5,7 +5,9 @@ from shared_dependency_targeted_reproducer import setup
 ap=argparse.ArgumentParser();ap.add_argument('--nift',required=True);ap.add_argument('--baseline',required=True);ap.add_argument('--probe',required=True);ap.add_argument('--fault-nift');ap.add_argument('--output',required=True);a=ap.parse_args()
 binary=str(pathlib.Path(a.nift).resolve());baseline=str(pathlib.Path(a.baseline).resolve());probe=str(pathlib.Path(a.probe).resolve());fault=str(pathlib.Path(a.fault_nift).resolve()) if a.fault_nift else None
 rows=[]
-def run(executable,root,*args,env=None):return subprocess.run([executable,*args],cwd=root,capture_output=True,text=True,env=env,timeout=45)
+def run(executable,root,*args,env=None):
+ result=subprocess.run([executable,*args],cwd=root,capture_output=True,text=True,env=env,timeout=45)
+ return result
 def build(root,*args,exe=binary,env=None):
  r=run(exe,root,'build',*args,env=env);assert r.returncode==0,(r.stdout,r.stderr);return r
 def load(root,valid=True):
