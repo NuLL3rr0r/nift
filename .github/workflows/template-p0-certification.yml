@@ -11,6 +11,10 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Preserve exact source bytes on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0

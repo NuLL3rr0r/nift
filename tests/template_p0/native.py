@@ -34,6 +34,8 @@ for label in ['baseline','candidate']:
     dest=source/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(f,dest)
  file=source/'src/ParserTemplate.cpp';text=file.read_text()
  identities[label]=hashlib.sha256(file.read_bytes()).hexdigest()
+ expected={'baseline':'0b9226dfd270bc6f8eb857d0102b56fde2d4ca2c16a4f7131185300f10a2db29','candidate':'817d19a864deb1feaa47ff540dc7b5dbf82153315968646a7e8958ba1128501c'}
+ assert identities[label]==expected[label],(label,'runtime identity changed')
  anchor='SourceProvenance source_provenance, nift::detail::SourceView view) {'
  assert text.count(anchor)==1
  text=header+text.replace(anchor,anchor+'++p0proof::parse;')
