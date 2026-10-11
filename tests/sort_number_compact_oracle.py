@@ -25,5 +25,7 @@ std::cout<<"PASS actual candidate comparator "<<pairs<<" Number pairs, both dire
 commands=[['g++','-std=c++17','-O2','-I'+str(r/'src'),'-I'+str(r/'include'),str(p/'special-oracle.cpp'),str(r/'src/RuntimeValue.cpp'),'-o',str(p/'special-oracle')],[str(p/'special-oracle')]]
 rows=[]
 for c in commands:
- q=subprocess.run(c,capture_output=True,text=True);rows.append({'command':c,'exit':q.returncode,'stdout':q.stdout,'stderr':q.stderr});assert q.returncode==0,rows[-1]
+ q=subprocess.run(c,capture_output=True,text=True)
+ rows.append({'command':c,'exit':q.returncode,'stdout':q.stdout,'stderr':q.stderr})
+ assert q.returncode==0,rows[-1]
 print(rows[-1]['stdout']);import shutil;shutil.rmtree(p)
