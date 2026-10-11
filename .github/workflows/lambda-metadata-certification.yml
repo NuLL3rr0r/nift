@@ -1,0 +1,97 @@
+name: Lambda metadata native certification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  callable:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        if: runner.os == 'Windows'
+        with:
+          msystem: UCRT64
+          update: true
+          install: make diffutils mingw-w64-ucrt-x86_64-gcc
+      - name: Build native CLI and actual-instance ownership proof
+        if: runner.os != 'Windows'
+        run: |
+          make -j2 nift
+          mkdir -p .build/lambda-metadata
+          c++ -std=c++17 -O2 -pthread -Isrc -Iinclude tests/lambda_metadata_ownership.cpp -o .build/lambda-metadata/ownership
+          .build/lambda-metadata/ownership | tee .build/lambda-metadata/stl.txt
+      - name: Build Windows CLI and libstdc++ ownership proof
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          make -j2 nift.exe
+          mkdir -p .build/lambda-metadata
+          g++ -std=c++17 -O2 -pthread -Isrc -Iinclude tests/lambda_metadata_ownership.cpp -o .build/lambda-metadata/ownership.exe
+          .build/lambda-metadata/ownership.exe | tee .build/lambda-metadata/stl.txt
+      - name: Callable factory, callback, environment, origin and volume suites
+        shell: pwsh
+        env:
+          MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          if ($IsWindows) {
+            $env:PATH = "$env:MSYS_ROOT\ucrt64\bin;$env:MSYS_ROOT\usr\bin;$env:PATH"
+            $binary = './nift.exe'
+          } else { $binary = './nift' }
+          python tests/v410_sort_factory_parity.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/v410_callback_overlay_parity.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/lambda_metadata_contracts.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: lambda-metadata-${{ runner.os }}
+          path: .build/lambda-metadata/
+          include-hidden-files: true
+  msvc-ownership:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Actual LambdaInstance clone and destruction under MSVC STL
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .build/lambda-metadata | Out-Null
+          cl /nologo /std:c++17 /EHsc /W4 /I src /I include tests/lambda_metadata_ownership.cpp /Fe:.build/lambda-metadata/msvc-ownership.exe
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./.build/lambda-metadata/msvc-ownership.exe | Tee-Object .build/lambda-metadata/msvc-stl.txt
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: lambda-metadata-msvc
+          path: .build/lambda-metadata/
+          include-hidden-files: true
+  sanitizer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: ASan UBSan LSan callable lifecycle
+        run: |
+          make -j2 .build/nift-sanitize
+          mkdir -p .build/lambda-metadata
+          c++ -std=c++17 -O1 -g -pthread -fsanitize=address,undefined -fno-omit-frame-pointer -Isrc -Iinclude tests/lambda_metadata_ownership.cpp -o .build/lambda-metadata/ownership-sanitize
+          export ASAN_OPTIONS=detect_leaks=1:halt_on_error=1
+          export UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1
+          .build/lambda-metadata/ownership-sanitize
+          python3 tests/v410_sort_factory_parity.py --nift .build/nift-sanitize
+          python3 tests/v410_callback_overlay_parity.py --nift .build/nift-sanitize
+          python3 tests/lambda_metadata_contracts.py --nift .build/nift-sanitize

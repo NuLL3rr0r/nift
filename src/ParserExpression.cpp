@@ -129,12 +129,7 @@ std::vector<nift::RuntimeValue> callback_value_arguments(const nift::RuntimeValu
     return args;
 }
 
-struct LambdaSyntax {
-    std::vector<std::string> params;
-    std::string variadic_param, body;
-    bool block = false, async = false;
-    std::size_t body_offset = 0;
-};
+using LambdaSyntax = nift::detail::LambdaSyntaxMetadata;
 thread_local std::unordered_map<std::string, std::shared_ptr<const LambdaSyntax>> lambda_syntax_cache;
 struct NumericLambdaPlan {
     std::unique_ptr<const nift::ast::Expr> expression;
@@ -1977,11 +1972,11 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
                 NIFT_COMPAT_NOINLINE
                 -> bool {
 #endif
-            auto instantiate_lambda = [&](const LambdaSyntax& code) {
+            auto instantiate_lambda = [&](const std::shared_ptr<const LambdaSyntax>& syntax) {
+                const auto& code = *syntax;
                 NIFT_LAMBDA_COUNT(instances);
                 auto li = std::make_shared<LambdaInstance>();
-                li->params = code.params; li->variadic_param = code.variadic_param;
-                li->async = code.async; li->block = code.block; li->body = code.body;
+                li->syntax = syntax; li->async = code.async;
                 li->body_view = text.view.slice(code.body_offset, code.body.size());
                 if(!source_path_stack_.empty()) li->source_path=source_path_stack_.back();
                 li->source_provenance=(active_module_env_?active_module_env_->source_provenance:(loading_module_env_?loading_module_env_->source_provenance:(source_context_stack_.empty()?SourceProvenance::InMemory:source_context_stack_.back().provenance)));
@@ -1995,7 +1990,7 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
                 return true;
             };
             auto cached = lambda_syntax_cache.find(text);
-            if (cached != lambda_syntax_cache.end()) return instantiate_lambda(*cached->second);
+            if (cached != lambda_syntax_cache.end()) return instantiate_lambda(cached->second);
             std::size_t arrow = std::string::npos; int pd=0, bd=0, cd=0; bool iq=false; char qc=0;
             for(std::size_t ai=0;ai+1<text.size();++ai){char ch=text[ai];if(iq){if(ch=='\\')++ai;else if(ch==qc)iq=false;continue;}if(ch=='\"'||ch=='\''){iq=true;qc=ch;continue;}if(ch=='(')++pd;else if(ch==')')--pd;else if(ch=='[')++bd;else if(ch==']')--bd;else if(ch=='{')++cd;else if(ch=='}')--cd;else if(ch=='='&&text[ai+1]=='>'&&pd==0&&bd==0&&cd==0){arrow=ai;break;}}
             if (arrow != std::string::npos && text.substr(0, arrow).find(":=") == std::string::npos && text.substr(0, arrow).find(" = ") == std::string::npos) {
@@ -2017,7 +2012,7 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
                 code->body_offset = text.find_first_not_of(" \t\r\n", arrow + 2) + (code->block ? 1 : 0);
                 if (lambda_syntax_cache.size() < kLambdaCodeCacheLimit && text.size() <= 4096)
                     lambda_syntax_cache.emplace(text, code);
-                return instantiate_lambda(*code);
+                return instantiate_lambda(code);
             }
 
 #ifdef NIFT_COMPAT_SPLIT_FRAMES
@@ -3074,15 +3069,15 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                             if(tag.rfind("\x1fnift:callable:lambda:",0)==0){
                                 auto li=lambda_instances_.find(tag.substr(22));if(li==lambda_instances_.end()){error="invalid lambda";return false;}auto fn=li->second;
                                 if(callable_call_depth_>=kMaxCallableDepth){error="callable recursion depth exceeded";return false;}++callable_call_depth_;
-                                if(fn->variadic_param.empty()?av.size()!=fn->params.size():av.size()<fn->params.size()){--callable_call_depth_;error="callback argument count mismatch";return false;}
+                                if(fn->syntax->variadic_param.empty()?av.size()!=fn->syntax->params.size():av.size()<fn->syntax->params.size()){--callable_call_depth_;error="callback argument count mismatch";return false;}
                                 auto lexical_env=enter_lexical_environment(fn->module_env);
-                                push_variable_scope();auto& sc=variable_scopes_.back();if(fn->block)copy_capture_bindings(sc,*fn->captures);
-                                for(std::size_t ai=0;ai<fn->params.size();++ai){auto sp=std::make_shared<nift::RuntimeValue>(av[ai]);sc.insert_or_assign(fn->params[ai],VariableBinding{sp,nift_binding_type(*sp),true,false});}
-                                if(!fn->variadic_param.empty()){nift::RuntimeValue rest=nift::RuntimeValue::make_array();for(std::size_t ai=fn->params.size();ai<av.size();++ai)rest.array.push_back(av[ai]);auto sp=std::make_shared<nift::RuntimeValue>(std::move(rest));sc.insert_or_assign(fn->variadic_param,VariableBinding{sp,nift_binding_type(*sp),true,false});}
+                                push_variable_scope();auto& sc=variable_scopes_.back();if(fn->syntax->block)copy_capture_bindings(sc,*fn->captures);
+                                for(std::size_t ai=0;ai<fn->syntax->params.size();++ai){auto sp=std::make_shared<nift::RuntimeValue>(av[ai]);sc.insert_or_assign(fn->syntax->params[ai],VariableBinding{sp,nift_binding_type(*sp),true,false});}
+                                if(!fn->syntax->variadic_param.empty()){nift::RuntimeValue rest=nift::RuntimeValue::make_array();for(std::size_t ai=fn->syntax->params.size();ai<av.size();++ai)rest.array.push_back(av[ai]);auto sp=std::make_shared<nift::RuntimeValue>(std::move(rest));sc.insert_or_assign(fn->syntax->variadic_param,VariableBinding{sp,nift_binding_type(*sp),true,false});}
                                 bool okcall=true;
                                 source_context_stack_.push_back(SourceContext{fn->source_path,fn->source_provenance,fn->body_view});
-                                if(fn->block){std::string bt=trim_copy(fn->body);const bool rendered=!bt.empty()&&bt.front()=='<';if(rendered){auto nested=parse(fn->body,fn->source_path,1,fn->source_provenance,fn->body_view);if(!nested.ok){error=nested.error.message;if(nested.diagnostic)active_diagnostic_=nested.diagnostic;okcall=false;}else result=nift::RuntimeValue(nested.output);}else{okcall=eval(nift::detail::SourceText(fn->body,fn->body_view),result,depth+1);if(!okcall&&error.rfind("callable recursion depth exceeded",0)!=0)error="lambda body error: "+error;}}
-                                else{okcall=eval_expression_lambda(fn->body,result,depth+1,fn->body_view,fn->captures.get());if(!okcall&&error.rfind("callable recursion depth exceeded",0)!=0)error="lambda body error: "+error;}
+                                if(fn->syntax->block){std::string bt=trim_copy(fn->syntax->body);const bool rendered=!bt.empty()&&bt.front()=='<';if(rendered){auto nested=parse(fn->syntax->body,fn->source_path,1,fn->source_provenance,fn->body_view);if(!nested.ok){error=nested.error.message;if(nested.diagnostic)active_diagnostic_=nested.diagnostic;okcall=false;}else result=nift::RuntimeValue(nested.output);}else{okcall=eval(nift::detail::SourceText(fn->syntax->body,fn->body_view),result,depth+1);if(!okcall&&error.rfind("callable recursion depth exceeded",0)!=0)error="lambda body error: "+error;}}
+                                else{okcall=eval_expression_lambda(fn->syntax->body,result,depth+1,fn->body_view,fn->captures.get());if(!okcall&&error.rfind("callable recursion depth exceeded",0)!=0)error="lambda body error: "+error;}
                                 source_context_stack_.pop_back();
                                 pop_variable_scope();leave_lexical_environment(std::move(lexical_env));--callable_call_depth_;if(!okcall)append_diagnostic_frame(nift::detail::DiagnosticFrameKind::Callback,"collection callback");return okcall;
                             }
@@ -3570,16 +3565,16 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                             auto li=lambda_instances_.find(tag.substr(22));if(li==lambda_instances_.end()){error="invalid lambda";return false;}auto fn=li->second;
                             if (callable_call_depth_ >= kMaxCallableDepth) { error = "callable recursion depth exceeded"; return false; }
                             ++callable_call_depth_;
-                            std::vector<nift::RuntimeValue> spread_args;bool aok=false;std::vector<bool> aq;auto ar=parse_parameters(text.substr(lp+1,text.size()-lp-2),aok,&aq);if(aok){std::vector<nift::detail::SourceText> ex;std::vector<bool> eq;for(size_t ai=0;ai<ar.size();++ai){if(!(ai<aq.size()&&aq[ai])&&trim_copy(ar[ai]).rfind("...",0)==0){nift::RuntimeValue sv;if(!eval(trim_copy(ar[ai]).substr(3),sv,depth+1)){--callable_call_depth_;return false;}if(!sv.is_array()){error="spread value must be an array";--callable_call_depth_;return false;}for(const auto& item:sv.array){ex.push_back("\x1fnift:spread:"+std::to_string(spread_args.size()));spread_args.push_back(item);eq.push_back(false);}}else{ex.push_back(ar[ai]);eq.push_back(ai<aq.size()&&aq[ai]);}}ar.swap(ex);aq.swap(eq);}if(!aok||(!fn->variadic_param.empty()?ar.size()<fn->params.size():ar.size()!=fn->params.size())){error="lambda argument count mismatch";--callable_call_depth_;return false;}
+                            std::vector<nift::RuntimeValue> spread_args;bool aok=false;std::vector<bool> aq;auto ar=parse_parameters(text.substr(lp+1,text.size()-lp-2),aok,&aq);if(aok){std::vector<nift::detail::SourceText> ex;std::vector<bool> eq;for(size_t ai=0;ai<ar.size();++ai){if(!(ai<aq.size()&&aq[ai])&&trim_copy(ar[ai]).rfind("...",0)==0){nift::RuntimeValue sv;if(!eval(trim_copy(ar[ai]).substr(3),sv,depth+1)){--callable_call_depth_;return false;}if(!sv.is_array()){error="spread value must be an array";--callable_call_depth_;return false;}for(const auto& item:sv.array){ex.push_back("\x1fnift:spread:"+std::to_string(spread_args.size()));spread_args.push_back(item);eq.push_back(false);}}else{ex.push_back(ar[ai]);eq.push_back(ai<aq.size()&&aq[ai]);}}ar.swap(ex);aq.swap(eq);}if(!aok||(!fn->syntax->variadic_param.empty()?ar.size()<fn->syntax->params.size():ar.size()!=fn->syntax->params.size())){error="lambda argument count mismatch";--callable_call_depth_;return false;}
                             std::vector<nift::RuntimeValue> av;for(size_t ai=0;ai<ar.size();++ai){nift::RuntimeValue v;if(ai<aq.size()&&aq[ai])v=nift::RuntimeValue(ar[ai]);else if(ar[ai].rfind("\x1fnift:spread:",0)==0)v=spread_args[static_cast<std::size_t>(std::stoull(ar[ai].substr(13)))];else if(!eval(ar[ai],v,depth+1)){--callable_call_depth_;return false;}av.push_back(std::move(v));}
                             if(fn->async){for(std::size_t ai=0;ai<ar.size();++ai){const std::string an=trim_copy(ar[ai]);if(valid_binding_identifier(an)){if(auto* ab=find_binding(an)){ab->sync();if(ab->value&&ab->value->is_string()&&ab->value->string.rfind("\x1fnift:atomic:",0)==0)av[ai]=*ab->value;}}}--callable_call_depth_;return spawn_future(*cb->value,av,out);}
-                            std::vector<VariableBinding> parameter_bindings;parameter_bindings.reserve(fn->params.size());for(size_t ai=0;ai<fn->params.size();++ai)parameter_bindings.push_back(bind_call_param(ar[ai],ai<aq.size()&&aq[ai],av[ai]));
+                            std::vector<VariableBinding> parameter_bindings;parameter_bindings.reserve(fn->syntax->params.size());for(size_t ai=0;ai<fn->syntax->params.size();++ai)parameter_bindings.push_back(bind_call_param(ar[ai],ai<aq.size()&&aq[ai],av[ai]));
                             auto lexical_env=enter_lexical_environment(fn->module_env);
-                            push_variable_scope();auto& sc=variable_scopes_.back();copy_capture_bindings(sc,*fn->captures);for(size_t ai=0;ai<fn->params.size();++ai)sc[fn->params[ai]]=std::move(parameter_bindings[ai]);if(!fn->variadic_param.empty()){nift::RuntimeValue rest=nift::RuntimeValue::make_array();for(size_t ai=fn->params.size();ai<av.size();++ai)rest.array.push_back(std::move(av[ai]));auto sp=std::make_shared<nift::RuntimeValue>(std::move(rest));sc[fn->variadic_param]=VariableBinding{sp,nift_binding_type(*sp),true,false};}
+                            push_variable_scope();auto& sc=variable_scopes_.back();copy_capture_bindings(sc,*fn->captures);for(size_t ai=0;ai<fn->syntax->params.size();++ai)sc[fn->syntax->params[ai]]=std::move(parameter_bindings[ai]);if(!fn->syntax->variadic_param.empty()){nift::RuntimeValue rest=nift::RuntimeValue::make_array();for(size_t ai=fn->syntax->params.size();ai<av.size();++ai)rest.array.push_back(std::move(av[ai]));auto sp=std::make_shared<nift::RuntimeValue>(std::move(rest));sc[fn->syntax->variadic_param]=VariableBinding{sp,nift_binding_type(*sp),true,false};}
                             bool okcall=true;
                             source_context_stack_.push_back(SourceContext{fn->source_path,fn->source_provenance,fn->body_view});
-                            if(fn->block){std::string bt=trim_copy(fn->body);const bool rendered=!bt.empty()&&bt.front()=='<';if(rendered){auto nested=parse(fn->body,fn->source_path,1,fn->source_provenance,fn->body_view);if(!nested.ok){error=nested.error.message;if(nested.diagnostic)active_diagnostic_=nested.diagnostic;okcall=false;}else out=nift::RuntimeValue(nested.output);}else{++function_call_depth_;auto nested=execute_native_program(fn->body,fn->source_path,1,fn->source_provenance,true,fn->body_view);--function_call_depth_;if(!nested.ok){error=nested.error.message;if(nested.diagnostic)active_diagnostic_=nested.diagnostic;okcall=false;}else if(pending_control_.kind==ControlFlow::Return){consume_return(out);}else out=nift::RuntimeValue(nullptr);}}
-                            else { okcall=eval_expression_lambda(fn->body,out,1,fn->body_view); if(!okcall&&error.rfind("callable recursion depth exceeded",0)!=0) error="lambda body error: "+error; VariableBinding lr; if(try_location_ref(fn->body,lr)&&lr.is_location_ref()&&lr.value){last_call_return_loc_root_=lr.ref_root_slot;last_call_return_loc_path_=lr.ref_path;} }
+                            if(fn->syntax->block){std::string bt=trim_copy(fn->syntax->body);const bool rendered=!bt.empty()&&bt.front()=='<';if(rendered){auto nested=parse(fn->syntax->body,fn->source_path,1,fn->source_provenance,fn->body_view);if(!nested.ok){error=nested.error.message;if(nested.diagnostic)active_diagnostic_=nested.diagnostic;okcall=false;}else out=nift::RuntimeValue(nested.output);}else{++function_call_depth_;auto nested=execute_native_program(fn->syntax->body,fn->source_path,1,fn->source_provenance,true,fn->body_view);--function_call_depth_;if(!nested.ok){error=nested.error.message;if(nested.diagnostic)active_diagnostic_=nested.diagnostic;okcall=false;}else if(pending_control_.kind==ControlFlow::Return){consume_return(out);}else out=nift::RuntimeValue(nullptr);}}
+                            else { okcall=eval_expression_lambda(fn->syntax->body,out,1,fn->body_view); if(!okcall&&error.rfind("callable recursion depth exceeded",0)!=0) error="lambda body error: "+error; VariableBinding lr; if(try_location_ref(fn->syntax->body,lr)&&lr.is_location_ref()&&lr.value){last_call_return_loc_root_=lr.ref_root_slot;last_call_return_loc_path_=lr.ref_path;} }
                             source_context_stack_.pop_back();pop_variable_scope();leave_lexical_environment(std::move(lexical_env));--callable_call_depth_;if(!okcall)append_diagnostic_frame(nift::detail::DiagnosticFrameKind::Lambda,"lambda");return okcall;
                         }
                     }

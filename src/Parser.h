@@ -18,6 +18,7 @@
 #include <functional>
 #include "Proc.h"
 #include "Ast.h"
+#include "LambdaSyntaxMetadata.h"
 
 namespace json { class Document; }
 class PackageTransaction;
@@ -266,10 +267,8 @@ private:
     std::vector<std::filesystem::path> source_path_stack_; // Compatibility view for prepared import ownership.
     ResourcePathAuthority resource_path_authority_;
     struct LambdaInstance {
-        std::vector<std::string> params;
-        std::string variadic_param;
-        std::string body;
-        bool block = false;
+        std::shared_ptr<const nift::detail::LambdaSyntaxMetadata> syntax;
+        // Async worker clones disable this instance flag; it cannot be shared.
         bool async = false;
         std::filesystem::path source_path;
         SourceProvenance source_provenance = SourceProvenance::FileBacked;
