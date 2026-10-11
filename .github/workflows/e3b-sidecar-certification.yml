@@ -36,6 +36,7 @@ jobs:
         with:
           python-version: '3.13'
       - uses: msys2/setup-msys2@v2
+        id: msys2
         if: runner.os == 'Windows'
         with:
           msystem: UCRT64
@@ -60,8 +61,15 @@ jobs:
         run: make -j2 nift.exe && make -C .build/e2-source -j2 nift.exe && make -C .build/e3b-source -j2 nift.exe
       - name: Native sidecar contracts
         shell: pwsh
+        env:
+          NIFT_IDENTITY_MSYS2: ${{ steps.msys2.outputs.msys2-location }}
         run: |
-          if ($IsWindows) { $env:PATH = "C:\msys64\ucrt64\bin;C:\msys64\usr\bin;$env:PATH"; $suffix = '.exe' } else { $suffix = '' }
+          if ($IsWindows) {
+            $env:NIFT_IDENTITY_CXX = Join-Path $env:NIFT_IDENTITY_MSYS2 'ucrt64/bin/g++.exe'
+            if (!(Test-Path $env:NIFT_IDENTITY_CXX)) { throw 'UCRT compiler missing' }
+            $env:PATH = "$env:NIFT_IDENTITY_MSYS2\ucrt64\bin;$env:NIFT_IDENTITY_MSYS2\usr\bin;$env:PATH"
+            $suffix = '.exe'
+          } else { $suffix = '' }
           python tests/run_identity_certification.py --e3b "./.build/e3b-source/nift$suffix" --e2 "./.build/e2-source/nift$suffix"
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v7
@@ -93,6 +101,7 @@ jobs:
         with:
           python-version: '3.13'
       - uses: msys2/setup-msys2@v2
+        id: msys2
         if: runner.os == 'Windows'
         with:
           msystem: UCRT64
@@ -111,8 +120,15 @@ jobs:
         run: make -j2 nift.exe
       - name: Check real cross-platform metadata exports
         shell: pwsh
+        env:
+          NIFT_IDENTITY_MSYS2: ${{ steps.msys2.outputs.msys2-location }}
         run: |
-          if ($IsWindows) { $env:PATH = "C:\msys64\ucrt64\bin;C:\msys64\usr\bin;$env:PATH"; $suffix = '.exe' } else { $suffix = '' }
+          if ($IsWindows) {
+            $env:NIFT_IDENTITY_CXX = Join-Path $env:NIFT_IDENTITY_MSYS2 'ucrt64/bin/g++.exe'
+            if (!(Test-Path $env:NIFT_IDENTITY_CXX)) { throw 'UCRT compiler missing' }
+            $env:PATH = "$env:NIFT_IDENTITY_MSYS2\ucrt64\bin;$env:NIFT_IDENTITY_MSYS2\usr\bin;$env:PATH"
+            $suffix = '.exe'
+          } else { $suffix = '' }
           python tests/sidecar_platform_contracts.py --nift "./nift$suffix" --imports .build/sidecar-imports --output .build/sidecar-crossover.json --export .build/sidecar-export.json
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v7
