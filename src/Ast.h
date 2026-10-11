@@ -11,8 +11,17 @@
 namespace nift::ast {
 struct SourceSpan { std::size_t begin=0, end=0; };
 enum class Kind { Literal, Binding, Unary, Binary, Logical, Coalesce, Index, Member, SafeIndex, SafeMember, Range, Call, Lambda, Array, Object, Legacy };
+// Encoded spellings permit a cheap stale-code guard for writable internal ASTs.
+enum class NumericBinaryOp : unsigned {
+    Unknown=0, Add='+', Subtract='-', Multiply='*', Divide='/', Modulo='%',
+    Equal='=' | ('=' << 8), NotEqual='!' | ('=' << 8),
+    Less='<', LessEqual='<' | ('=' << 8), Greater='>', GreaterEqual='>' | ('=' << 8)
+};
 struct Expr {
-    Kind kind=Kind::Legacy; SourceSpan span{}; std::string text, op, name; std::vector<std::string> params;
+    Kind kind=Kind::Legacy; NumericBinaryOp numeric_op=NumericBinaryOp::Unknown; SourceSpan span{}; std::string text, op, name; std::vector<std::string> params;
+    // Manual/changed spellings retain canonical textual dispatch.
+    void prepare_numeric_operator();
+    NumericBinaryOp prepared_numeric_operator() const;
     nift::RuntimeValue literal;
     std::unique_ptr<Expr> left, right; std::vector<std::unique_ptr<Expr>> items;
 };

@@ -1,0 +1,88 @@
+name: Scalar S0 numeric AST native certification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Preserve exact source bytes on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        if: runner.os == 'Windows'
+        with:
+          msystem: UCRT64
+          update: true
+          install: make diffutils mingw-w64-ucrt-x86_64-gcc
+      - name: Exact numeric differential and stale-cache/layout contracts
+        shell: pwsh
+        env:
+          MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          if ($IsWindows) {
+            $env:PATH = "$env:MSYS_ROOT\ucrt64\bin;$env:MSYS_ROOT\usr\bin;$env:PATH"
+            $env:CXX = 'g++'
+          }
+          python tests/scalar_s0/native.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: scalar-s0-${{ runner.os }}
+          path: .build/scalar-s0-native/summary.json
+          include-hidden-files: true
+  msvc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: MSVC exact differential and enum/layout proof
+        shell: pwsh
+        run: |
+          python tests/scalar_s0/native.py --msvc
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: scalar-s0-msvc
+          path: .build/scalar-s0-native/summary.json
+          include-hidden-files: true
+  sanitizer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: ASan UBSan LeakSanitizer exact numeric matrix and contracts
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: python tests/scalar_s0/native.py --sanitize
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: scalar-s0-sanitizer
+          path: .build/scalar-s0-native/summary.json
+          include-hidden-files: true

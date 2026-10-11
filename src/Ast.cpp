@@ -8,6 +8,29 @@
 #include <stdexcept>
 
 namespace nift::ast {
+namespace {
+unsigned operator_spelling(const std::string& op) {
+    if (op.size()==1) return static_cast<unsigned char>(op[0]);
+    if (op.size()==2) return static_cast<unsigned char>(op[0]) | (static_cast<unsigned char>(op[1]) << 8);
+    return 0;
+}
+}
+void Expr::prepare_numeric_operator() {
+    numeric_op=NumericBinaryOp::Unknown;
+    switch (static_cast<NumericBinaryOp>(operator_spelling(op))) {
+        case NumericBinaryOp::Add: case NumericBinaryOp::Subtract:
+        case NumericBinaryOp::Multiply: case NumericBinaryOp::Divide:
+        case NumericBinaryOp::Modulo: case NumericBinaryOp::Equal:
+        case NumericBinaryOp::NotEqual: case NumericBinaryOp::Less:
+        case NumericBinaryOp::LessEqual: case NumericBinaryOp::Greater:
+        case NumericBinaryOp::GreaterEqual:
+            numeric_op=static_cast<NumericBinaryOp>(operator_spelling(op)); break;
+        default: break;
+    }
+}
+NumericBinaryOp Expr::prepared_numeric_operator() const {
+    return static_cast<unsigned>(numeric_op)==operator_spelling(op) ? numeric_op : NumericBinaryOp::Unknown;
+}
 void rebase(Expr& expression, std::size_t offset) {
  expression.span.begin+=offset;expression.span.end+=offset;
  if(expression.left)rebase(*expression.left,offset);
@@ -55,10 +78,10 @@ struct P {
  }
  std::unique_ptr<Expr> postfix(){auto l=primary();if(!l)return{};while(true){ws();if(p+1<s.size()&&s[p]=='?'&&s[p+1]=='.'){auto b=l->span.begin;p+=2;ws();auto st=p;if(p>=s.size()||!(std::isalpha((unsigned char)s[p])||s[p]=='_')){error="expected member name";return{};}++p;while(p<s.size()&&(std::isalnum((unsigned char)s[p])||s[p]=='_'))++p;auto n=node(Kind::SafeMember,b);n->name=s.substr(st,p-st);n->left=std::move(l);l=std::move(n);continue;}if(p+1<s.size()&&s[p]=='?'&&s[p+1]=='['){auto b=l->span.begin;p+=2;auto idx=coalesce();ws();if(!idx||p>=s.size()||s[p]!=']'){error="expected ']'";return{};}++p;auto n=node(Kind::SafeIndex,b);n->left=std::move(l);n->right=std::move(idx);l=std::move(n);continue;}if(p<s.size()&&s[p]=='.'){auto b=l->span.begin;++p;ws();auto st=p;if(p>=s.size()||!(std::isalpha((unsigned char)s[p])||s[p]=='_')){error="expected member name";return{};}++p;while(p<s.size()&&(std::isalnum((unsigned char)s[p])||s[p]=='_'))++p;auto n=node(Kind::Member,b);n->name=s.substr(st,p-st);n->left=std::move(l);l=std::move(n);continue;}if(p<s.size()&&s[p]=='['){auto b=l->span.begin;++p;auto idx=coalesce();ws();if(!idx||p>=s.size()||s[p]!=']'){error="expected ']'";return{};}++p;auto n=node(Kind::Index,b);n->left=std::move(l);n->right=std::move(idx);l=std::move(n);continue;}if(p<s.size()&&s[p]=='('){auto b=l->span.begin;const std::size_t call_open=p;int d=0;bool q=false;char qc=0;do{char ch=s[p++];if(q){if(ch=='\\'&&p<s.size())++p;else if(ch==qc)q=false;}else if(ch=='\''||ch=='"'){q=true;qc=ch;}else if(ch=='(')++d;else if(ch==')')--d;}while(p<s.size()&&d>0);if(d!=0){error="unterminated call";return{};}auto n=node(Kind::Call,b);n->text=s.substr(b,p-b);{const std::string args_text=s.substr(call_open+1,p-call_open-2);std::vector<std::pair<std::string,std::size_t>> parts;std::string cur;std::size_t argument_begin=0;int dep=0;bool aq=false;char aqc=0;for(std::size_t z=0;z<args_text.size();++z){char ch=args_text[z];if(aq){if(ch=='\\'&&z+1<args_text.size())++z;else if(ch==aqc)aq=false;cur+=ch;continue;}if(ch=='\''||ch=='"'){aq=true;aqc=ch;cur+=ch;continue;}if(ch=='('||ch=='['||ch=='{')++dep;else if(ch==')'||ch==']'||ch=='}')--dep;if(ch==','&&dep==0){parts.push_back({cur,argument_begin});cur.clear();argument_begin=z+1;continue;}cur+=ch;}if(!cur.empty())parts.push_back({cur,argument_begin});for(const auto& part:parts){std::string a=part.first;const auto leading=a.find_first_not_of(" \t\r\n");{auto fb=a.find_first_not_of(" \t\r\n");if(fb!=std::string::npos){auto fe=a.find_last_not_of(" \t\r\n");a=a.substr(fb,fe-fb+1);}else a.clear();}if(a.empty())continue;auto ae=parse_expression(a);if(ae.supported){rebase(*ae.expr,call_open+1+part.second+leading);n->items.push_back(std::move(ae.expr));n->params.push_back(a);}else{n->kind=Kind::Legacy;n->left.reset();n->items.clear();n->params.clear();break;}}}n->left=std::move(l);l=std::move(n);continue;}break;}return l;}
  std::unique_ptr<Expr> unary(){G g(depth);if(depth>128){error="expression nesting exceeds parser limit";return{};}ws();auto b=p;if(take("!")){auto r=unary();if(!r)return{};auto n=node(Kind::Unary,b);n->op="!";n->right=std::move(r);return n;}if(take("-")){auto r=unary();if(!r)return{};auto n=node(Kind::Unary,b);n->op="-";n->right=std::move(r);return n;}if(take("+")){auto r=unary();if(!r)return{};auto n=node(Kind::Unary,b);n->op="+";n->right=std::move(r);return n;}return postfix();}
- template<class Next> std::unique_ptr<Expr> chain(Next next,const std::initializer_list<const char*> ops){auto l=(this->*next)();if(!l)return{};while(true){ws();std::string op;for(auto x:ops)if(s.compare(p,std::char_traits<char>::length(x),x)==0){op=x;break;}if(op.empty())break;auto b=l->span.begin;p+=op.size();auto r=(this->*next)();if(!r)return{};auto n=node(Kind::Binary,b);n->op=op;n->left=std::move(l);n->right=std::move(r);l=std::move(n);}return l;}
+ template<class Next> std::unique_ptr<Expr> chain(Next next,const std::initializer_list<const char*> ops){auto l=(this->*next)();if(!l)return{};while(true){ws();std::string op;for(auto x:ops)if(s.compare(p,std::char_traits<char>::length(x),x)==0){op=x;break;}if(op.empty())break;auto b=l->span.begin;p+=op.size();auto r=(this->*next)();if(!r)return{};auto n=node(Kind::Binary,b);n->op=op;n->prepare_numeric_operator();n->left=std::move(l);n->right=std::move(r);l=std::move(n);}return l;}
  std::unique_ptr<Expr> mul(){return chain(&P::unary,{"*","/","%"});}
  std::unique_ptr<Expr> add(){return chain(&P::mul,{"+","-"});}
- std::unique_ptr<Expr> compare(){auto l=add();if(!l)return{};ws();for(auto op:{"==","!=","<=",">=","<",">"}){std::string x=op;if(s.compare(p,x.size(),x)==0){auto b=l->span.begin;p+=x.size();auto r=add();if(!r)return{};auto n=node(Kind::Binary,b);n->op=x;n->left=std::move(l);n->right=std::move(r);return n;}}return l;}
+ std::unique_ptr<Expr> compare(){auto l=add();if(!l)return{};ws();for(auto op:{"==","!=","<=",">=","<",">"}){std::string x=op;if(s.compare(p,x.size(),x)==0){auto b=l->span.begin;p+=x.size();auto r=add();if(!r)return{};auto n=node(Kind::Binary,b);n->op=x;n->prepare_numeric_operator();n->left=std::move(l);n->right=std::move(r);return n;}}return l;}
  std::unique_ptr<Expr> logical_and(){auto l=compare();if(!l)return{};while(take("&&")){auto b=l->span.begin;auto r=compare();if(!r)return{};auto n=node(Kind::Logical,b);n->op="&&";n->left=std::move(l);n->right=std::move(r);l=std::move(n);}return l;}
  std::unique_ptr<Expr> logical_or(){auto l=logical_and();if(!l)return{};while(take("||")){auto b=l->span.begin;auto r=logical_and();if(!r)return{};auto n=node(Kind::Logical,b);n->op="||";n->left=std::move(l);n->right=std::move(r);l=std::move(n);}return l;}
  std::unique_ptr<Expr> coalesce(){auto l=logical_or();if(!l)return{};if(take("??")){auto b=l->span.begin;auto r=coalesce();if(!r)return{};auto n=node(Kind::Coalesce,b);n->left=std::move(l);n->right=std::move(r);return n;}return l;}
@@ -164,7 +187,37 @@ bool evaluate(const Expr& e,Context& c,nift::RuntimeValue& out,std::string& erro
   if(e.kind==Kind::Index){std::shared_ptr<const nift::RuntimeValue> b;if(!eval_chain(*e.left,c,b,error))return false;nift::RuntimeValue i;if(!evaluate(*e.right,c,i,error))return false;std::size_t index=0;if(b->is_array()&&nift::runtime_number_to_size(i,index)&&index<b->array.size()){out=b->array[index];return true;}if(b->is_bytes()&&nift::runtime_number_to_size(i,index)&&b->bytes&&index<b->bytes->size()){out=nift::RuntimeValue(static_cast<int>((*b->bytes)[index]));return true;}if(b->is_object()&&i.is_string()){if(const auto* member=b->find_member(i.string)){out=*member;return true;}}error="invalid index";return false;}
   if(e.kind==Kind::Unary){nift::RuntimeValue r;if(!evaluate(*e.right,c,r,error))return false;if(e.op=="!"){out=nift::RuntimeValue(!truthy(r));return true;}if(!r.is_number()){error="unary arithmetic operators require a numeric operand";return false;}out=e.op=="-"?nift::runtime_number_negate(r):r;return true;}
  if(e.kind==Kind::Logical){nift::RuntimeValue l;if(!evaluate(*e.left,c,l,error))return false;if(e.op=="&&"&&!truthy(l)){out=nift::RuntimeValue(false);return true;}if(e.op=="||"&&truthy(l)){out=nift::RuntimeValue(true);return true;}nift::RuntimeValue r;if(!evaluate(*e.right,c,r,error))return false;out=nift::RuntimeValue(truthy(r));return true;}
-  if(e.kind==Kind::Binary){nift::RuntimeValue l,r;if(!evaluate(*e.left,c,l,error)||!evaluate(*e.right,c,r,error))return false;const auto&o=e.op;if(o=="=="||o=="!="){bool v=eq(l,r);out=nift::RuntimeValue(o=="=="?v:!v);return true;}if(o=="<"||o=="<="||o==">"||o==">="){if(l.is_bytes()||r.is_bytes()){error="bytes ordering is not supported";return false;}if(l.is_number()&&r.is_number()){int cmp=0;const bool comparable=nift::runtime_compare_numbers_relational(l,r,cmp);bool v=comparable&&(o=="<"?cmp<0:o=="<="?cmp<=0:o==">"?cmp>0:cmp>=0);out=nift::RuntimeValue(v);return true;}if(l.is_string()&&r.is_string()){bool v=o=="<"?l.string<r.string:o=="<="?l.string<=r.string:o==">"?l.string>r.string:l.string>=r.string;out=nift::RuntimeValue(v);return true;}error="ordering comparisons require two numbers or two strings";return false;}
+  if(e.kind==Kind::Binary){nift::RuntimeValue l,r;if(!evaluate(*e.left,c,l,error)||!evaluate(*e.right,c,r,error))return false;// Only numeric operands use prepared dispatch; every general/unknown path
+// below remains the original textual semantic oracle.
+if(l.is_number()&&r.is_number()) {
+    const auto op=e.prepared_numeric_operator();
+    switch(op) {
+        case NumericBinaryOp::Equal: case NumericBinaryOp::NotEqual: {
+            const bool v=eq(l,r);out=nift::RuntimeValue(op==NumericBinaryOp::Equal?v:!v);return true;
+        }
+        case NumericBinaryOp::Less: case NumericBinaryOp::LessEqual:
+        case NumericBinaryOp::Greater: case NumericBinaryOp::GreaterEqual: {
+            int cmp=0;const bool comparable=nift::runtime_compare_numbers_relational(l,r,cmp);
+            const bool v=comparable&&(op==NumericBinaryOp::Less?cmp<0:op==NumericBinaryOp::LessEqual?cmp<=0:op==NumericBinaryOp::Greater?cmp>0:cmp>=0);
+            out=nift::RuntimeValue(v);return true;
+        }
+        case NumericBinaryOp::Add: out=nift::RuntimeValue(l.num+r.num);break;
+        case NumericBinaryOp::Subtract: out=nift::RuntimeValue(l.num-r.num);break;
+        case NumericBinaryOp::Multiply: out=nift::RuntimeValue(l.num*r.num);break;
+        case NumericBinaryOp::Divide:
+            if(nift::runtime_number_is_zero(r)){error="division by zero";return false;}
+            out=nift::RuntimeValue(l.num/r.num);break;
+        case NumericBinaryOp::Modulo:
+            if(nift::runtime_number_is_zero(r)){error="modulo by zero";return false;}
+            if(!nift::runtime_number_is_integer(l)||!nift::runtime_number_is_integer(r)){error="modulo requires integer-valued operands";return false;}
+            out=nift::RuntimeValue(std::fmod(l.num,r.num));break;
+        default: goto textual_numeric_dispatch;
+    }
+    if(!std::isfinite(out.num)){error="arithmetic result is not finite";return false;}
+    return true;
+}
+textual_numeric_dispatch:
+const auto&o=e.op;if(o=="=="||o=="!="){bool v=eq(l,r);out=nift::RuntimeValue(o=="=="?v:!v);return true;}if(o=="<"||o=="<="||o==">"||o==">="){if(l.is_bytes()||r.is_bytes()){error="bytes ordering is not supported";return false;}if(l.is_number()&&r.is_number()){int cmp=0;const bool comparable=nift::runtime_compare_numbers_relational(l,r,cmp);bool v=comparable&&(o=="<"?cmp<0:o=="<="?cmp<=0:o==">"?cmp>0:cmp>=0);out=nift::RuntimeValue(v);return true;}if(l.is_string()&&r.is_string()){bool v=o=="<"?l.string<r.string:o=="<="?l.string<=r.string:o==">"?l.string>r.string:l.string>=r.string;out=nift::RuntimeValue(v);return true;}error="ordering comparisons require two numbers or two strings";return false;}
       if(o=="+"&&(l.is_bytes()||r.is_bytes())){if(!l.is_bytes()||!r.is_bytes()){error="bytes values cannot be rendered as text; bytes concatenation requires two bytes values";return false;}nift::RuntimeBytes joined;if(l.bytes)joined.insert(joined.end(),l.bytes->begin(),l.bytes->end());if(r.bytes)joined.insert(joined.end(),r.bytes->begin(),r.bytes->end());out=nift::RuntimeValue(std::move(joined));return true;}if(o=="+"&&(l.is_string()||r.is_string())){if(!c.render){error="string rendering unavailable";return false;}try{out=nift::RuntimeValue(c.render(l)+c.render(r));}catch(const std::runtime_error&){error="string concatenation requires renderable scalar values";return false;}return true;}if(!l.is_number()||!r.is_number()){error="arithmetic operators require numeric operands";return false;}if(o=="+")out=nift::RuntimeValue(l.num+r.num);else if(o=="-")out=nift::RuntimeValue(l.num-r.num);else if(o=="*")out=nift::RuntimeValue(l.num*r.num);else if(o=="/"){if(nift::runtime_number_is_zero(r)){error="division by zero";return false;}out=nift::RuntimeValue(l.num/r.num);}else if(o=="%"){if(nift::runtime_number_is_zero(r)){error="modulo by zero";return false;}if(!nift::runtime_number_is_integer(l)||!nift::runtime_number_is_integer(r)){error="modulo requires integer-valued operands";return false;}out=nift::RuntimeValue(std::fmod(l.num,r.num));}else return false;if(!std::isfinite(out.num)){error="arithmetic result is not finite";return false;}return true;}
  error="unsupported AST node";return false;
  };const bool ok=success();if(!ok&&c.failure_origin)c.failure_origin(e.span);return ok;
