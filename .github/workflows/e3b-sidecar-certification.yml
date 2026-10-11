@@ -52,6 +52,10 @@ jobs:
         with:
           ref: 6775a0028db69b0eaf55343b3dc00079920529d4
           path: .build/e3b-source
+      - name: Preflight native Windows inaccessible-path fixture
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python tests/identity_windows_acl.py
       - name: Build both candidates
         if: runner.os != 'Windows'
         run: make -j2 nift && make -C .build/e2-source -j2 nift && make -C .build/e3b-source -j2 nift

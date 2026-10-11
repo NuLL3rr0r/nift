@@ -143,18 +143,21 @@ with tempfile.TemporaryDirectory(prefix='nift-identity-publication-') as tempora
   finally:meta.write_bytes(prior);os.chmod(meta,mode);(root/'content/a.html').write_bytes(old_content)
  # Real inaccessible parent. Windows ACL is restored even on test failure.
  blocked=root/'data';old_mode=blocked.stat().st_mode
+ import contextlib
  if os.name=='nt':
-  user=os.environ['USERNAME'];deny=subprocess.run(['icacls',str(blocked),'/deny',user+':(OI)(CI)(RX)','/t','/L'],capture_output=True,text=True);assert deny.returncode==0,deny.stdout+deny.stderr
- else:os.chmod(blocked,0)
- try:
+  from identity_windows_acl import denied_read
+  access=denied_read(blocked)
+ else:
+  @contextlib.contextmanager
+  def denied_posix():
+   try:os.chmod(blocked,0);yield
+   finally:os.chmod(blocked,old_mode)
+  access=denied_posix()
+ with access:
   try:os.lstat(blocked/'plain.txt');raise AssertionError('inaccessible parent did not deny observation')
   except PermissionError:pass
   r=run(probe,root,'native',str(root),'data/plain.txt');assert r.returncode==0,(r.stdout,r.stderr)
   equal_status(root,'actual inaccessible parent parity')
- finally:
-  if os.name=='nt':
-   restored=subprocess.run(['icacls',str(blocked),'/remove:d',user,'/t','/L'],capture_output=True,text=True);assert restored.returncode==0
-  else:os.chmod(blocked,old_mode)
  # A fresh parent containment observation must still reject an ancestor
  # changed into a directory symlink escaping the project.
  real=root/'real-data';blocked.rename(real);outside=base/'outside-directory';outside.mkdir();(outside/'plain.txt').write_text('outside')
