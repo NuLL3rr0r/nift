@@ -153,6 +153,214 @@ std::string Parser::path_to(const std::string& argument, const std::string& dire
     return relative;
 }
 
+// P0: syntax-only, operation-local template emission. A complete body
+// must be eligible before any iteration executes. Statements/directives,
+// calls, escapes and markup that changes parser state use the old path.
+struct Parser::LoopEmissionOperation {
+    enum class Kind { Literal, Less, Path } kind;
+    std::size_t begin = 0, length = 0;
+    std::string key, expression, root;
+    std::vector<std::string> members;
+};
+struct Parser::LoopEmissionPlan {
+    std::string text;
+    nift::detail::SourceView view;
+    std::vector<LoopEmissionOperation> operations;
+};
+std::optional<Parser::LoopEmissionPlan> Parser::prepare_loop_emission(
+    const nift::detail::ControlBlockBody& body) const {
+    if (strict_script_mode_ || standalone_script_host_ ||
+        body.text.find_first_of("@\\") != std::string::npos ||
+        body.text.find("break") != std::string::npos ||
+        body.text.find("continue") != std::string::npos ||
+        body.text.find("return") != std::string::npos ||
+        body.text.find("<!--") != std::string::npos ||
+        body.text.find("-->") != std::string::npos ||
+        body.text.find("<pre") != std::string::npos ||
+        body.text.find("</pre") != std::string::npos ||
+        body.text.find("<code") != std::string::npos ||
+        body.text.find("</code") != std::string::npos) return std::nullopt;
+    LoopEmissionPlan plan{body.text, body.view, {}};
+    const auto identifier = [](unsigned char c, bool first) {
+        return c == '_' || (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') || (!first && c >= '0' && c <= '9');
+    };
+    for (std::size_t pos = 0; pos < plan.text.size();) {
+        LoopEmissionOperation op;
+        op.begin = pos;
+        if (plan.text[pos] == '$') {
+            if (pos + 1 == plan.text.size() || plan.text[pos + 1] != '[')
+                return std::nullopt;
+            const auto close = plan.text.find(']', pos + 2);
+            if (close == std::string::npos) return std::nullopt;
+            op.kind = LoopEmissionOperation::Kind::Path;
+            op.length = close - pos + 1;
+            op.key = plan.text.substr(pos + 2, close - pos - 2);
+            op.expression = trim_copy(op.key);
+            std::size_t part = 0;
+            while (part < op.expression.size()) {
+                if (!identifier(static_cast<unsigned char>(op.expression[part]), true))
+                    return std::nullopt;
+                const auto start = part++;
+                while (part < op.expression.size() &&
+                       identifier(static_cast<unsigned char>(op.expression[part]), false)) ++part;
+                auto name = op.expression.substr(start, part - start);
+                if (op.root.empty()) op.root = std::move(name);
+                else op.members.push_back(std::move(name));
+                if (part == op.expression.size()) break;
+                if (op.expression[part++] != '.' || part == op.expression.size())
+                    return std::nullopt;
+            }
+            if (op.root.empty() || op.root == "true" || op.root == "false" ||
+                op.root == "null" || op.root == "nan" || op.root == "inf") return std::nullopt;
+            pos = close + 1;
+        } else if (plan.text[pos] == '<') {
+            op.kind = LoopEmissionOperation::Kind::Less;
+            op.length = 1;
+            ++pos;
+        } else {
+            op.kind = LoopEmissionOperation::Kind::Literal;
+            const auto next = plan.text.find_first_of("<$", pos);
+            pos = next == std::string::npos ? plan.text.size() : next;
+            op.length = pos - op.begin;
+        }
+        plan.operations.push_back(std::move(op));
+    }
+    return plan;
+}
+
+RenderResult Parser::execute_loop_emission(const LoopEmissionPlan& plan,
+    const fs::path& source_path, int depth, SourceProvenance source_provenance) {
+    const nift::detail::SourceText source(plan.text, plan.view);
+    if (depth + 1 > 64) {
+        fail(source_path, source, 0, "maximum template parse depth exceeded (possible recursion)");
+        return result_;
+    }
+    source_context_stack_.push_back(SourceContext{source_path, source_provenance, plan.view});
+    source_path_stack_.push_back(source_path);
+    struct SourceContextGuard {
+        std::vector<SourceContext>& stack;
+        std::vector<fs::path>& paths;
+        ~SourceContextGuard() { stack.pop_back(); paths.pop_back(); }
+    } emission_context_guard{source_context_stack_, source_path_stack_};
+    std::string output;
+    output.reserve(source.size() + 64); // Same body buffer policy as parse().
+    for (const auto& op : plan.operations) {
+        if (!result_.ok || pending_control_.kind != ControlFlow::None) break;
+        expression_failure_view_ = {};
+        if (op.kind == LoopEmissionOperation::Kind::Literal) {
+            output.append(plan.text, op.begin, op.length);
+            continue;
+        }
+        if (op.kind == LoopEmissionOperation::Kind::Less) {
+            if (code_block_depth_ > 0 && html_comment_depth_ == 0) output += "&lt;";
+            else output.push_back('<');
+            continue;
+        }
+        // Resolve live logical locations every time. Only ordinary local
+        // values and unshadowed loop metadata take this direct path.
+        // Exceptional/host/receiver values retain the canonical expression
+        // oracle at this operation; no body replay or parser fallback.
+        const nift::RuntimeValue* current = nullptr;
+        bool local_found = false;
+        if (!op.members.empty()) for (auto scope = variable_scopes_.rbegin(); scope != variable_scopes_.rend(); ++scope) {
+            const auto found = scope->find(op.root);
+            if (found == scope->end()) continue;
+            local_found = true;
+            found->second.sync();
+            current = found->second.value.get();
+            break;
+        }
+        if (!local_found && receiver_stack_.empty() && op.root == "loop" && !host_.binding(op.root)) {
+            const auto found = json_bindings_.find(op.root);
+            if (found != json_bindings_.end()) current = found->second.get();
+        }
+        for (const auto& member : op.members) {
+            if (!current || !current->is_object()) { current = nullptr; break; }
+            current = current->find_member(member);
+        }
+        nift::RuntimeValue expression_value;
+        std::string expression_error;
+        // Bare bindings retain named-callable/literal precedence in the
+        // existing cheap bare-name path. Full named paths do likewise.
+        bool resolved = current != nullptr && !op.members.empty() &&
+            callables_.find(op.expression) == callables_.end() &&
+            (!active_module_env_ || active_module_env_->callables.find(op.expression) == active_module_env_->callables.end());
+        last_expression_mutation_ = false;
+        if (resolved) expression_value = *current;
+        else resolved = evaluate_expression(op.expression, expression_value, expression_error);
+        const std::string& key = op.key;
+        const auto i = op.begin;
+        if (!resolved) {
+            // Canonical lookup/error timing for exceptional dynamic values.
+            // Unknown legacy names require the ordinary parser's fallback
+            // resolution ladder, without parsing or replaying this body.
+            if (!strict_script_mode_ && (expression_error.empty() ||
+                expression_error.rfind("unknown value or malformed expression:", 0) == 0)) {
+                std::shared_ptr<const nift::RuntimeValue> pagination_value;
+                if (resolve_pagination_value(op.expression, pagination_value)) {
+                    if (pagination_value->is_timer()) { fail(source_path, source, i, "timer values cannot be rendered as text in $[" + key + "]"); break; }
+                    output += pagination_value->is_string() ? pagination_value->string : pagination_value->dump(0);
+                    continue;
+                }
+                if (built_in_metadata_name(key)) { output += metadata(key); continue; }
+                std::string rendered, error;
+                if (json_value(key, rendered, error)) {
+                    if (!error.empty()) { fail(source_path, source, i, error); break; }
+                    output += rendered;
+                    continue;
+                }
+                // Unknown $[...] is emitted literally by the canonical parser.
+                output.append(plan.text, op.begin, op.length);
+                continue;
+            }
+            if (expression_error.empty()) expression_error = "unknown value or malformed expression: " + op.expression;
+            fail(source_path, source, i, expression_error);
+            break;
+        }
+        // Keep the exact scalar renderability checks and canonical renderer.
+            if (expression_value.is_array()) {
+                // Script land: a bare call statement that returns a
+                // non-renderable collection is fire-and-forget.
+                const std::string ck=trim_copy(key);
+                if (standalone_script_host_ && !ck.empty() && ck.back()==')') { continue; }
+                fail(source_path, source, i, "cannot render JSON array $[" + key + "]; select an element first");
+                break;
+            }
+            if (expression_value.is_object()) {
+                const std::string ck=trim_copy(key);
+                if (standalone_script_host_ && !ck.empty() && ck.back()==')') { continue; }
+                fail(source_path, source, i, "cannot render JSON object $[" + key + "]; select a member first");
+                break;
+            }
+            if (expression_value.is_bytes()) {
+                fail(source_path, source, i, "bytes values cannot be rendered as text in $[" + key + "]; decode as UTF-8 first");
+                break;
+            }
+            if (expression_value.is_timer()) {
+                fail(source_path, source, i, "timer values cannot be rendered as text in $[" + key + "]");
+                break;
+            }
+            if (expression_value.is_error()) {
+                fail(source_path, source, i, "Error values cannot be rendered as text in $[" + key + "]");
+                break;
+            }
+            if (function_call_depth_ == 0 &&
+                expression_value.is_string() &&
+                (expression_value.string.rfind("\x1fnift:struct:", 0) == 0 ||
+                 expression_value.string.rfind("\x1fnift:callable:", 0) == 0 ||
+                 expression_value.string.rfind("\x1fnift:collection:", 0) == 0 ||
+                 expression_value.string.rfind("\x1fnift:file:", 0) == 0 ||
+                 expression_value.string.rfind("\x1fnift:stream:", 0) == 0)) {
+                fail(source_path, source, i, "cannot render a struct, callable or collection instance $[" + key + "]; select a member or a value-returning call first");
+                break;
+            }
+        output += render_expression_value(expression_value);
+    }
+    result_.output = output;
+    return result_;
+}
+
 RenderResult Parser::parse(const std::string& source, const fs::path& source_path, int depth) {
     const SourceProvenance provenance = active_module_env_ ? active_module_env_->source_provenance
         : (source_context_stack_.empty() ? SourceProvenance::FileBacked : source_context_stack_.back().provenance);
@@ -1372,6 +1580,8 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
                 source.substr(block_open + 1, block_close - block_open - 1));
             std::vector<std::unique_ptr<nift::ast::Stmt>> for_prepared_body;
             const bool for_prepared_ok=prepare_loop_body(body.text,for_prepared_body);
+            const auto emission_plan = !for_prepared_ok && collection->is_array()
+                ? prepare_loop_emission(body) : std::optional<LoopEmissionPlan>{};
             const std::string control_indent = insertion_indent(output);
             const int insertion_code_block_depth = code_block_depth_;
 
@@ -1556,7 +1766,8 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
                     variable_scopes_.back().emplace(binding_part, std::move(lb));
                     ++loop_depth_;
                     RenderResult nested;
-                    if(for_prepared_ok){
+                    if (emission_plan) nested = execute_loop_emission(*emission_plan, source_path, depth, source_provenance);
+                    else if(for_prepared_ok){
                         std::string pe;
                         auto execution=execute_mapped_body(for_prepared_body,body.view);if(execution.kind()==nift::detail::ExecOutcome::Kind::Fatal){nested.ok=false;nested.diagnostic=execution.diagnostic();nested.error.message=nift::detail::project_diagnostic(execution.diagnostic());}else if(execution.kind()==nift::detail::ExecOutcome::Kind::Recoverable){active_recoverable_=execution.error();nested.ok=false;nested.error.message=execution.error().error?execution.error().error->message:"recoverable failure";}
                     }else nested=parse(body.text, source_path, depth + 1, source_provenance, body.view);

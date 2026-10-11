@@ -1,0 +1,45 @@
+name: Template P0 native certification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        if: runner.os == 'Windows'
+        with:
+          msystem: UCRT64
+          update: true
+          install: make diffutils mingw-w64-ucrt-x86_64-gcc
+      - name: Exact Engine differential and copied-source parser counters
+        shell: pwsh
+        env:
+          MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          if ($IsWindows) {
+            $env:PATH = "$env:MSYS_ROOT\ucrt64\bin;$env:MSYS_ROOT\usr\bin;$env:PATH"
+            $env:CXX = 'g++'
+          }
+          python tests/template_p0/native.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: template-p0-${{ runner.os }}
+          path: |
+            .build/template-p0-native/summary.json
+            .build/template-p0-native/differential.json
+          include-hidden-files: true

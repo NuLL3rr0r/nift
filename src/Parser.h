@@ -22,6 +22,7 @@
 
 namespace json { class Document; }
 class PackageTransaction;
+namespace nift::detail { struct ControlBlockBody; }
 
 // Internal source of a template or page within a render. Either filesystem
 // backed (path is non-empty; content is read through the host) or in-memory
@@ -486,6 +487,11 @@ private:
     std::string pagination_items_text_;
     std::filesystem::path pagination_current_output_;
 
+    struct LoopEmissionOperation;
+    struct LoopEmissionPlan;
+    std::optional<LoopEmissionPlan> prepare_loop_emission(const nift::detail::ControlBlockBody& body) const;
+    RenderResult execute_loop_emission(const LoopEmissionPlan& plan,
+        const std::filesystem::path& source_path, int depth, SourceProvenance source_provenance);
     RenderResult parse(const std::string& source, const std::filesystem::path& source_path, int depth,
                        SourceProvenance source_provenance, nift::detail::SourceView view = {});
     RenderResult parse(const std::string& source, const std::filesystem::path& source_path, int depth);

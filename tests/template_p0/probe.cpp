@@ -1,0 +1,13 @@
+#include <nift/nift.h>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <atomic>
+#include <thread>
+#include <vector>
+std::string read(const std::filesystem::path&p){std::ifstream f(p,std::ios::binary);if(!f)throw std::runtime_error("missing "+p.string());return {std::istreambuf_iterator<char>(f),{}};}
+nift::Value record(const nift::RenderResult&r){auto x=nift::Value::make_object();x["ok"]=nift::Value(r.ok());x["output"]=nift::Value(r.output());x["stdout"]=nift::Value(r.stdout_output());x["stderr"]=nift::Value(r.stderr_output());x["message"]=nift::Value(r.error().message);x["source"]=nift::Value(r.error().source);x["line"]=nift::Value(int(r.error().line));x["column"]=nift::Value(int(r.error().column));auto ds=nift::Value::make_array(),rs=nift::Value::make_array();for(auto&s:r.dependencies())ds.push_back(nift::Value(s));for(auto&s:r.requirements())rs.push_back(nift::Value(s));x["dependencies"]=ds;x["requirements"]=rs;return x;}
+int main(int argc,char**argv){try{auto root=std::filesystem::path(argv[1]);auto source=read(root/"template");nift::Engine engine;engine.set_root(root);std::atomic<int> loads{0},envs{0},calls{0};engine.set_loader(std::function<std::optional<std::string>(std::string_view)>([&](std::string_view path)->std::optional<std::string>{++loads;auto f=root/std::filesystem::path(path).filename();if(!std::filesystem::exists(f))return std::nullopt;return read(f);}));engine.set_environment_provider(std::function<std::optional<std::string>(std::string_view)>([&](std::string_view)->std::optional<std::string>{++envs;return "ENV";}));engine.register_function("tick",[&](const std::vector<nift::Value>&){return nift::Value(++calls);});nift::Context contexts[2];for(int i=0;i<2;i++){auto file=root/("data"+std::to_string(i)+".json");if(!std::filesystem::exists(file))file=root/"data0.json";if(!contexts[i].set_json("d",read(file)))throw std::runtime_error("bad JSON");nift::Value bytes=nift::Value::make_array();bytes.push_back(nift::Value(nift::Value::Bytes{0,65,255}));contexts[i].set("byteitems",bytes);}
+for(int i=0;i<4;i++){auto result=engine.render(nift::Source::text(source,"fixture.n"),contexts[i%2]);auto x=record(result);x["loads"]=nift::Value(loads.load());x["envs"]=nift::Value(envs.load());x["calls"]=nift::Value(calls.load());std::cout<<x.json()<<"\n@@@\n";}
+if(argc>2){std::vector<std::string> actual(8);std::vector<std::thread> ts;for(int i=0;i<8;i++)ts.emplace_back([&,i]{nift::Context ctx;ctx.set_json("d",read(root/"data0.json"));actual[i]=record(engine.render(nift::Source::text(source,"fixture.n"),ctx)).json();});for(auto&t:ts)t.join();for(auto&s:actual)std::cout<<s<<"\n@@@\n";}
+return 0;}catch(const std::exception&e){std::cerr<<e.what()<<"\n";return 1;}}
