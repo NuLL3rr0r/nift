@@ -48,6 +48,9 @@ jobs:
   msvc:
     runs-on: windows-latest
     steps:
+      - name: Preserve exact source bytes for MSVC
+        shell: pwsh
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
