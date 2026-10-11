@@ -1,0 +1,86 @@
+name: Compact Number sorting native certification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        if: runner.os == 'Windows'
+        with:
+          msystem: UCRT64
+          update: true
+          install: make diffutils mingw-w64-ucrt-x86_64-gcc
+      - name: Build native CLI
+        if: runner.os != 'Windows'
+        run: make -j2 nift
+      - name: Build Windows CLI
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: make -j2 nift.exe
+      - name: Exact compact comparator and callback contracts
+        shell: pwsh
+        env:
+          MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          if ($IsWindows) {
+            $env:PATH = "$env:MSYS_ROOT\ucrt64\bin;$env:MSYS_ROOT\usr\bin;$env:PATH"
+            $binary = './nift.exe'
+          } else { $binary = './nift' }
+          python tests/sort_number_compact.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/sort_number_compact_oracle.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/v410_sort_factory_parity.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/v410_callback_overlay_parity.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/lambda_metadata_contracts.py --nift $binary
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & $binary tests/sort_number_compact_volume.f
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+  msvc-oracle:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Extract actual production comparator for MSVC STL
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .build/number-sort | Out-Null
+          python -c "from pathlib import Path; import shutil; s=Path('tests/sort_number_compact_oracle.py').read_text(); ns={'__file__':str(Path('tests/sort_number_compact_oracle.py').resolve())}; exec(s.split('commands=')[0],ns); shutil.copy2(ns['p']/'special-oracle.cpp','.build/number-sort/msvc-oracle.cpp'); shutil.rmtree(ns['p'])"
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          cl /nologo /std:c++17 /EHsc /O2 /I src /I include .build/number-sort/msvc-oracle.cpp src/RuntimeValue.cpp /Fe:.build/number-sort/msvc-oracle.exe
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./.build/number-sort/msvc-oracle.exe
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+  sanitizer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: ASan UBSan LeakSanitizer exact contracts and 100k selectors
+        run: |
+          make -j2 .build/nift-sanitize
+          export ASAN_OPTIONS=detect_leaks=1:halt_on_error=1
+          export UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1
+          python3 tests/sort_number_compact.py --nift .build/nift-sanitize
+          python3 tests/v410_sort_factory_parity.py --nift .build/nift-sanitize
+          python3 tests/v410_callback_overlay_parity.py --nift .build/nift-sanitize
+          .build/nift-sanitize tests/sort_number_compact_volume.f

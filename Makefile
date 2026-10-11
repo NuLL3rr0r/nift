@@ -2015,3 +2015,9 @@ test: test-dependency-path-identity
 test-dependency-path-identity: $(TARGET)
 	@mkdir -p $(TEST_DIR)
 	$(PYTHON) tests/dependency_path_identity.py --nift ./$(TARGET) --output $(TEST_DIR)/dependency-path-identity.json
+
+.PHONY: test-sort-number-compact
+test: test-sort-number-compact
+test-sort-number-compact: $(TARGET)
+	python3 tests/sort_number_compact.py --nift ./$(TARGET)
+	python3 tests/sort_number_compact_oracle.py

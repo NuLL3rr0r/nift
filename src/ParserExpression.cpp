@@ -3166,8 +3166,52 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                             if(args.size()==1) specs.push_back({args[0],false}); else {
                                 for(size_t si=0;si<args.size();si+=2){if(si+1>=args.size()||si+1>=aq.size()||!aq[si+1]){error="sort_by: direction must be quoted 'asc' or 'desc'";return false;}std::string d=args[si+1];if(d!="asc"&&d!="desc"){error="sort_by: direction must be 'asc' or 'desc'";return false;}specs.push_back({args[si],d=="desc"});}
                             }
-                            struct Decorated { std::vector<nift::RuntimeValue> keys; nift::RuntimeValue value; }; std::vector<Decorated> decorated; decorated.reserve(a.size());
-                            for(auto& v:base.array){Decorated d;d.keys.reserve(specs.size());for(const auto& sp:specs){nift::RuntimeValue k;if(!invoke_value_callback(sp.selector,callback_value_arguments(v),k))return false;if(!(k.is_string()||k.is_number()||k.is_bool())){error="sort_by: key must be scalar";return false;}d.keys.push_back(std::move(k));}d.value=std::move(v);decorated.push_back(std::move(d));}
+                            struct Decorated { std::vector<nift::RuntimeValue> keys; nift::RuntimeValue value; };
+                            struct NumberSortKey { double value; size_t original_index; };
+                            std::vector<Decorated> decorated;
+                            std::vector<NumberSortKey> number_keys;
+                            bool compact_numbers = specs.size() == 1;
+                            if(compact_numbers) number_keys.reserve(a.size());
+                            else decorated.reserve(a.size());
+                            for(size_t vi=0;vi<base.array.size();++vi){
+                                auto& v=base.array[vi];
+                                Decorated d;
+                                if(!compact_numbers) d.keys.reserve(specs.size());
+                                for(const auto& sp:specs){
+                                    nift::RuntimeValue k;
+                                    if(!invoke_value_callback(sp.selector,callback_value_arguments(v),k))return false;
+                                    if(!(k.is_string()||k.is_number()||k.is_bool())){error="sort_by: key must be scalar";return false;}
+                                    if(compact_numbers){
+                                        if(k.type==nift::RuntimeType::Number){number_keys.push_back({k.num,vi});continue;}
+                                        // Recover previous keys without replaying selectors. Exact
+                                        // StrNumber spellings stay on the generic comparison path.
+                                        decorated.reserve(a.size());
+                                        for(const auto& prior:number_keys){
+                                            Decorated previous;
+                                            previous.keys.push_back(nift::RuntimeValue(prior.value));
+                                            previous.value=std::move(base.array[prior.original_index]);
+                                            decorated.push_back(std::move(previous));
+                                        }
+                                        number_keys.clear();compact_numbers=false;
+                                        d.keys.reserve(specs.size());
+                                    }
+                                    d.keys.push_back(std::move(k));
+                                }
+                                if(!compact_numbers){d.value=std::move(v);decorated.push_back(std::move(d));}
+                            }
+                            if(compact_numbers){
+                                const bool desc=specs.front().desc;
+                                std::stable_sort(number_keys.begin(),number_keys.end(),[desc](const NumberSortKey& x,const NumberSortKey& y){
+                                    // runtime_compare_numbers orders NaNs last, with all NaNs and
+                                    // signed zeroes equal; stable_sort preserves their input order.
+                                    const bool xn=std::isnan(x.value),yn=std::isnan(y.value);
+                                    const int c=xn||yn?(xn==yn?0:xn?1:-1):x.value<y.value?-1:x.value>y.value?1:0;
+                                    return desc?c>0:c<0;
+                                });
+                                out=nift::RuntimeValue::make_array();out.array.reserve(number_keys.size());
+                                for(const auto& key:number_keys)out.array.push_back(std::move(base.array[key.original_index]));
+                                return true;
+                            }
                             auto cmp_key=[&](const nift::RuntimeValue& x,const nift::RuntimeValue& y,int& c)->bool{if(x.is_number()&&y.is_number())c=nift::runtime_compare_numbers(x,y);else if(x.is_string()&&y.is_string())c=x.string<y.string?-1:x.string>y.string?1:0;else if(x.is_bool()&&y.is_bool())c=x.boolean<y.boolean?-1:x.boolean>y.boolean?1:0;else{error="sort_by: keys must be comparable and homogeneous";return false;}return true;};
                             bool compare_error=false;std::stable_sort(decorated.begin(),decorated.end(),[&](const Decorated& x,const Decorated& y){for(size_t si=0;si<specs.size();++si){int c=0;if(!cmp_key(x.keys[si],y.keys[si],c)){compare_error=true;return false;}if(c)return specs[si].desc?c>0:c<0;}return false;});if(compare_error)return false;out=nift::RuntimeValue::make_array();out.array.reserve(decorated.size());for(auto& d:decorated)out.array.push_back(std::move(d.value));return true;
                         }
