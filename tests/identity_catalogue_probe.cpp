@@ -24,10 +24,11 @@ static int run_probe(int argc,char** argv) {
         for(size_t i=0;i<catalogue.records.size();++i){if(i)std::cout<<',';std::cout<<'"'<<hex(catalogue.key(static_cast<uint32_t>(i)))<<'"';}
         std::cout<<"]}\n";return 0;
     }
-    if(command=="native") {
+    if(command=="native"||command=="native-denied") {
         for(int i=3;i<argc;++i) {
             const fs::path path=(root/fs::u8path(argv[i])).lexically_normal();
             const auto ordinary=legacy_dependency_status(path);
+            if(command=="native-denied")assert(!ordinary.exists&&ordinary.error);
             const auto id=loaded?catalogue.find(argv[i]):niftid::invalid;
             const auto* prepared=id==niftid::invalid?path.c_str():catalogue.path(id);
             const auto native=filesystem::dependency_status_native(prepared);

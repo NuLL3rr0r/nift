@@ -145,7 +145,7 @@ with tempfile.TemporaryDirectory(prefix='nift-identity-publication-') as tempora
  blocked=root/'data';old_mode=blocked.stat().st_mode
  import contextlib
  if os.name=='nt':
-  from identity_windows_acl import denied_read
+  from identity_windows_acl import denied_read, assert_denied
   access=denied_read(blocked)
  else:
   @contextlib.contextmanager
@@ -154,9 +154,11 @@ with tempfile.TemporaryDirectory(prefix='nift-identity-publication-') as tempora
    finally:os.chmod(blocked,old_mode)
   access=denied_posix()
  with access:
-  try:os.lstat(blocked/'plain.txt');raise AssertionError('inaccessible parent did not deny observation')
-  except PermissionError:pass
-  r=run(probe,root,'native',str(root),'data/plain.txt');assert r.returncode==0,(r.stdout,r.stderr)
+  if os.name=='nt':assert_denied(blocked)
+  else:
+   try:os.lstat(blocked/'plain.txt');raise AssertionError('inaccessible parent did not deny observation')
+   except PermissionError:pass
+  r=run(probe,root,'native-denied',str(root),'data/plain.txt');assert r.returncode==0,(r.stdout,r.stderr)
   equal_status(root,'actual inaccessible parent parity')
  # A fresh parent containment observation must still reject an ancestor
  # changed into a directory symlink escaping the project.
