@@ -15,7 +15,7 @@ def api():
  return kernel,security
 
 @contextlib.contextmanager
-def denied_read(directory):
+def denied_acl(directory, inheritance):
  kernel,security=api();invalid=ctypes.c_void_p(-1).value
  # Keep WRITE_DAC and READ_CONTROL capability before changing access. Restoring
  # by pathname after denial can itself be denied by the fixture.
@@ -27,7 +27,7 @@ def denied_read(directory):
   control=wintypes.WORD();revision=wintypes.DWORD()
   assert security.GetSecurityDescriptorControl(descriptor,ctypes.byref(control),ctypes.byref(revision))
   saved=True
-  denied=subprocess.run(['icacls',str(directory),'/deny',os.environ['USERNAME']+':(OI)(CI)(RD,REA,RA,X)','/L'],capture_output=True,text=True)
+  denied=subprocess.run(['icacls',str(directory),'/deny',os.environ['USERNAME']+':'+inheritance+'(RD,REA,RA,X)','/L'],capture_output=True,text=True)
   assert denied.returncode==0,denied.stdout+denied.stderr
   yield
  finally:
@@ -38,6 +38,15 @@ def denied_read(directory):
   finally:
    if descriptor.value:kernel.LocalFree(descriptor)
    kernel.CloseHandle(handle)
+
+@contextlib.contextmanager
+def denied_read(directory):
+ # An inherited deny may follow an explicit child grant in the access check.
+ # Deny the actual observed leaf explicitly, then deny directory enumeration.
+ # Restore the parent before the leaf, using both preopened original DACLs.
+ with denied_acl(directory/'plain.txt',''):
+  with denied_acl(directory,'(OI)(CI)'):
+   yield
 
 def assert_denied(directory):
  try:
