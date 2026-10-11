@@ -78,6 +78,19 @@ assert simple['baseline'][0]==120,simple
 for row in rows:
  if row['fixture'].startswith('fallback-') and row['fixture']!='fallback-nested':
   assert row['counters']['candidate'][1:]==[0,0,0],row['fixture']
-summary={'baseline':BASE,'source_sha256':identities,'fixtures':274,'results':1128,'simple_counters':simple,'eligibility':{x['fixture']:x['counters']['candidate'][1] for x in rows}}
+volume=work/'exact-10000';volume.mkdir(exist_ok=True)
+with zipfile.ZipFile(ROOT/'tests/template_p0/exact-10000.zip') as z:z.extractall(volume)
+exact={}
+for label,binary in binaries.items():
+ result=run([str(binary),str(volume)],timeout=60)
+ exact[label]=[json.loads(x) for x in result.stdout.split('\n@@@\n') if x.strip()]
+ lines=[x for x in result.stderr.splitlines() if x.startswith('P0COUNTERS ')]
+ assert len(lines)==1
+ exact[label+'_counters']=list(map(int,lines[0].split()[1:]))
+assert exact['baseline']==exact['candidate']
+assert exact['baseline_counters'][0]==40004,exact['baseline_counters']
+assert exact['candidate_counters']==[4,4,40000,80000],exact['candidate_counters']
+(work/'exact-10000.json').write_text(json.dumps(exact,indent=2)+'\n')
+summary={'baseline':BASE,'source_sha256':identities,'fixtures':274,'results':1128,'simple_counters':simple,'exact_10000_counters':{k:v for k,v in exact.items() if k.endswith('_counters')},'eligibility':{x['fixture']:x['counters']['candidate'][1] for x in rows}}
 (work/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
 print('PASS P0: 274 fixtures, 1128 results; preparation, live lookup, whole-body fallback and parser reduction')

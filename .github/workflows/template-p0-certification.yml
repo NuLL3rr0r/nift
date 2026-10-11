@@ -46,4 +46,5 @@ jobs:
           path: |
             .build/template-p0-native/summary.json
             .build/template-p0-native/differential.json
+            .build/template-p0-native/exact-10000.json
           include-hidden-files: true
