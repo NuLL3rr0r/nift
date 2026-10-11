@@ -3,6 +3,19 @@ import argparse, hashlib, json, math, os, re, shutil, subprocess, tempfile
 from pathlib import Path
 
 
+def remove_generated_tree(root):
+    # Retry only Windows readonly cleanup, not ACL/access-control failures.
+    def retry_readonly(function, path, error):
+        if os.name != 'nt' or not isinstance(error[1], PermissionError):
+            raise error[1]
+        attributes = os.stat(path, follow_symlinks=False).st_file_attributes
+        if not attributes & 1:  # FILE_ATTRIBUTE_READONLY
+            raise error[1]
+        os.chmod(path, 0o700)
+        function(path)
+    shutil.rmtree(root, onerror=retry_readonly)
+
+
 def run(nift, cwd, *args, expect=0):
     proc = subprocess.run([nift, *args], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     if proc.returncode != expect:
@@ -99,11 +112,11 @@ def tree_hash(root: Path):
 def reset_generated(project: Path):
     public = project / 'public'
     if public.exists():
-        shutil.rmtree(public)
+        remove_generated_tree(public)
     public.mkdir()
     meta = project / '.nift' / 'public'
     if meta.exists():
-        shutil.rmtree(meta)
+        remove_generated_tree(meta)
 
 
 def write_project(project: Path, mode: str):

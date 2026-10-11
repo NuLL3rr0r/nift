@@ -65,4 +65,11 @@ if __name__=='__main__':
   with denied_read(directory):assert_denied(directory)
   assert leaf.read_text()=='plain'
   with os.scandir(directory) as entries:assert len(list(entries))==1
- print('Windows native following denial and saved-DACL restoration PASS')
+ from incremental_state_transitions_adversarial import remove_generated_tree as transitions_cleanup
+ from pagination_incremental_equivalence import remove_generated_tree as pagination_cleanup
+ with tempfile.TemporaryDirectory(prefix='nift-identity-readonly-preflight-') as temporary:
+  for index,cleanup in enumerate([transitions_cleanup,pagination_cleanup]):
+   tree=pathlib.Path(temporary)/str(index);metadata=tree/'.nift/public/a.info.json';metadata.parent.mkdir(parents=True);metadata.write_text('{}');os.chmod(metadata,0o444)
+   assert metadata.stat().st_file_attributes&1
+   cleanup(tree);assert not tree.exists()
+ print('Windows native denial, saved-DACL restoration and readonly cleanup PASS')

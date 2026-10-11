@@ -11,8 +11,21 @@ A build that drops a page, leaves a stale output, or fails to propagate a
 template change is caught here even when the remaining outputs are
 self-consistent.
 """
-import argparse, hashlib, json, shutil, subprocess, tempfile
+import argparse, hashlib, json, os, shutil, subprocess, tempfile
 from pathlib import Path
+
+
+def remove_generated_tree(root):
+    # Retry only Windows readonly cleanup, not ACL/access-control failures.
+    def retry_readonly(function, path, error):
+        if os.name != 'nt' or not isinstance(error[1], PermissionError):
+            raise error[1]
+        attributes = os.stat(path, follow_symlinks=False).st_file_attributes
+        if not attributes & 1:  # FILE_ATTRIBUTE_READONLY
+            raise error[1]
+        os.chmod(path, 0o700)
+        function(path)
+    shutil.rmtree(root, onerror=retry_readonly)
 
 
 def run(nift, cwd, *args, expect=0):
@@ -79,9 +92,9 @@ def transition(nift: str, proj: Path, mode: str, expected: set[str], label: str)
     # transition cannot hide behind a later one.
     fresh = proj.parent / f'{proj.name}-oracle'
     if fresh.exists():
-        shutil.rmtree(fresh)
+        remove_generated_tree(fresh)
     shutil.copytree(proj, fresh)
-    shutil.rmtree(fresh / 'public')
+    remove_generated_tree(fresh / 'public')
     (fresh / 'public').mkdir()
     run(nift, fresh, 'build', '--all')
     if public_hash(fresh) != public_hash(proj):
@@ -144,7 +157,7 @@ def main() -> int:
             # incremental output must equal a clean rebuild of the same project
             fresh = base / f'{mode}-fresh'
             shutil.copytree(proj, fresh)
-            shutil.rmtree(fresh / 'public')
+            remove_generated_tree(fresh / 'public')
             (fresh / 'public').mkdir()
             run(nift, fresh, 'build', '--all')
             if public_set(fresh) != public_set(proj) or public_hash(fresh) != public_hash(proj):
