@@ -25,6 +25,7 @@ static int run_probe(int argc,char** argv) {
         std::cout<<"]}\n";return 0;
     }
     if(command=="native"||command=="native-denied") {
+        unsigned uncertain=0;
         for(int i=3;i<argc;++i) {
             const fs::path path=(root/fs::u8path(argv[i])).lexically_normal();
             const auto ordinary=legacy_dependency_status(path);
@@ -38,11 +39,18 @@ static int run_probe(int argc,char** argv) {
             const auto leaf=filesystem::dependency_leaf_native(prepared);
             if(leaf==filesystem::NativeLeafState::Plain)assert(!error&&!fs::is_symlink(status));
             if(leaf==filesystem::NativeLeafState::Missing)assert(error==std::errc::no_such_file_or_directory||status.type()==fs::file_type::not_found);
+#ifndef _WIN32
             if(leaf==filesystem::NativeLeafState::Error)assert(error&&error!=std::errc::no_such_file_or_directory);
+#else
+            // GetFileAttributesW may deny access while symlink_status can still
+            // observe a leaf. Error/Reparse are uncertainty states: production
+            // invokes the exact original safety helper, checked by CLI parity.
+            if(leaf==filesystem::NativeLeafState::Error||leaf==filesystem::NativeLeafState::Reparse)++uncertain;
+#endif
             if(leaf==filesystem::NativeLeafState::Symlink)assert(!error&&fs::is_symlink(status));
             // Reparse invokes the original safety helper at the actual call site.
         }
-        std::cout<<"{\"native_observations\":true}\n";return 0;
+        std::cout<<"{\"native_observations\":true,\"uncertain_native_leaf_observations\":"<<uncertain<<"}\n";return 0;
     }
     return 64;
 }

@@ -160,6 +160,9 @@ with tempfile.TemporaryDirectory(prefix='nift-identity-publication-') as tempora
    except PermissionError:pass
   r=run(probe,root,'native-denied',str(root),'data/plain.txt');assert r.returncode==0,(r.stdout,r.stderr)
   equal_status(root,'actual inaccessible parent parity')
+  observation=json.loads(r.stdout);assert observation['native_observations']
+  rows[-1]['uncertain_native_leaf_observations']=observation['uncertain_native_leaf_observations']
+  if os.name=='nt':assert observation['uncertain_native_leaf_observations']==1
  # A fresh parent containment observation must still reject an ancestor
  # changed into a directory symlink escaping the project.
  real=root/'real-data';blocked.rename(real);outside=base/'outside-directory';outside.mkdir();(outside/'plain.txt').write_text('outside')
