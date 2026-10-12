@@ -1586,9 +1586,19 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
             if(read_guard.had_loop)read_guard.old_loop=json_bindings_.at("loop");
             const auto count=col->array.size();
             for(std::size_t k=0;k<count;++k){if(pending_control_.kind!=ControlFlow::None)break;
-            json_bindings_[st.name]=std::make_shared<const nift::RuntimeValue>(col->array[k]);
+            // P3C-F1 shrink-safety: materialize the element only while the live
+            // backing collection still contains index k (in-body pop/clear/splice
+            // can shrink the iterated array below the snapshot count). The
+            // selector binding keeps its live logical location (root + at(k)), so
+            // a later USE of a vanished element reproduces the canonical
+            // "reference target no longer exists" diagnostic; never read beyond
+            // the live vector extent (heap use-after-free).
+            const bool element_alive = k < col->array.size();
+            nift::RuntimeValue element_value;
+            if(element_alive) element_value = col->array[k];
+            json_bindings_[st.name]=std::make_shared<const nift::RuntimeValue>(element_alive?element_value:nift::RuntimeValue(nullptr));
             json_bindings_["loop"]=make_loop_metadata(k,count);
-            push_json_scope();VariableBinding lb{std::make_shared<nift::RuntimeValue>(col->array[k]),nift_binding_type(col->array[k]),true,false};
+            push_json_scope();VariableBinding lb{element_alive?std::make_shared<nift::RuntimeValue>(element_value):std::shared_ptr<nift::RuntimeValue>(),nift_binding_type(element_value),true,false};
             // Loop elements are location references rooted at the iterated
             // aggregate binding, so in-body mutation of the parent (push/pop/
             // replace) cannot dangle the element (no interior pointer retained).
@@ -1888,13 +1898,19 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
 
                 for (std::size_t position = 0; position < order.size() && result_.ok; ++position) {
                     const std::size_t index = order[position];
-                    const nift::RuntimeValue* element = &collection->array[index];
-                    json_bindings_[binding_part] = std::make_shared<const nift::RuntimeValue>(*element);
+                    // P3C-F1 shrink-safety: in-body pop/clear/splice can shrink the
+                    // live iterated array below the snapshot order. Never read
+                    // collection->array[index] (heap use-after-free); bind a
+                    // vanished element as an absent selector whose location ref
+                    // still yields the canonical "reference target no longer
+                    // exists" diagnostic on use.
+                    const nift::RuntimeValue* element = index < collection->array.size() ? &collection->array[index] : nullptr;
+                    json_bindings_[binding_part] = std::make_shared<const nift::RuntimeValue>(element?*element:nift::RuntimeValue(nullptr));
                     json_bindings_["loop"] = make_loop_metadata(position, order.size());
 
                     push_json_scope();
-                    VariableBinding lb{std::make_shared<nift::RuntimeValue>(*element),
-                        nift_binding_type(*element), true, false};
+                    VariableBinding lb{element?std::make_shared<nift::RuntimeValue>(*element):std::shared_ptr<nift::RuntimeValue>(),
+                        element?nift_binding_type(*element):0, true, false};
                     // @for element is a location reference rooted at the iterated
                     // aggregate binding so in-body parent mutation cannot dangle it.
                     if(valid_binding_identifier(collection_expression)){VariableBinding* srcb=nullptr;for(auto sc=variable_scopes_.rbegin();sc!=variable_scopes_.rend();++sc){auto it=sc->find(collection_expression);if(it!=sc->end()){srcb=&it->second;break;}}if(srcb){srcb->sync();if(srcb->value&&(srcb->value->is_array()||srcb->value->is_object())){lb.ref_root_slot=srcb->slot;std::vector<PathComponent> pc;pc.push_back(PathComponent::at(index));lb.ref_path=std::move(pc);}}}
