@@ -37,6 +37,10 @@ struct Context {
     // Narrow ordinary named-call hook. Empty means declined before effects.
     std::function<std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>>(const Expr&)> source_call;
     std::function<void(SourceSpan)> failure_origin;
+    // Project a failed location path without evaluating any operand again.
+    std::function<void(const Expr&, const Expr&, std::string&)> location_failure;
+    // Component operands carry their own failure; parent paths cannot claim it.
+    unsigned location_operand_depth=0;
     std::function<bool(const nift::RuntimeValue&, const std::string&, std::size_t, std::string&)> method_arity_check;
     std::function<bool(const std::string&, SourceSpan, nift::RuntimeValue&, std::string&)> legacy_with_span;
     std::function<bool(const std::string&, nift::RuntimeValue&, std::string&)> resolve;
@@ -65,7 +69,7 @@ struct Context {
     std::function<std::string(const nift::RuntimeValue&)> render;
 };
 enum class StmtKind { Block, Declaration, Assignment, CompoundAssignment, Increment, Expression, If, While, For, Break, Continue, Return, Function, Struct, Enum, Import, Export, Script, Legacy };
-struct Stmt { StmtKind kind=StmtKind::Legacy; SourceSpan span{}; std::string text, name, op; int decl_type=0; std::unique_ptr<Expr> expr, target, condition, iterable; std::vector<std::string> params, bindings; std::string variadic_param; std::vector<std::unique_ptr<Stmt>> body; std::vector<std::unique_ptr<Expr>> call_args; };
+struct Stmt { StmtKind kind=StmtKind::Legacy; SourceSpan span{}; std::string text, name, op; int decl_type=0; bool source_location_diagnostics=false; std::unique_ptr<Expr> expr, target, condition, iterable; std::vector<std::string> params, bindings; std::string variadic_param; std::vector<std::unique_ptr<Stmt>> body, else_body; std::vector<std::unique_ptr<Expr>> call_args; };
 struct StatementParseResult { std::unique_ptr<Stmt> stmt; std::string error; bool supported=false; };
 struct ParseResult { std::unique_ptr<Expr> expr; std::string error; bool supported=false; };
 enum class TemplateKind { Literal, Expression, Script, If, For, Fragment, Function, LegacyDirective };

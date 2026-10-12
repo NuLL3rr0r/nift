@@ -171,6 +171,9 @@ private:
         bool mutable_binding = true;
         bool deep_readonly = false;
         bool is_script_invocation = false;
+        // Loop selectors retain an initial cached value as well as a logical
+        // location. Indexed writes use the cache in canonical source order.
+        bool is_iteration_selector = false;
         std::shared_ptr<std::shared_ptr<nift::RuntimeValue>> slot;
         // A nested aggregate binding is a logical location reference.  It owns
         // the root binding slot plus a parsed key/index path; it never owns a
