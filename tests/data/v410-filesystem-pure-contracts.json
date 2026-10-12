@@ -296,13 +296,13 @@
   {
     "source": "n:=0; fn(p()) { n+=1; print(n); return \"a/b\" }; j:=0; while(j<1) { print(p().split(\"/\").last()); j+=1 }; print(n)",
     "exit": 0,
-    "stdout": "1\n2\n3\nb\n3\n",
+    "stdout": "1\nb\n1\n",
     "stderr": ""
   },
   {
     "source": "p:=\"a/b\"; n:=0; fn(d()) { n+=1; print(n); return \"/\" }; j:=0; while(j<1) { print(p.split(d()).last()); j+=1 }; print(n)",
     "exit": 0,
-    "stdout": "1\n2\n3\nb\n3\n",
+    "stdout": "1\nb\n1\n",
     "stderr": ""
   },
   {

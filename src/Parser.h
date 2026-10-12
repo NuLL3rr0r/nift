@@ -18,6 +18,7 @@
 #include <functional>
 #include "Proc.h"
 #include "Ast.h"
+#include "EvaluatedOperand.h"
 #include "LambdaSyntaxMetadata.h"
 
 namespace json { class Document; }
@@ -158,6 +159,12 @@ private:
         static PathComponent member(std::string k) { PathComponent p; p.kind=Kind::Key; p.key=std::move(k); return p; }
         bool operator==(const PathComponent& o) const { return kind==o.kind && (kind==Kind::Index ? index==o.index : key==o.key); }
     };
+    using EvaluatedOperand = nift::detail::EvaluatedOperand<PathComponent>;
+    struct OrdinaryArgumentFrame {
+        std::vector<EvaluatedOperand> operands;
+        std::vector<nift::detail::SourceText> sources;
+        std::string callable;
+    };
     struct VariableBinding {
         std::shared_ptr<nift::RuntimeValue> value;
         int type = 0;
@@ -260,6 +267,28 @@ private:
     // Prepared AST bodies for user callables, cached on first prepared call.
     struct PreparedCallable { std::shared_ptr<const std::filesystem::path> source_path; nift::detail::SourceView view; bool ready=false; std::vector<std::unique_ptr<nift::ast::Stmt>> stmts; };
     std::unordered_map<const Callable*, PreparedCallable> prepared_callables_;
+    enum class CompletionPhase { Untouched, Evaluating, Evaluated, Completed, Failed };
+    struct CompletionSite {
+        nift::detail::SourceText source;
+        nift::ast::SourceSpan operation_span{}, receiver_span{};
+        std::vector<nift::ast::SourceSpan> argument_spans;
+        std::shared_ptr<ModuleEnv> lexical_module;
+        std::optional<nift::detail::Diagnostic> diagnostic;
+        std::optional<nift::RuntimeValue> recoverable;
+    };
+    struct CompletionFrame {
+        std::string operation;
+        CompletionSite site;
+        std::optional<EvaluatedOperand> receiver;
+        std::vector<EvaluatedOperand> operands;
+        CompletionPhase phase=CompletionPhase::Untouched;
+        bool pretty=false, highlight=false;
+    };
+    bool evaluate_expression_string_literal(const nift::detail::SourceText&, nift::RuntimeValue&, std::string&);
+    bool complete_output_family(CompletionFrame&, nift::RuntimeValue&, std::string&);
+    bool complete_presentation(CompletionFrame&, nift::RuntimeValue&, std::string&);
+    std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>> evaluate_completion_boundary(
+        const nift::ast::Expr&, nift::detail::SourceView, nift::ast::Context&);
     std::shared_ptr<ModuleEnv> active_module_env_;
     std::shared_ptr<ModuleEnv> loading_module_env_;
     std::unordered_map<std::uint64_t, std::shared_ptr<ModuleEnv>> module_envs_;
@@ -360,8 +389,19 @@ private:
         const std::function<bool(std::size_t,nift::RuntimeValue&)>& operand,
         nift::RuntimeValue& out, std::string& error);
     std::shared_ptr<const PreparedFilesystemOperation> prepare_filesystem_operation(const std::string& source) const;
-    bool evaluate_filesystem_expression(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe);
-    bool evaluate_expression_impl(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe=nullptr);
+    bool evaluate_filesystem_expression(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe, int inherited_depth=0);
+    static bool aliasable_call_leaf(const nift::RuntimeValue&);
+    bool canonical_native_call(const std::string& name);
+    enum class MethodCompletion { Unsupported, Completed, Failed };
+    static MethodCompletion complete_readonly_method(const nift::RuntimeValue& receiver, const std::string& method,
+        const std::vector<nift::RuntimeValue>& args, nift::RuntimeValue& out, std::string& error);
+    static bool readonly_method_arity_ok(const nift::RuntimeValue& receiver, const std::string& method, std::size_t argc, std::string& error);
+    static bool readonly_method_supported(const nift::RuntimeValue& receiver, const std::string& method);
+    bool form_call_arguments(const nift::detail::SourceText&, const std::string&, std::size_t, bool, OrdinaryArgumentFrame&, std::string&, int child_depth=0);
+    bool evaluate_call_operand(const nift::detail::SourceText&, EvaluatedOperand&, std::string&, int depth_budget=0);
+    std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>> evaluate_source_call(const nift::ast::Expr&, nift::detail::SourceView,
+        const std::function<nift::detail::EvalOutcome<nift::RuntimeValue>(const std::string&,std::vector<nift::RuntimeValue>&&)>&, int depth_budget=0);
+    bool evaluate_expression_impl(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe=nullptr, OrdinaryArgumentFrame* ordinary_arguments=nullptr, int inherited_depth=0);
     struct FfiLibraryInstance {
         void* handle = nullptr;
         bool closed = false;
@@ -508,10 +548,10 @@ private:
                                std::string& error);
     bool resolve_json_value(const std::string& expression,
                             std::shared_ptr<const nift::RuntimeValue>& value,
-                            std::string& error);
-    bool evaluate_expression(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view = {});
-    bool evaluate_expression(const nift::detail::SourceText& expression, nift::RuntimeValue& value, std::string& error) {
-        return evaluate_expression(static_cast<const std::string&>(expression), value, error, expression.view);
+                            std::string& error, EvaluatedOperand* completed=nullptr, nift::detail::SourceView source={});
+    bool evaluate_expression(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view = {}, int depth_budget = 0);
+    bool evaluate_expression(const nift::detail::SourceText& expression, nift::RuntimeValue& value, std::string& error, int depth_budget = 0) {
+        return evaluate_expression(static_cast<const std::string&>(expression), value, error, expression.view, depth_budget);
     }
     bool resolve_owned_resource_path(const std::string& name,
                                      const std::vector<nift::RuntimeValue>& args,

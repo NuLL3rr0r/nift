@@ -17,7 +17,11 @@ enum class NumericBinaryOp : unsigned {
     Equal='=' | ('=' << 8), NotEqual='!' | ('=' << 8),
     Less='<', LessEqual='<' | ('=' << 8), Greater='>', GreaterEqual='>' | ('=' << 8)
 };
+enum class LiteralRole { ObjectKeyOrSynthetic, ExpressionString, QuotedData, OutputQuoted };
 struct Expr {
+    LiteralRole literal_role=LiteralRole::ObjectKeyOrSynthetic;
+    SourceSpan literal_token_span{};
+    std::string literal_token;
     Kind kind=Kind::Legacy; NumericBinaryOp numeric_op=NumericBinaryOp::Unknown; SourceSpan span{}; std::string text, op, name; std::vector<std::string> params;
     // Manual/changed spellings retain canonical textual dispatch.
     void prepare_numeric_operator();
@@ -26,7 +30,14 @@ struct Expr {
     std::unique_ptr<Expr> left, right; std::vector<std::unique_ptr<Expr>> items;
 };
 struct Context {
+    std::function<nift::detail::EvalOutcome<nift::RuntimeValue>(const Expr&)> literal_outcome;
+    // Parser-owned admission: empty is UnsupportedBeforeEffects. An admitted
+    // completion is terminal and must never fall through to original source.
+    std::function<std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>>(const Expr&)> completion_boundary;
+    // Narrow ordinary named-call hook. Empty means declined before effects.
+    std::function<std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>>(const Expr&)> source_call;
     std::function<void(SourceSpan)> failure_origin;
+    std::function<bool(const nift::RuntimeValue&, const std::string&, std::size_t, std::string&)> method_arity_check;
     std::function<bool(const std::string&, SourceSpan, nift::RuntimeValue&, std::string&)> legacy_with_span;
     std::function<bool(const std::string&, nift::RuntimeValue&, std::string&)> resolve;
     std::function<bool(const std::string&, std::shared_ptr<const nift::RuntimeValue>&, std::string&)> resolve_ref;

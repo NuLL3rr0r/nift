@@ -1201,7 +1201,7 @@ bool Parser::find_balanced(const std::string& source,
 
 bool Parser::resolve_json_value(const std::string& expression,
                                 std::shared_ptr<const nift::RuntimeValue>& value,
-                                std::string& error) {
+                                std::string& error, EvaluatedOperand* completed, nift::detail::SourceView source) {
     std::size_t position = 0;
 
     auto identifier = [&](std::string& result) -> bool {
@@ -1236,6 +1236,11 @@ bool Parser::resolve_json_value(const std::string& expression,
     }
     if (local_binding && local_binding->value && (local_binding->value->is_object() || local_binding->value->is_array() || local_binding->value->is_bytes())) {
         current = local_binding->value;
+        if(completed){
+            completed->provenance=EvaluatedOperand::Provenance::LocationCandidate;
+            completed->root=local_binding->is_location_ref()?local_binding->ref_root_slot:local_binding->slot;
+            if(local_binding->is_location_ref())completed->path=local_binding->ref_path;
+        }
     } else if (const auto* supplied = host_.binding(root_name)) {
         current = *supplied;
         if (root_name == "project") {
@@ -1290,6 +1295,7 @@ bool Parser::resolve_json_value(const std::string& expression,
 
     while (position < expression.size()) {
         if (expression[position] == '.') {
+            const auto component_start=position;
             ++position;
             std::string member;
             if (!identifier(member)) {
@@ -1322,6 +1328,7 @@ bool Parser::resolve_json_value(const std::string& expression,
                 return true;
             }
 
+            if(completed){completed->path.push_back(PathComponent::member(member));completed->components.push_back({source.slice(component_start,position-component_start),member,false,true});}
             const nift::RuntimeValue* child = &(*current)[member];
             current = std::shared_ptr<const nift::RuntimeValue>(current, child);
             continue;
@@ -1331,6 +1338,9 @@ bool Parser::resolve_json_value(const std::string& expression,
             ++position; const std::size_t token_start=position; bool quoted=false; char quote=0;
             if(position<expression.size()&&(expression[position]=='"'||expression[position]=='\'')){quoted=true;quote=expression[position++];while(position<expression.size()&&expression[position]!=quote){if(expression[position]=='\\'&&position+1<expression.size())position+=2;else ++position;}if(position>=expression.size()){error="unterminated JSON object key in '"+expression+"'";return true;}++position;}else while(position<expression.size()&&expression[position]!=']')++position;
             if(position>=expression.size()||expression[position]!=']'){error="JSON index has no closing ']' in '"+expression+"'";return true;}std::string token=trim_copy(expression.substr(token_start,position-token_start));++position;
+            const auto component_view=source.slice(token_start,position-token_start-1);
+            auto evaluate_token=[&](nift::RuntimeValue& result){return completed?evaluate_expression(token,result,error,component_view):evaluate_expression(token,result,error);};
+            auto record=[&](PathComponent part){if(completed){completed->path.push_back(std::move(part));completed->components.push_back({component_view,token,quoted,false});}};
             if(current->is_array()){
                 std::size_t index=0;
                 if(quoted||token.empty()||!std::all_of(token.begin(),token.end(),[](unsigned char c){return std::isdigit(c); })){
@@ -1338,27 +1348,27 @@ bool Parser::resolve_json_value(const std::string& expression,
                         error="JSON array indices must be non-negative integers in '"+expression+"'";return true;
                     }
                     nift::RuntimeValue computed;
-                    if(!evaluate_expression(token,computed,error)||!nift::runtime_number_to_size(computed,index)){
+                    if(!evaluate_token(computed)||!nift::runtime_number_to_size(computed,index)){
                         if(error.empty())error="JSON array indices must be non-negative integers in '"+expression+"'";
                         return true;
                     }
                 }else{try{index=(std::size_t)std::stoull(token);}catch(...){error="JSON array index is out of range in '"+expression+"'";return true;}}
-                if(index>=current->array.size()){error="JSON array index "+std::to_string(index)+" is out of range in '"+expression+"'";return true;}const nift::RuntimeValue* child=&(*current)[index];current=std::shared_ptr<const nift::RuntimeValue>(current,child);continue;
+                if(index>=current->array.size()){error="JSON array index "+std::to_string(index)+" is out of range in '"+expression+"'";return true;}record(PathComponent::at(index));const nift::RuntimeValue* child=&(*current)[index];current=std::shared_ptr<const nift::RuntimeValue>(current,child);continue;
             }
             if(current->is_bytes()){
                 std::size_t index=0;
                 if(quoted||token.empty()||!std::all_of(token.begin(),token.end(),[](unsigned char c){return std::isdigit(c);})){
-                    nift::RuntimeValue computed;if(quoted||!evaluate_expression(token,computed,error)||!nift::runtime_number_to_size(computed,index)){if(error.empty())error="bytes indices must be non-negative integers in '"+expression+"'";return true;}
+                    nift::RuntimeValue computed;if(quoted||!evaluate_token(computed)||!nift::runtime_number_to_size(computed,index)){if(error.empty())error="bytes indices must be non-negative integers in '"+expression+"'";return true;}
                 }else{try{index=static_cast<std::size_t>(std::stoull(token));}catch(...){error="bytes index is out of range in '"+expression+"'";return true;}}
                 if(!current->bytes||index>=current->bytes->size()){error="bytes index "+std::to_string(index)+" is out of range in '"+expression+"'";return true;}
-                current=std::make_shared<const nift::RuntimeValue>(static_cast<int>((*current->bytes)[index]));continue;
+                record(PathComponent::at(index));current=std::make_shared<const nift::RuntimeValue>(static_cast<int>((*current->bytes)[index]));continue;
             }
             if(current->is_object()){
                 std::string key;if(quoted){if(token.size()<2){error="invalid JSON object key";return true;}key=token.substr(1,token.size()-2);}else{VariableBinding* kb=nullptr;for(auto scope=variable_scopes_.rbegin();scope!=variable_scopes_.rend();++scope){auto it=scope->find(token);if(it!=scope->end()){kb=&it->second;break;}}if(!kb||!kb->value||!kb->value->is_string()){
                     nift::RuntimeValue computed;
-                    if(!evaluate_expression(token,computed,error)||!computed.is_string()){if(error.empty())error="JSON object index must be a quoted string, string binding, or string expression in '"+expression+"'";return true;}
+                    if(!evaluate_token(computed)||!computed.is_string()){if(error.empty())error="JSON object index must be a quoted string, string binding, or string expression in '"+expression+"'";return true;}
                     key=computed.string;
-                }else{key=kb->value->string;}}if(!current->has(key)){error="JSON object has no key '"+key+"'";return true;}const nift::RuntimeValue* child=&(*current)[key];current=std::shared_ptr<const nift::RuntimeValue>(current,child);continue;
+                }else{key=kb->value->string;}}if(!current->has(key)){error="JSON object has no key '"+key+"'";return true;}record(PathComponent::member(key));const nift::RuntimeValue* child=&(*current)[key];current=std::shared_ptr<const nift::RuntimeValue>(current,child);continue;
             }
             error="cannot index JSON value in '"+expression+"'";return true;
         }

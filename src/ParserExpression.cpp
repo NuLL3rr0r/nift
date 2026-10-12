@@ -1142,16 +1142,16 @@ std::shared_ptr<const Parser::PreparedFilesystemOperation> Parser::prepare_files
     return recipe;
 }
 
-bool Parser::evaluate_expression(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view) {
-    return evaluate_filesystem_expression(expression,value,error,std::move(view),nullptr);
+bool Parser::evaluate_expression(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, int depth_budget) {
+    return evaluate_filesystem_expression(expression,value,error,std::move(view),nullptr,depth_budget);
 }
 
-bool Parser::evaluate_filesystem_expression(const std::string& expression,nift::RuntimeValue& value,std::string& error,nift::detail::SourceView view,const PreparedFilesystemOperation* recipe) {
+bool Parser::evaluate_filesystem_expression(const std::string& expression,nift::RuntimeValue& value,std::string& error,nift::detail::SourceView view,const PreparedFilesystemOperation* recipe, int inherited_depth) {
     const std::uint64_t file_checkpoint = begin_file_operation();
     try {
         const auto previous_failure = expression_failure_view_;
         expression_failure_view_ = {};
-        const bool ok = evaluate_expression_impl(expression, value, error, std::move(view), recipe);
+        const bool ok = evaluate_expression_impl(expression, value, error, std::move(view), recipe, nullptr, inherited_depth);
         if (ok) expression_failure_view_ = previous_failure;
         if (!ok) rollback_file_operation(file_checkpoint);
         return ok;
@@ -1161,7 +1161,377 @@ bool Parser::evaluate_filesystem_expression(const std::string& expression,nift::
     }
 }
 
-bool Parser::evaluate_expression_impl(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe) {
+bool Parser::evaluate_expression_string_literal(const nift::detail::SourceText& token,nift::RuntimeValue& value,std::string& error) {
+    if(!scalar_literal(token,value,error))return false;
+    if(value.is_string()&&value.string.find("$[")!=std::string::npos){
+        std::string resolved;if(!interpolate_parameter(value.string,resolved,error))return false;
+        value=nift::RuntimeValue(std::move(resolved));
+    }
+    return true;
+}
+
+bool Parser::complete_output_family(CompletionFrame& frame,nift::RuntimeValue& out,std::string& error) {
+    const auto& name=frame.operation;
+    frame.phase=CompletionPhase::Failed;
+    const bool ok=[&](){
+        if(frame.operands.size()!=1){error=name+": expected one value";return false;}nift::RuntimeValue d=*frame.operands[0].snapshot;if(d.is_string()&&frame.operands[0].quoted_literal&&d.string.find("$[")!=std::string::npos){std::string r,e;if(!interpolate_parameter(d.string,r,e)){error=name+": "+e;return false;}d=nift::RuntimeValue(r);}if(d.is_bytes()){error=name+": bytes values cannot be rendered as text";return false;}if(d.is_error()||d.is_timer()||d.is_array()||d.is_object()||(d.is_string()&&d.string.rfind("\x1fnift:",0)==0&&d.string.rfind("\x1fnift:timer:",0)!=0&&d.string.rfind("\x1fnift:enum:",0)!=0&&d.string.rfind("\x1fnift:atomic:",0)!=0)){error=name+": value is not directly renderable";return false;}const std::string rendered=render_expression_value(d)+'\n';if(name=="err")execution_output_->write_stderr(rendered);else if(name=="warn")execution_output_->write_warning(rendered);else execution_output_->write_stdout(rendered);out=nift::RuntimeValue(nullptr);return true;
+    }();
+    if(ok)frame.phase=CompletionPhase::Completed;
+    return ok;
+}
+
+bool Parser::complete_presentation(CompletionFrame& frame,nift::RuntimeValue& out,std::string& error) {
+    frame.phase=CompletionPhase::Failed;
+    std::string rendered;
+    if(!serialize_value(*frame.receiver->snapshot,frame.pretty,rendered,error))return false;
+    out=nift::RuntimeValue(std::move(rendered));frame.phase=CompletionPhase::Completed;return true;
+}
+
+std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>> Parser::evaluate_completion_boundary(
+    const nift::ast::Expr& expression,nift::detail::SourceView owner,nift::ast::Context& context) {
+    using Outcome=nift::detail::EvalOutcome<nift::RuntimeValue>;
+    CompletionFrame frame;
+    const bool output=expression.name=="print"||expression.name=="err"||expression.name=="warn";
+    const nift::ast::Expr* base=&expression;std::string presentation_base;
+    const bool presentation=!output&&nift::detail::strip_presentation_chain(expression.text,presentation_base,frame.pretty,frame.highlight);
+    if(!output&&!presentation)return {}; // Untouched only; historical route remains.
+    if(presentation){
+        while(base->kind==nift::ast::Kind::Call&&base->left&&base->left->kind==nift::ast::Kind::Member&&base->items.empty()){
+            const auto& name=base->left->name;
+            if(name!="stringify"&&name!="prettify"&&name!="highlight")break;
+            base=base->left->left.get();
+        }
+        if(!base)return {};
+    }
+    frame.operation=output?expression.name:"presentation";
+    frame.site.source=nift::detail::SourceText(expression.text,owner.slice(expression.span.begin,expression.span.end-expression.span.begin));
+    frame.site.operation_span=expression.span;frame.site.receiver_span=base->span;
+    frame.site.lexical_module=active_module_env_;
+    frame.site.diagnostic=active_diagnostic_;frame.site.recoverable=active_recoverable_;
+    std::string error;
+    auto failure=[&](){
+        frame.phase=CompletionPhase::Failed;
+        if(active_recoverable_)return Outcome::recoverable(*active_recoverable_);
+        if(active_diagnostic_)return Outcome::fatal(*active_diagnostic_);
+        return Outcome::fatal(nift::detail::make_diagnostic(nift::detail::DiagnosticCode::InternalLegacyFailure,error,
+            expression_failure_view_?expression_failure_view_.locate(0,expression_failure_view_.size()):frame.site.source.view.locate(0)));
+    };
+    if(output){
+        bool parsed=false;std::vector<bool> quoted;
+        const auto open=frame.site.source.find('(');
+        const auto sources=parse_parameters(frame.site.source.substr(open+1,frame.site.source.size()-open-2),parsed,&quoted);
+        if(!parsed||sources.size()!=expression.items.size())return {}; // No effects.
+        frame.operands.resize(sources.size());
+        // Canonical output arity is checked before evaluating an invalid call.
+        if(sources.size()!=1){nift::RuntimeValue ignored;if(!complete_output_family(frame,ignored,error))return failure();}
+        frame.phase=CompletionPhase::Evaluating;
+        for(std::size_t i=0;i<sources.size();++i){
+            const auto& child=*expression.items[i];auto& operand=frame.operands[i];operand.source=owner.slice(child.span.begin,child.span.end-child.span.begin);operand.span=child.span;operand.quoted_literal=i<quoted.size()&&quoted[i];frame.site.argument_spans.push_back(child.span);
+            nift::RuntimeValue value;
+            if(operand.quoted_literal)value=nift::RuntimeValue(sources[i]);
+            else if(!nift::ast::evaluate(child,context,value,error))return failure();
+            operand.provenance=EvaluatedOperand::Provenance::Value;operand.snapshot=std::move(value);
+        }
+    }else{
+        frame.phase=CompletionPhase::Evaluating;EvaluatedOperand receiver;receiver.source=owner.slice(base->span.begin,base->span.end-base->span.begin);receiver.span=base->span;
+        nift::RuntimeValue value;if(!nift::ast::evaluate(*base,context,value,error))return failure();
+        receiver.provenance=EvaluatedOperand::Provenance::Value;receiver.snapshot=std::move(value);frame.receiver=std::move(receiver);
+    }
+    frame.phase=CompletionPhase::Evaluated;nift::RuntimeValue value;
+    const bool ok=output?complete_output_family(frame,value,error):complete_presentation(frame,value,error);
+    if(!ok)return failure();
+    return Outcome::value(std::move(value));
+}
+
+namespace {
+bool deferred_location(const nift::ast::Expr& node,bool suffix=false) {
+    if(node.kind==nift::ast::Kind::Index&&node.right&&node.right->kind==nift::ast::Kind::Call&&suffix)return true;
+    return node.left&&deferred_location(*node.left,node.kind==nift::ast::Kind::Index||node.kind==nift::ast::Kind::Member);
+}
+bool binding_path(const nift::ast::Expr& node) {
+    if(node.kind==nift::ast::Kind::Binding)return true;
+    return (node.kind==nift::ast::Kind::Index||node.kind==nift::ast::Kind::Member)&&node.left&&binding_path(*node.left);
+}
+}
+
+bool Parser::aliasable_call_leaf(const nift::RuntimeValue& value) {
+    return value.is_array()||value.is_object()||(value.is_string()&&value.string.rfind("\x1fnift:",0)==0);
+}
+
+bool Parser::evaluate_call_operand(const nift::detail::SourceText& original, EvaluatedOperand& operand, std::string& error, int depth_budget) {
+    const auto source=original.trimmed();operand.source=source.view;operand.span={0,source.size()};
+    auto parsed=nift::ast::parse_expression(source);
+    nift::RuntimeValue value;
+    bool completed_read=false;
+    if(parsed.supported&&parsed.expr&&binding_path(*parsed.expr)){
+        // Canonical reader validates each receiver before evaluating its index.
+        // It can return an owned byte snapshot without creating a logical alias.
+        std::shared_ptr<const nift::RuntimeValue> resolved;
+        completed_read=resolve_json_value(source,resolved,error,&operand,source.view);
+        if(completed_read){
+            if(!error.empty()){operand.provenance=EvaluatedOperand::Provenance::Failed;if(!expression_failure_view_)expression_failure_view_=source.view;return false;}
+            value=*resolved;
+        }
+    }
+    if(!completed_read){
+        if(!evaluate_expression(source,value,error,source.view,depth_budget)){operand.provenance=EvaluatedOperand::Provenance::Failed;return false;}
+        // A bare inherited alias retains its already-owned path. Ordinary bare
+        // bindings stay Value even if their snapshots share a resource handle.
+        if(parsed.supported&&parsed.expr&&parsed.expr->kind==nift::ast::Kind::Binding){
+            for(auto scope=variable_scopes_.rbegin();scope!=variable_scopes_.rend();++scope){auto it=scope->find(parsed.expr->name);if(it!=scope->end()){if(it->second.is_location_ref()){operand.root=it->second.ref_root_slot;operand.path=it->second.ref_path;}break;}}
+        }
+    }
+    operand.snapshot=std::move(value);operand.binding_type=nift_binding_type_from_text(source,*operand.snapshot);
+    operand.provenance=completed_read&&!operand.path.empty()?EvaluatedOperand::Provenance::ValueFromPath:EvaluatedOperand::Provenance::Value;
+    if(operand.root&&!operand.path.empty()&&aliasable_call_leaf(*operand.snapshot)){
+        VariableBinding location;location.ref_root_slot=operand.root;location.ref_path=operand.path;location.sync();
+        if(location.value)operand.provenance=EvaluatedOperand::Provenance::Location;
+    }
+    return true;
+}
+
+bool Parser::form_call_arguments(const nift::detail::SourceText& argument_text,const std::string& name,std::size_t required,bool variadic,OrdinaryArgumentFrame& frame,std::string& error, int child_depth) {
+    bool parsed=false;std::vector<bool> quoted;auto args=parse_parameters(argument_text,parsed,&quoted);
+    if(!parsed){error="callable argument count mismatch: "+name;return false;}
+    bool spread=false;for(std::size_t i=0;i<args.size();++i)spread|=!(i<quoted.size()&&quoted[i])&&args[i].trimmed().rfind("...",0)==0;
+    if(!spread&&(variadic?args.size()<required:args.size()!=required)){error="callable argument count mismatch: "+name;return false;}
+    frame.callable=name;
+    for(std::size_t i=0;i<args.size();++i){
+        auto source=args[i].trimmed();EvaluatedOperand operand;
+        if(i<quoted.size()&&quoted[i]){
+            operand.source=source.view;operand.span={0,source.size()};operand.provenance=EvaluatedOperand::Provenance::Value;operand.snapshot=nift::RuntimeValue(args[i]);operand.binding_type=nift_binding_type(*operand.snapshot);
+        }else if(source.rfind("...",0)==0){
+            const auto spread_source=source.substr(3).trimmed();
+            if(!evaluate_call_operand(spread_source,operand,error,child_depth))return false;
+            if(!operand.snapshot->is_array()){error="spread value must be an array";expression_failure_view_=spread_source.view;return false;}
+            for(const auto& value:operand.snapshot->array){EvaluatedOperand expanded;expanded.source=spread_source.view;expanded.span=operand.span;expanded.provenance=EvaluatedOperand::Provenance::Value;expanded.snapshot=value;expanded.binding_type=nift_binding_type(value);frame.sources.push_back(spread_source);frame.operands.push_back(std::move(expanded));}
+            continue;
+        }else if(!evaluate_call_operand(source,operand,error,child_depth))return false;
+        frame.sources.push_back(args[i]);frame.operands.push_back(std::move(operand));
+    }
+    if(variadic?frame.operands.size()<required:frame.operands.size()!=required){error="callable argument count mismatch: "+name;return false;}
+    return true;
+}
+
+bool Parser::readonly_method_supported(const nift::RuntimeValue& receiver, const std::string& method) {
+    return (receiver.is_string() && receiver.string.rfind("\x1fnift:", 0) != 0 &&
+                (method == "length" || method == "empty" || method == "split" || method == "trim" || method == "to_upper" || method == "to_lower")) ||
+           (receiver.is_array() && (method == "size" || method == "length" || method == "empty" || method == "first" || method == "last")) ||
+           (receiver.is_object() && (method == "size" || method == "empty"));
+}
+
+bool Parser::readonly_method_arity_ok(const nift::RuntimeValue& receiver, const std::string& method, std::size_t argc, std::string& error) {
+    // Canonical arity belongs to the method, not the receiver syntax path, for
+    // methods the shared readonly layer actually supports on this receiver kind.
+    // Unsupported (method, receiver-kind) pairs are left to their existing
+    // handling so they keep their canonical type diagnostics and spans.
+    struct Spec { int min; int max; };
+    static const std::unordered_map<std::string, Spec> spec = {
+        {"split", {1, 1}}, {"last", {0, 0}}, {"first", {0, 0}},
+        {"size", {0, 0}}, {"length", {0, 0}}, {"empty", {0, 0}},
+        {"trim", {0, 0}}, {"to_upper", {0, 0}}, {"to_lower", {0, 0}},
+    };
+    const auto it = spec.find(method);
+    if (it == spec.end()) return true;
+    if (!readonly_method_supported(receiver, method)) return true;
+    if (static_cast<int>(argc) >= it->second.min && static_cast<int>(argc) <= it->second.max) return true;
+    if (method == "split") error = "split: expected one delimiter";
+    else error = method + ": expected no arguments";
+    return false;
+}
+
+Parser::MethodCompletion Parser::complete_readonly_method(const nift::RuntimeValue& receiver, const std::string& method,
+    const std::vector<nift::RuntimeValue>& args, nift::RuntimeValue& out, std::string& error) {
+    // One canonical readonly method completion. Arity is validated before use;
+    // operation diagnostics use the method name exactly as the source evaluator.
+    auto no_args = [&]() -> bool {
+        if (!args.empty()) { error = method + ": expected no arguments"; return false; }
+        return true;
+    };
+    auto utf8_count = [](const std::string& s, std::size_t& count) -> bool {
+        count = 0;
+        for (std::size_t i = 0; i < s.size();) {
+            const unsigned char c = static_cast<unsigned char>(s[i]);
+            const std::size_t n = c < 0x80 ? 1 : (c >= 0xC2 && c <= 0xDF ? 2 : (c >= 0xE0 && c <= 0xEF ? 3 : (c >= 0xF0 && c <= 0xF4 ? 4 : 0)));
+            if (!n || i + n > s.size()) return false;
+            for (std::size_t j = 1; j < n; ++j) if ((static_cast<unsigned char>(s[i + j]) & 0xC0) != 0x80) return false;
+            ++count; i += n;
+        }
+        return true;
+    };
+    if (receiver.is_string() && receiver.string.rfind("\x1fnift:", 0) != 0) {
+        const std::string& str = receiver.string;
+        if (method == "length") {
+            if (!no_args()) return MethodCompletion::Failed;
+            std::size_t n = 0; if (!utf8_count(str, n)) { error = "length: invalid UTF-8"; return MethodCompletion::Failed; }
+            out = nift::RuntimeValue(static_cast<double>(n)); return MethodCompletion::Completed;
+        }
+        if (method == "empty") {
+            if (!no_args()) return MethodCompletion::Failed;
+            out = nift::RuntimeValue(str.empty()); return MethodCompletion::Completed;
+        }
+        if (method == "split") {
+            if (args.size() != 1) { error = "split: expected one delimiter"; return MethodCompletion::Failed; }
+            if (!args[0].is_string()) { error = "split: delimiter must be a string"; return MethodCompletion::Failed; }
+            nift::RuntimeValue result = nift::RuntimeValue::make_array();
+            const std::string& delim = args[0].string;
+            if (delim.empty()) {
+                std::vector<std::string> parts;
+                for (std::size_t i = 0; i < str.size();) {
+                    const unsigned char c = static_cast<unsigned char>(str[i]);
+                    const std::size_t n = c < 0x80 ? 1 : (c >= 0xC2 && c <= 0xDF ? 2 : (c >= 0xE0 && c <= 0xEF ? 3 : (c >= 0xF0 && c <= 0xF4 ? 4 : 0)));
+                    if (!n || i + n > str.size()) { error = "split: invalid UTF-8"; return MethodCompletion::Failed; }
+                    for (std::size_t j = 1; j < n; ++j) if ((static_cast<unsigned char>(str[i + j]) & 0xC0) != 0x80) { error = "split: invalid UTF-8"; return MethodCompletion::Failed; }
+                    parts.push_back(str.substr(i, n)); i += n;
+                }
+                for (auto& part : parts) result.array.emplace_back(part);
+                out = std::move(result); return MethodCompletion::Completed;
+            }
+            std::size_t pos = 0;
+            while (true) {
+                const std::size_t at = str.find(delim, pos);
+                if (at == std::string::npos) { result.array.emplace_back(str.substr(pos)); break; }
+                result.array.emplace_back(str.substr(pos, at - pos)); pos = at + delim.size();
+            }
+            out = std::move(result); return MethodCompletion::Completed;
+        }
+        if (method == "trim") {
+            if (!no_args()) return MethodCompletion::Failed;
+            std::string s = str; const auto b = s.find_first_not_of(" \t\r\n");
+            if (b == std::string::npos) s.clear(); else { s = s.substr(b); const auto e = s.find_last_not_of(" \t\r\n"); s = s.substr(0, e + 1); }
+            out = nift::RuntimeValue(std::move(s)); return MethodCompletion::Completed;
+        }
+        if (method == "to_upper") {
+            if (!no_args()) return MethodCompletion::Failed;
+            std::string s = str; for (auto& ch : s) ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
+            out = nift::RuntimeValue(std::move(s)); return MethodCompletion::Completed;
+        }
+        if (method == "to_lower") {
+            if (!no_args()) return MethodCompletion::Failed;
+            std::string s = str; for (auto& ch : s) ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+            out = nift::RuntimeValue(std::move(s)); return MethodCompletion::Completed;
+        }
+        if (method == "first" || method == "last" || method == "size") {
+            // Not supported for strings; leave the canonical type diagnostic and
+            // span to the existing receiver-specific handling.
+            return MethodCompletion::Unsupported;
+        }
+        return MethodCompletion::Unsupported;
+    }
+    if (receiver.is_array()) {
+        if (method == "size" || method == "length") {
+            if (!no_args()) return MethodCompletion::Failed;
+            out = nift::RuntimeValue(static_cast<double>(receiver.array.size())); return MethodCompletion::Completed;
+        }
+        if (method == "empty") {
+            if (!no_args()) return MethodCompletion::Failed;
+            out = nift::RuntimeValue(receiver.array.empty()); return MethodCompletion::Completed;
+        }
+        if (method == "first" || method == "last") {
+            if (!no_args()) return MethodCompletion::Failed;
+            if (receiver.array.empty()) { error = method + ": array is empty"; return MethodCompletion::Failed; }
+            out = method == "first" ? receiver.array.front() : receiver.array.back(); return MethodCompletion::Completed;
+        }
+        return MethodCompletion::Unsupported;
+    }
+    if (receiver.is_object()) {
+        if (method == "size") {
+            if (!no_args()) return MethodCompletion::Failed;
+            out = nift::RuntimeValue(static_cast<double>(receiver.object.size())); return MethodCompletion::Completed;
+        }
+        if (method == "empty") {
+            if (!no_args()) return MethodCompletion::Failed;
+            out = nift::RuntimeValue(receiver.object.empty()); return MethodCompletion::Completed;
+        }
+        return MethodCompletion::Unsupported;
+    }
+    return MethodCompletion::Unsupported;
+}
+
+bool Parser::canonical_native_call(const std::string& name) {
+    // Canonical call-ownership oracle for prepared dispatch. The compatibility
+    // (source) evaluator resolves these heads natively before it considers user
+    // callables, so prepared evaluation must not run a same-named user callable
+    // for them. The set is derived from the compatibility evaluator's native
+    // dispatch (call_args heads plus the special native heads). Only `error` has
+    // an explicit source-evaluator shadow rule; when a user or host callable
+    // shadows it, native dispatch defers, so prepared dispatch must match.
+    static const std::unordered_set<std::string> native_heads={
+        "arch","async","attr_escape","await","build","build_all","build_names","build_repair",
+        "bytes","cat","cd","close","cmd","copy","cp","deepcopy","env","epoch","err","exists",
+        "ffi_buffer","ffi_bytes","ffi_call","ffi_callback","ffi_close","ffi_open","ffi_sizeof",
+        "ffi_snapshot_bytes","ffi_struct","file","getenv","hardware_concurrency","html_escape",
+        "ifstream","is_dir","is_file","ls","make_dir","max","min","minify","mkdir","module_path",
+        "move","mutex","mv","ofstream","open","open_bytes","os","package_path","page","platform",
+        "print","project_root","pwd","range","read","remove","rm","run","same","secure_random_bytes",
+        "setenv","sleep","stat","status","thread","timer","touch","track","tracked","type",
+        "unsetenv","untrack","url_encode","warn","which"
+    };
+    if(name=="error"){
+        for(auto scope=variable_scopes_.rbegin();scope!=variable_scopes_.rend();++scope){auto it=scope->find("error");if(it!=scope->end()){it->second.sync();if(it->second.value&&it->second.value->is_string()&&it->second.value->string.rfind("\x1fnift:callable:",0)==0)return false;break;}}
+        if(active_module_env_&&active_module_env_->callables.count("error"))return false;
+        if(callables_.count("error"))return false;
+        if(host_.has_host_callable("error"))return false;
+        return true;
+    }
+    return native_heads.count(name)!=0;
+}
+
+std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>> Parser::evaluate_source_call(
+    const nift::ast::Expr& call, nift::detail::SourceView source_owner,
+    const std::function<nift::detail::EvalOutcome<nift::RuntimeValue>(const std::string&,std::vector<nift::RuntimeValue>&&)>& complete_prepared, int depth_budget) {
+                using Outcome=nift::detail::EvalOutcome<nift::RuntimeValue>;
+                if(call.name.empty())return {};
+                for(auto scope=variable_scopes_.rbegin();scope!=variable_scopes_.rend();++scope){auto it=scope->find(call.name);if(it!=scope->end()){it->second.sync();if(it->second.value&&it->second.value->is_string()&&it->second.value->string.rfind("\x1fnift:callable:",0)==0)return {};break;}}
+                const Callable* target=nullptr;
+                if(active_module_env_){auto found=active_module_env_->callables.find(call.name);if(found!=active_module_env_->callables.end())target=&found->second;}
+                if(!target){auto found=callables_.find(call.name);if(found!=callables_.end())target=&found->second;}
+                // Canonical ownership: when a user callable shares a name that the
+                // compatibility (source) evaluator resolves natively, prepared
+                // evaluation must not run that user callable. Evaluate the call
+                // through the compatibility evaluator exactly as an ordinary
+                // (direct) context would, so no speculative side effect precedes
+                // the native result and there is no whole-source replay. When no
+                // user callable exists the existing prepared/legacy handoff is
+                // left untouched, preserving its diagnostic source spans.
+                if(target&&canonical_native_call(call.name)){
+                    const auto native_view=source_owner.slice(call.span.begin,call.span.end-call.span.begin);
+                    nift::RuntimeValue native_value;std::string native_error;
+                    const bool native_ok=evaluate_expression_impl(call.text,native_value,native_error,native_view,nullptr,nullptr,depth_budget);
+                    if(!native_ok){
+                        if(active_recoverable_)return Outcome::recoverable(*active_recoverable_);
+                        if(active_diagnostic_)return Outcome::fatal(*active_diagnostic_);
+                        return Outcome::fatal(nift::detail::make_diagnostic(nift::detail::DiagnosticCode::InternalLegacyFailure,native_error,native_view.locate(0)));
+                    }
+                    return Outcome::value(std::move(native_value));
+                }
+                if(!target||target->fragment||target->async)return {};
+                // Preserve the canonical failing nested-computed-index path.
+                // This guard is structural and runs before any effects. Support
+                // for these expressions is explicitly deferred by F1D review.
+                for(const auto& argument:call.items)if(deferred_location(*argument))return {};
+                const auto owner_view=source_owner;
+                const auto call_view=owner_view.slice(call.span.begin,call.span.end-call.span.begin);
+                nift::detail::SourceText source(call.text,call_view);
+                const auto open=source.find('(');
+                OrdinaryArgumentFrame frame;std::string error;
+                auto failure=[&]()->Outcome{
+                    if(active_recoverable_)return Outcome::recoverable(*active_recoverable_);
+                    if(active_diagnostic_)return Outcome::fatal(*active_diagnostic_);
+                    return Outcome::fatal(nift::detail::make_diagnostic(nift::detail::DiagnosticCode::InternalLegacyFailure,error,
+                        expression_failure_view_?expression_failure_view_.locate(0,expression_failure_view_.size()):call_view.locate(0)));
+                };
+                if(!form_call_arguments(source.substr(open+1,source.size()-open-2),call.name,target->params.size(),!target->variadic_param.empty(),frame,error,depth_budget+1))return failure();
+                bool has_location=false;
+                for(const auto& operand:frame.operands)has_location|=operand.provenance==EvaluatedOperand::Provenance::Location || (operand.snapshot->is_string()&&operand.snapshot->string.rfind("\x1fnift:atomic:",0)==0);
+                if(!has_location){std::vector<nift::RuntimeValue> values;for(const auto& operand:frame.operands)values.push_back(*operand.snapshot);auto result=complete_prepared(call.name,std::move(values));if(result.kind()!=Outcome::Kind::Unsupported)return result;}
+                nift::RuntimeValue result;
+                const bool ok=evaluate_expression_impl(call.text,result,error,call_view,nullptr,&frame,depth_budget);
+                if(!ok)return failure();
+                return Outcome::value(std::move(result));
+}
+
+bool Parser::evaluate_expression_impl(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe, OrdinaryArgumentFrame* ordinary_arguments, int inherited_depth) {
     last_expression_mutation_ = false;
     auto resolve_direct = [&](const std::string& raw, nift::RuntimeValue& out) -> bool {
         const std::string text = trim_copy(raw);
@@ -1430,7 +1800,7 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
             }
             return false;
         }
-        if (scalar_literal(text, literal, literal_error)) { if(literal.is_string()&&literal.string.find("$[")!=std::string::npos){std::string r,e;if(!interpolate_parameter(literal.string,r,e)){error=e;return false;}literal=nift::RuntimeValue(r);} out = std::move(literal); return true; }
+        if (scalar_literal(text, literal, literal_error)) { if(literal.is_string()&&!evaluate_expression_string_literal(text,literal,error))return false; out = std::move(literal); return true; }
         // A numeric-looking literal that failed only because its magnitude is
         // outside the signed 64-bit range deserves its precise diagnostic rather
         // than the generic unknown-expression fallback.
@@ -1758,18 +2128,20 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
 
         auto try_location_ref = [&](const std::string& source, VariableBinding& dst) -> bool {
             const std::string ref_source=trim_copy(source);auto parsed=nift::ast::parse_expression(ref_source);if(!parsed.supported||!parsed.expr)return false;
-            std::shared_ptr<std::shared_ptr<nift::RuntimeValue>> root;std::vector<PathComponent> path;
-            std::function<bool(const nift::ast::Expr&)> walk;
-            walk=[&](const nift::ast::Expr& ex)->bool{
-                if(ex.kind==nift::ast::Kind::Binding){auto* b=find_binding(ex.name);if(!b||!b->value)return false;if(b->is_location_ref()){root=b->ref_root_slot;path=b->ref_path;}else root=b->slot;return true;}
-                if(ex.kind==nift::ast::Kind::Member){if(!ex.left||!walk(*ex.left))return false;path.push_back(PathComponent::member(ex.name));return true;}
-                if(ex.kind==nift::ast::Kind::Index){if(!ex.left||!walk(*ex.left))return false;nift::RuntimeValue idx;if(!eval(ex.right->text.empty()?ref_source.substr(ex.right->span.begin,ex.right->span.end-ex.right->span.begin):ex.right->text,idx,depth+1))return false;std::size_t index=0;if(nift::runtime_number_to_size(idx,index))path.push_back(PathComponent::at(index));else if(idx.is_string())path.push_back(PathComponent::member(idx.string));else return false;return true;}
-                return false;
-            };
-            if(!walk(*parsed.expr)||path.empty())return false;
+            EvaluatedOperand operand;
+            const bool formed=nift::detail::form_location_path(*parsed.expr,operand,
+                [&](const nift::ast::Expr& ex,EvaluatedOperand& result){
+                    auto* binding=find_binding(ex.name);if(!binding||!binding->value)return false;
+                    if(binding->is_location_ref()){result.root=binding->ref_root_slot;result.path=binding->ref_path;}else result.root=binding->slot;
+                    result.binding_type=binding->type;result.mutable_binding=binding->mutable_binding;result.deep_readonly=binding->deep_readonly;
+                    return true;
+                },
+                [&](const nift::ast::Expr& index,nift::RuntimeValue& value){return eval(index.text.empty()?ref_source.substr(index.span.begin,index.span.end-index.span.begin):index.text,value,depth+1);},
+                [&](const nift::RuntimeValue& index,std::vector<PathComponent>& path){std::size_t offset=0;if(nift::runtime_number_to_size(index,offset))path.push_back(PathComponent::at(offset));else if(index.is_string())path.push_back(PathComponent::member(index.string));else return false;return true;});
+            if(!formed||operand.path.empty())return false;
             auto original=dst.value;
-            dst.ref_root_slot=std::move(root);dst.ref_path=std::move(path);dst.sync();if(!dst.value){dst.rebind(std::move(original));return false;}
-            if(!(dst.value->is_array()||dst.value->is_object()||(dst.value->is_string()&&dst.value->string.rfind("\x1fnift:",0)==0))){dst.ref_root_slot.reset();dst.ref_path.clear();dst.sync();return false;}
+            dst.ref_root_slot=std::move(operand.root);dst.ref_path=std::move(operand.path);dst.sync();if(!dst.value){dst.rebind(std::move(original));return false;}
+            if(!aliasable_call_leaf(*dst.value)){dst.ref_root_slot.reset();dst.ref_path.clear();dst.sync();return false;}
             dst.type=nift_binding_type(*dst.value);return true;
         };
 
@@ -2606,7 +2978,14 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
             const bool print_call=call_args("print",args,q);
             const bool err_call=!print_call&&call_args("err",args,q);
             const bool warn_call=!print_call&&!err_call&&call_args("warn",args,q);
-            if(print_call||err_call||warn_call){const std::string name=err_call?"err":(warn_call?"warn":"print");if(args.size()!=1){error=name+": expected one value";return false;}nift::RuntimeValue d;if(!arg_value(args,q,0,d))return false;if(d.is_string()&&q.size()>0&&q[0]&&d.string.find("$[")!=std::string::npos){std::string r,e;if(!interpolate_parameter(d.string,r,e)){error=name+": "+e;return false;}d=nift::RuntimeValue(r);}if(d.is_bytes()){error=name+": bytes values cannot be rendered as text";return false;}if(d.is_error()||d.is_timer()||d.is_array()||d.is_object()||(d.is_string()&&d.string.rfind("\x1fnift:",0)==0&&d.string.rfind("\x1fnift:timer:",0)!=0&&d.string.rfind("\x1fnift:enum:",0)!=0&&d.string.rfind("\x1fnift:atomic:",0)!=0)){error=name+": value is not directly renderable";return false;}const std::string rendered=render_expression_value(d)+'\n';if(err_call)execution_output_->write_stderr(rendered);else if(warn_call)execution_output_->write_warning(rendered);else execution_output_->write_stdout(rendered);out=nift::RuntimeValue(nullptr);return true;}
+            if(print_call||err_call||warn_call){
+                CompletionFrame frame;frame.operation=err_call?"err":warn_call?"warn":"print";
+                frame.site.source=text;frame.site.lexical_module=active_module_env_;frame.operands.resize(args.size());
+                frame.phase=CompletionPhase::Evaluating;
+                if(args.size()==1){nift::RuntimeValue value;if(!arg_value(args,q,0,value))return false;frame.operands[0].snapshot=std::move(value);frame.operands[0].quoted_literal=!q.empty()&&q[0];frame.operands[0].source=args[0].view;frame.operands[0].provenance=EvaluatedOperand::Provenance::Value;}
+                frame.phase=CompletionPhase::Evaluated;
+                return complete_output_family(frame,out,error);
+            }
             if(call_args("read",args,q)){if(!args.empty()){error="read: expected no arguments";return false;}if(!standalone_script_host_){error="read: interactive input is only available in standalone Nift scripts/shell";return false;}std::string line;if(!std::getline(std::cin,line)){if(std::cin.eof()){std::cin.clear();out=nift::RuntimeValue(nullptr);return true;}error="read: input failure";return false;}out=nift::RuntimeValue(line);return true;}
 
 #ifdef NIFT_COMPAT_SPLIT_FRAMES
@@ -2642,8 +3021,8 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
             std::string target; bool pretty=false, highlight=false;
             if (strip_presentation_chain(text, target, pretty, highlight)) {
                 nift::RuntimeValue v;if(!eval(target,v,depth+1))return false;
-                std::string rendered;if(!serialize_value(v,pretty,rendered,error))return false;
-                out=nift::RuntimeValue(rendered);return true;
+                CompletionFrame frame;frame.operation="presentation";frame.site.source=text;frame.site.lexical_module=active_module_env_;frame.pretty=pretty;frame.highlight=highlight;EvaluatedOperand receiver;receiver.snapshot=std::move(v);receiver.provenance=EvaluatedOperand::Provenance::Value;frame.receiver=std::move(receiver);frame.phase=CompletionPhase::Evaluated;
+                return complete_presentation(frame,out,error);
             }
 
 #ifdef NIFT_COMPAT_SPLIT_FRAMES
@@ -2754,6 +3133,7 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                         std::shared_ptr<const nift::RuntimeValue> path_value;
                         std::string path_error;
                         if (resolve_json_value(receiver, path_value, path_error) && path_error.empty() && path_value) {
+                            if ((method=="size"||method=="length"||method=="empty"||method=="first"||method=="last") && !trim_copy(arg_text).empty()) { error=method+": expected no arguments"; return false; }
                             const nift::RuntimeValue& pv = *path_value;
                             if (pv.is_array()) {
                                 if (method=="size"||method=="length"){out=nift::RuntimeValue((double)pv.array.size());return true;}
@@ -2783,6 +3163,18 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                         return eval(args[i],v,depth+1);
                     };
                     auto no_args=[&]()->bool{if(!args.empty()){error=method+": expected no arguments";return false;}return true;};
+                    // F1E9 shared readonly method completion. Arity is validated
+                    // before any argument is evaluated; the operation semantics
+                    // come from the one canonical readonly implementation.
+                    if ((base.is_string() || base.is_array() || base.is_object()) && readonly_method_supported(base, method)) {
+                        if (!readonly_method_arity_ok(base, method, args.size(), error)) return false;
+                        std::vector<nift::RuntimeValue> method_values; method_values.reserve(args.size());
+                        for (std::size_t ai = 0; ai < args.size(); ++ai) { nift::RuntimeValue mv; if (!eval_arg(ai, mv)) return false; method_values.push_back(std::move(mv)); }
+                        nift::RuntimeValue method_out;
+                        const auto completion = complete_readonly_method(base, method, method_values, method_out, error);
+                        if (completion == MethodCompletion::Completed) { out = std::move(method_out); return true; }
+                        if (completion == MethodCompletion::Failed) return false;
+                    }
 #ifdef NIFT_COMPAT_SPLIT_FRAMES
                     {
 #endif
@@ -3630,13 +4022,32 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                 if (callee) {
                     const auto callee_env = module_callee ? module_callee_env : callee->module_env;
                     if (callable_call_depth_ >= kMaxCallableDepth) { error = "callable recursion depth exceeded: " + call_name; return false; }
-                    std::vector<nift::RuntimeValue> spread_args;bool args_ok=false; std::vector<bool> quoted_args; auto args=parse_parameters(text.substr(lp+1,text.size()-lp-2),args_ok,&quoted_args); if(args_ok){std::vector<nift::detail::SourceText> ex;std::vector<bool> eq;for(size_t ai=0;ai<args.size();++ai){if(!(ai<quoted_args.size()&&quoted_args[ai])&&trim_copy(args[ai]).rfind("...",0)==0){nift::RuntimeValue sv;if(!eval(trim_copy(args[ai]).substr(3),sv,depth+1))return false;if(!sv.is_array()){error="spread value must be an array";return false;}for(const auto& item:sv.array){ex.push_back("\x1fnift:spread:"+std::to_string(spread_args.size()));spread_args.push_back(item);eq.push_back(false);}}else{ex.push_back(args[ai]);eq.push_back(ai<quoted_args.size()&&quoted_args[ai]);}}args.swap(ex);quoted_args.swap(eq);}if(!args_ok||(!callee->variadic_param.empty()?args.size()<callee->params.size():args.size()!=callee->params.size())){error="callable argument count mismatch: "+call_name;return false;}
-                    std::vector<nift::RuntimeValue> values; for(std::size_t ai=0;ai<args.size();++ai){nift::RuntimeValue v;if(ai<quoted_args.size()&&quoted_args[ai])v=nift::RuntimeValue(args[ai]);else if(args[ai].rfind("\x1fnift:spread:",0)==0)v=spread_args[static_cast<std::size_t>(std::stoull(args[ai].substr(13)))];else if(!eval(args[ai],v,depth+1))return false;values.push_back(std::move(v));}
+                    OrdinaryArgumentFrame local_arguments;auto* argument_frame=ordinary_arguments;
+                    bool formed_arguments=argument_frame&&depth==0&&argument_frame->callable==call_name&&!callee->async&&!callee->fragment;
+                    bool admitted=!callee->async&&!callee->fragment;
+                    auto* marker_binding=find_binding(call_name);if(marker_binding&&marker_binding->value&&marker_binding->value->is_string()&&marker_binding->value->string.rfind("\x1fnift:callable:",0)==0)admitted=false;
+                    bool raw_ok=false;auto raw_args=parse_parameters(text.substr(lp+1,text.size()-lp-2),raw_ok);
+                    for(const auto& argument:raw_args){auto parsed=nift::ast::parse_expression(argument);if(parsed.supported&&parsed.expr&&deferred_location(*parsed.expr))admitted=false;}
+                    if(!formed_arguments&&admitted&&raw_ok){
+                        if(!form_call_arguments(text.substr(lp+1,text.size()-lp-2),call_name,callee->params.size(),!callee->variadic_param.empty(),local_arguments,error,depth+1))return false;
+                        argument_frame=&local_arguments;formed_arguments=true;
+                    }
+                    std::vector<nift::RuntimeValue> spread_args;bool args_ok=false;std::vector<bool> quoted_args;std::vector<nift::detail::SourceText> args;std::vector<nift::RuntimeValue> values;
+                    if(formed_arguments){args=argument_frame->sources;args_ok=true;quoted_args.resize(args.size(),false);for(const auto& operand:argument_frame->operands)values.push_back(*operand.snapshot);}
+                    else {
+                    args=parse_parameters(text.substr(lp+1,text.size()-lp-2),args_ok,&quoted_args); if(args_ok){std::vector<nift::detail::SourceText> ex;std::vector<bool> eq;for(size_t ai=0;ai<args.size();++ai){if(!(ai<quoted_args.size()&&quoted_args[ai])&&trim_copy(args[ai]).rfind("...",0)==0){nift::RuntimeValue sv;if(!eval(trim_copy(args[ai]).substr(3),sv,depth+1))return false;if(!sv.is_array()){error="spread value must be an array";return false;}for(const auto& item:sv.array){ex.push_back("\x1fnift:spread:"+std::to_string(spread_args.size()));spread_args.push_back(item);eq.push_back(false);}}else{ex.push_back(args[ai]);eq.push_back(ai<quoted_args.size()&&quoted_args[ai]);}}args.swap(ex);quoted_args.swap(eq);}if(!args_ok||(!callee->variadic_param.empty()?args.size()<callee->params.size():args.size()!=callee->params.size())){error="callable argument count mismatch: "+call_name;return false;}
+                    for(std::size_t ai=0;ai<args.size();++ai){nift::RuntimeValue v;if(ai<quoted_args.size()&&quoted_args[ai])v=nift::RuntimeValue(args[ai]);else if(args[ai].rfind("\x1fnift:spread:",0)==0)v=spread_args[static_cast<std::size_t>(std::stoull(args[ai].substr(13)))];else if(!eval(args[ai],v,depth+1))return false;values.push_back(std::move(v));}
+                    }
                     if(callee->async){if(module_callee){error="module-private async callables are unsupported";return false;}for(std::size_t ai=0;ai<args.size();++ai){const std::string an=trim_copy(args[ai]);if(valid_binding_identifier(an)){if(auto* ab=find_binding(an)){ab->sync();if(ab->value&&ab->value->is_string()&&ab->value->string.rfind("\x1fnift:atomic:",0)==0)values[ai]=*ab->value;}}}nift::RuntimeValue cb(named_callable_tag(call_name,callee->module_env));return spawn_future(cb,values,out);}
                     ++callable_call_depth_;
                     const int caller_loop_depth = loop_depth_;
                     loop_depth_ = 0;
-                    std::vector<VariableBinding> parameter_bindings;parameter_bindings.reserve(callee->params.size());for(std::size_t ai=0;ai<callee->params.size();++ai)parameter_bindings.push_back(bind_call_param(args[ai],ai<quoted_args.size()&&quoted_args[ai],values[ai]));
+                    std::vector<VariableBinding> parameter_bindings;parameter_bindings.reserve(callee->params.size());for(std::size_t ai=0;ai<callee->params.size();++ai){
+                        if(!formed_arguments){parameter_bindings.push_back(bind_call_param(args[ai],ai<quoted_args.size()&&quoted_args[ai],values[ai]));continue;}
+                        const auto& operand=argument_frame->operands[ai];
+                        if(operand.provenance==EvaluatedOperand::Provenance::Location){VariableBinding location;location.ref_root_slot=operand.root;location.ref_path=operand.path;location.type=operand.binding_type;location.mutable_binding=true;location.deep_readonly=false;location.sync();parameter_bindings.push_back(std::move(location));}
+                        else {auto value=std::make_shared<nift::RuntimeValue>(std::move(values[ai]));parameter_bindings.emplace_back(value,operand.binding_type,true,false);}
+                    }
                     auto lexical_env=enter_lexical_environment(callee_env);
                     push_variable_scope(); auto& scope=variable_scopes_.back(); for(std::size_t ai=0;ai<callee->params.size();++ai)scope.emplace(callee->params[ai],std::move(parameter_bindings[ai]));if(!callee->variadic_param.empty()){nift::RuntimeValue rest=nift::RuntimeValue::make_array();for(std::size_t ai=callee->params.size();ai<values.size();++ai)rest.array.push_back(std::move(values[ai]));auto sp=std::make_shared<nift::RuntimeValue>(std::move(rest));scope.emplace(callee->variadic_param,VariableBinding{sp,nift_binding_type(*sp),true,false});}
                     const bool saved_mutation = last_expression_mutation_;
@@ -4427,7 +4838,7 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
         else if (!expression_failure_view_ && text.view && !text.empty()) expression_failure_view_ = text.view;
         return ok;
     };
-    return eval(nift::detail::SourceText(expression,std::move(view)),value,0);
+    return eval(nift::detail::SourceText(expression,std::move(view)),value,inherited_depth);
 }
 
 bool Parser::evaluate_condition(const std::string& expression, bool& value, std::string& error) {

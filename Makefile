@@ -2021,3 +2021,16 @@ test: test-sort-number-compact
 test-sort-number-compact: $(TARGET)
 	python3 tests/sort_number_compact.py --nift ./$(TARGET)
 	python3 tests/sort_number_compact_oracle.py
+
+.PHONY: test-evaluated-operand
+$(TEST_DIR)/evaluated-operand-unit$(EXEEXT): tests/evaluated_operand_unit.cpp src/EvaluatedOperand.h src/Ast.cpp src/Ast.h src/RuntimeValue.cpp src/RuntimeValue.h src/SourceView.h
+	mkdir -p $(TEST_DIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) tests/evaluated_operand_unit.cpp src/Ast.cpp src/RuntimeValue.cpp -o $@
+test-evaluated-operand: $(TEST_DIR)/evaluated-operand-unit$(EXEEXT) $(TARGET)
+	$(TEST_DIR)/evaluated-operand-unit$(EXEEXT)
+	NIFT_BIN="$(CURDIR)/$(TARGET)" python3 tests/evaluated_operand_smoke.py
+test: test-evaluated-operand
+.PHONY: test-evaluated-operand-differential
+test-evaluated-operand-differential: $(TARGET)
+	@test -n "$(NIFT_BASELINE_BIN)" || { echo "NIFT_BASELINE_BIN is required" >&2; exit 1; }
+	python3 tests/evaluated_operand_differential.py --baseline "$(NIFT_BASELINE_BIN)" --candidate "$(CURDIR)/$(TARGET)"

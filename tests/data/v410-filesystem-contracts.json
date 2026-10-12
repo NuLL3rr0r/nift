@@ -68,7 +68,7 @@
     "name": "named-stat-prepared",
     "source": "fn(stat(p)) { print(\"named\"); return 7 }; j:=0; while(j<1) { print(stat(\"a\")); j+=1 }",
     "exit": 1,
-    "stdout": "named\n",
+    "stdout": "",
     "stderr": "error: <ORACLE_ROOT>/case.f:1:62: print: value is not directly renderable\n",
     "files": {
       "b": "B",

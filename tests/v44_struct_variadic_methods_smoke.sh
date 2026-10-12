@@ -59,7 +59,7 @@ spread
 5
 [1,2,3]
 4
-spread,first,last
+first,spread,last
 spread,first,last' ] || { printf 'unexpected variadic method output:\n%s\n' "$out" >&2; exit 1; }
 
 cat >"$t/method-module.f" <<'NIFT'
