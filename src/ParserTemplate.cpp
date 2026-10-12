@@ -1,3 +1,4 @@
+#include "P4Plan.h"
 #include "RuntimeJson.h"
 #include "Parser.h"
 #include "ParserHelpers.h"
@@ -1310,6 +1311,51 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
                 if(!prepare_loop_body(program,prep.stmts))return false;
                 prep.source_path=std::make_shared<const std::filesystem::path>(callee->source_path);
                 prep.ready=true;
+                if(std::getenv("NIFT_P4_SHAPE")){
+                    std::function<void(const std::vector<std::unique_ptr<nift::ast::Stmt>>&,int)> dump;
+                    dump=[&](const auto& body,int level){for(const auto& st:body){std::fprintf(stderr,"P4_ST %d %d name=%s op=%s expr=%d/%s iterable=%d/%s text=%s\n",level,(int)st->kind,st->name.c_str(),st->op.c_str(),st->expr?(int)st->expr->kind:-1,st->expr?st->expr->name.c_str():"",st->iterable?(int)st->iterable->kind:-1,st->iterable?st->iterable->name.c_str():"",st->text.substr(0,100).c_str());dump(st->body,level+1);dump(st->else_body,level+1);}};
+                    std::fprintf(stderr,"P4_FN %s\n",name.c_str());dump(prep.stmts,0);
+                }
+
+            }
+            auto unshadowed=[&](const std::string& builtin){
+                if(!canonical_native_call(builtin)||callables_.count(builtin)||host_.has_host_callable(builtin))return false;
+                for(const auto& frame:variable_scopes_)if(frame.count(builtin))return false;
+                return true;
+            };
+            bool p4_self_alias=false;for(const auto& frame:variable_scopes_)if(frame.count(name))p4_self_alias=true;
+            const bool p4_enabled=!p4_self_alias&&standalone_script_host_&&!std::getenv("NIFT_P4_DISABLE")&&!active_module_env_&&!callee_env&&!callee->module_env&&callee->variadic_param.empty();
+            nift::p4::Walker walker_plan;
+            const bool p4_walker=p4_enabled&&args.size()==2&&args[0].is_string()&&args[1].is_string()&&args[0].string.rfind("\x1fnift:",0)!=0&&args[1].string.rfind("\x1fnift:",0)!=0&&unshadowed("ls")&&unshadowed("is_dir")&&nift::p4::walker(prep.stmts,callee->params,name,walker_plan);
+            if(p4_walker){
+                if(std::getenv("NIFT_P4_TRACE"))std::fprintf(stderr,"P4_ADMIT walker %s\n",name.c_str());
+                if(callable_call_depth_>=kMaxCallableDepth){e="callable recursion depth exceeded: "+name;return false;}
+                last_call_return_loc_root_.reset();last_call_return_loc_path_.clear();
+                ++callable_call_depth_;
+                source_context_stack_.push_back(SourceContext{prep.source_path,callee->source_provenance,prep.view});
+                const bool result=p4_walk(args[0].string,args[1].string,out,e,
+                    prep.view.slice(walker_plan.ls->span.begin,walker_plan.ls->span.end-walker_plan.ls->span.begin),
+                    prep.view.slice(walker_plan.predicate->span.begin,walker_plan.predicate->span.end-walker_plan.predicate->span.begin),
+                    prep.view.slice(walker_plan.recurse->span.begin,walker_plan.recurse->span.end-walker_plan.recurse->span.begin),name);
+                source_context_stack_.pop_back();--callable_call_depth_;return result;
+            }
+            nift::p4::Consumer consumer_plan;bool p4_consumer=false;
+            if(p4_enabled&&args.size()==5&&args[0].is_string()&&(args[0].string=="walk"||args[0].string=="stat")&&args[1].is_string()&&args[2].is_string()&&args[3].is_number()&&args[4].is_number()&&unshadowed("ls")&&unshadowed("is_dir")&&unshadowed("stat")&&nift::p4::consumer(prep.stmts,callee->params,args[0].string,consumer_plan)){
+                const auto wi=callables_.find(consumer_plan.walker);
+                bool alias=false;for(const auto& frame:variable_scopes_)if(frame.count(consumer_plan.walker))alias=true;
+                if(wi!=callables_.end()&&!alias&&!wi->second.fragment&&!wi->second.async&&!wi->second.module_env&&wi->second.variadic_param.empty()){
+                    auto& wp=prepared_callables_[&wi->second];
+                    if(!wp.ready){std::string program,perr;if(translate_function_program(wi->second.body,program,perr,wi->second.body_view,&wp.view)&&prepare_loop_body(program,wp.stmts)){wp.source_path=std::make_shared<const std::filesystem::path>(wi->second.source_path);wp.ready=true;}}
+                    nift::p4::Walker proof;p4_consumer=wp.ready&&nift::p4::walker(wp.stmts,wi->second.params,consumer_plan.walker,proof);
+                }
+            }
+            struct P4ConditionsGuard {
+                decltype(p4_conditions_)& current;decltype(p4_conditions_) previous;bool active;
+                ~P4ConditionsGuard(){if(active)current=std::move(previous);}
+            } p4_conditions_guard{p4_conditions_,{},p4_consumer};
+            if(p4_consumer){
+                if(std::getenv("NIFT_P4_TRACE"))std::fprintf(stderr,"P4_ADMIT consumer %s %zu\n",name.c_str(),consumer_plan.conditions.size());
+                p4_conditions_guard.previous=std::move(p4_conditions_);p4_conditions_=std::move(consumer_plan.conditions);
             }
             if(callable_call_depth_>=kMaxCallableDepth){e="callable recursion depth exceeded: "+name;return false;}
             auto lexical_env=enter_lexical_environment(callee_env ? callee_env : callee->module_env);
@@ -1573,7 +1619,7 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
                 if(st.op=="clear"){if(!av.empty()){e="clear: expected no arguments";return false;}if(!rb->mutable_binding){e="cannot mutate const array: "+st.name;return false;}arr.clear();last_expression_mutation_=true;return true;}
                 {nift::RuntimeValue lege;return c.legacy(st.text,lege,e);}};
         execute_body=[&](const std::vector<std::unique_ptr<nift::ast::Stmt>>& body,std::string& e)->bool{for(const auto& s:body){if(pending_control_.kind!=ControlFlow::None)return true;if(!execute_prepared(*s,e))return false;}return true;};
-        execute_prepared=[&](const nift::ast::Stmt& st,std::string& e)->bool{struct SpanGuard { nift::ast::SourceSpan& target; nift::ast::SourceSpan previous; ~SpanGuard(){target=previous;} } span_guard{prepared_statement_span,prepared_statement_span};prepared_statement_span=st.span;struct LiteralReturnGuard { bool& target;bool previous;~LiteralReturnGuard(){target=previous;} } literal_return_guard{prepared_return_literal,prepared_return_literal};prepared_return_literal=st.kind==nift::ast::StmtKind::Return;auto& c=ast_context();nift::RuntimeValue rhs,oldv,next;if(st.kind==nift::ast::StmtKind::Legacy){return c.legacy(st.text,rhs,e);}if(st.kind==nift::ast::StmtKind::Import){const fs::path owner_source=active_module_env_?active_module_env_->source_path:(source_path_stack_.empty()?fs::path{}:source_path_stack_.back());auto imported=parse(st.text,owner_source,1,source_provenance,prepared_view->slice(st.span.begin,st.text.size()));if(!imported.ok){e=imported.error.message;return false;}return true;}if(st.kind==nift::ast::StmtKind::If){nift::RuntimeValue cv;if(!st.condition){e="unsupported prepared if condition";return false;}if(!nift::ast::evaluate(*st.condition,c,cv,e))return false;push_json_scope();const bool branch_ok=execute_body(nift::ast::truthy(cv)?st.body:st.else_body,e);pop_json_scope();return branch_ok;}if(st.kind==nift::ast::StmtKind::While){DiagnosticModeGuard diagnostic_mode(project_source_locations,st.source_location_diagnostics);nift::RuntimeValue cv;while(true){if(pending_control_.kind!=ControlFlow::None)return true;if(!st.condition){e="unsupported prepared while condition";return false;}if(!nift::ast::evaluate(*st.condition,c,cv,e))return false;if(!nift::ast::truthy(cv))return true;push_json_scope();++loop_depth_;const bool wok=execute_body(st.body,e);--loop_depth_;pop_json_scope();if(!wok)return false;if(pending_control_.kind==ControlFlow::Break){pending_control_={};return true;}if(pending_control_.kind==ControlFlow::Continue){pending_control_={};continue;}}return true;}if(st.kind==nift::ast::StmtKind::For){DiagnosticModeGuard diagnostic_mode(project_source_locations,st.source_location_diagnostics);std::shared_ptr<const nift::RuntimeValue> col;nift::RuntimeValue colv;if(st.iterable&&st.iterable->kind==nift::ast::Kind::Binding){if(!c.resolve_ref(st.iterable->name,col,e))return false;}else if(st.iterable){if(!nift::ast::evaluate(*st.iterable,c,colv,e))return false;col=std::make_shared<const nift::RuntimeValue>(std::move(colv));}else{e="unsupported prepared for iterable";return false;}if(!col->is_array()){e="for iteration requires an array";return false;}// Match canonical For's selector/read metadata environment. Restore
+        execute_prepared=[&](const nift::ast::Stmt& st,std::string& e)->bool{struct SpanGuard { nift::ast::SourceSpan& target; nift::ast::SourceSpan previous; ~SpanGuard(){target=previous;} } span_guard{prepared_statement_span,prepared_statement_span};prepared_statement_span=st.span;struct LiteralReturnGuard { bool& target;bool previous;~LiteralReturnGuard(){target=previous;} } literal_return_guard{prepared_return_literal,prepared_return_literal};prepared_return_literal=st.kind==nift::ast::StmtKind::Return;auto& c=ast_context();nift::RuntimeValue rhs,oldv,next;if(st.kind==nift::ast::StmtKind::Legacy){return c.legacy(st.text,rhs,e);}if(st.kind==nift::ast::StmtKind::Import){const fs::path owner_source=active_module_env_?active_module_env_->source_path:(source_path_stack_.empty()?fs::path{}:source_path_stack_.back());auto imported=parse(st.text,owner_source,1,source_provenance,prepared_view->slice(st.span.begin,st.text.size()));if(!imported.ok){e=imported.error.message;return false;}return true;}if(st.kind==nift::ast::StmtKind::If){auto fact=p4_conditions_.find(&st);if(fact!=p4_conditions_.end()){const auto& chosen=fact->second?st.body:st.else_body;if(chosen.empty())return true;push_json_scope();const bool ok=execute_body(chosen,e);pop_json_scope();return ok;}nift::RuntimeValue cv;if(!st.condition){e="unsupported prepared if condition";return false;}if(!nift::ast::evaluate(*st.condition,c,cv,e))return false;push_json_scope();const bool branch_ok=execute_body(nift::ast::truthy(cv)?st.body:st.else_body,e);pop_json_scope();return branch_ok;}if(st.kind==nift::ast::StmtKind::While){DiagnosticModeGuard diagnostic_mode(project_source_locations,st.source_location_diagnostics);nift::RuntimeValue cv;while(true){if(pending_control_.kind!=ControlFlow::None)return true;if(!st.condition){e="unsupported prepared while condition";return false;}if(!nift::ast::evaluate(*st.condition,c,cv,e))return false;if(!nift::ast::truthy(cv))return true;push_json_scope();++loop_depth_;const bool wok=execute_body(st.body,e);--loop_depth_;pop_json_scope();if(!wok)return false;if(pending_control_.kind==ControlFlow::Break){pending_control_={};return true;}if(pending_control_.kind==ControlFlow::Continue){pending_control_={};continue;}}return true;}if(st.kind==nift::ast::StmtKind::For){DiagnosticModeGuard diagnostic_mode(project_source_locations,st.source_location_diagnostics);std::shared_ptr<const nift::RuntimeValue> col;nift::RuntimeValue colv;if(st.iterable&&st.iterable->kind==nift::ast::Kind::Binding){if(!c.resolve_ref(st.iterable->name,col,e))return false;}else if(st.iterable){if(!nift::ast::evaluate(*st.iterable,c,colv,e))return false;col=std::make_shared<const nift::RuntimeValue>(std::move(colv));}else{e="unsupported prepared for iterable";return false;}if(!col->is_array()){e="for iteration requires an array";return false;}// Match canonical For's selector/read metadata environment. Restore
             // outer names on every normal, control-flow and failure exit.
             struct LoopReadBindings {
                 decltype(json_bindings_)& bindings;

@@ -268,6 +268,8 @@ private:
     std::vector<SavedLexicalScopes> saved_lexical_scopes_;
     std::unordered_map<std::string, Callable> callables_;
     // Prepared AST bodies for user callables, cached on first prepared call.
+    std::unordered_map<const nift::ast::Stmt*,bool> p4_conditions_;
+    bool p4_walk(const std::string& root,const std::string& relative,nift::RuntimeValue& out,std::string& error,const nift::detail::SourceView& list_view,const nift::detail::SourceView& predicate_view,const nift::detail::SourceView& recursion_view,const std::string& self);
     struct PreparedCallable { std::shared_ptr<const std::filesystem::path> source_path; nift::detail::SourceView view; bool ready=false; std::vector<std::unique_ptr<nift::ast::Stmt>> stmts; };
     std::unordered_map<const Callable*, PreparedCallable> prepared_callables_;
     enum class CompletionPhase { Untouched, Evaluating, Evaluated, Completed, Failed };

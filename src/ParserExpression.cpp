@@ -1457,7 +1457,7 @@ bool Parser::canonical_native_call(const std::string& name) {
     // an explicit source-evaluator shadow rule; when a user or host callable
     // shadows it, native dispatch defers, so prepared dispatch must match.
     static const std::unordered_set<std::string> native_heads={
-        "arch","async","attr_escape","await","build","build_all","build_names","build_repair",
+        "__p4_oracle","arch","async","attr_escape","await","build","build_all","build_names","build_repair",
         "bytes","cat","cd","close","cmd","copy","cp","deepcopy","env","epoch","err","exists",
         "ffi_buffer","ffi_bytes","ffi_call","ffi_callback","ffi_close","ffi_open","ffi_sizeof",
         "ffi_snapshot_bytes","ffi_struct","file","getenv","hardware_concurrency","html_escape",
@@ -2694,6 +2694,63 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                 out=nift::RuntimeValue(nullptr);return true;}
             if(call_args("pwd",args,q)){if(!args.empty()){error="pwd: expected no arguments";return false;}out=nift::RuntimeValue((standalone_script_host_?fs::current_path():host_.root()).generic_string());return true;}
             if(call_args("cd",args,q)){if(!standalone_script_host_){error="cd: only available in standalone Nift scripts/shell";return false;}fs::path p;if(args.size()!=1||!checked_path("cd",args,q,0,p))return false;std::error_code ec;fs::current_path(p,ec);if(ec)return fail_recoverable(nift::detail::DiagnosticCode::IoChangeDirectoryFailed,"cd: "+ec.message(),error);out=nift::RuntimeValue(nullptr);return true;}
+            // P4A scratch-only native acquisition + consumer oracle. Never public.
+            if(call_args("__p4_oracle",args,q)) {
+                std::string mode,root_raw;
+                if(args.size()!=2||!string_arg("__p4_oracle",args,q,0,mode)||!string_arg("__p4_oracle",args,q,1,root_raw))return false;
+                if(mode!="walk"&&mode!="stat"){error="P4 oracle: unsupported mode";return false;}
+                if(glob_has_magic(root_raw)){error="P4 oracle: glob root not admitted";return false;}
+                struct Entry{std::string relative;bool directory;};
+                std::vector<Entry> entries;
+                auto path_for=[&](const std::string& relative,const std::string& operation,fs::path& path)->bool {
+                    path=resolve_path(root_raw+"/"+relative);
+                    if(!standalone_script_host_&&!resource_path_authority_.project_root.empty()&&!filesystem::path_within(resource_path_authority_.project_root,path)){error=operation+": path must stay inside the Nift project";return false;}
+                    if(!nift_fs_root_allowed(path,resource_path_authority_.enforce_filesystem_root?resource_path_authority_.filesystem_root:fs::path{},error)){error=operation+": "+error;return false;}
+                    return true;
+                };
+                std::function<bool(const std::string&,int)> acquire;
+                acquire=[&](const std::string& rel,int level)->bool {
+                    if(callable_call_depth_+level+1>=kMaxCallableDepth){error="callable recursion depth exceeded: walk";return false;}
+                    fs::path directory;if(!path_for(rel,"ls",directory))return false;
+                    std::error_code ec;
+                    if(!fs::is_directory(directory,ec)||ec){if(ec)return fail_recoverable(nift::detail::DiagnosticCode::IoDirectoryReadFailed,"ls: "+ec.message(),error);error="ls: path is not a readable directory";return false;}
+                    std::vector<std::string> names;
+                    for(fs::directory_iterator it(directory,ec),end;!ec&&it!=end;it.increment(ec))names.push_back(it->path().filename().generic_string());
+                    if(ec)return fail_recoverable(nift::detail::DiagnosticCode::IoDirectoryReadFailed,"ls: "+ec.message(),error);
+                    std::sort(names.begin(),names.end());
+                    for(const auto& name:names){
+                        auto child=rel.empty()?name:rel+"/"+name;
+                        fs::path path;if(!path_for(child,"is_dir",path))return false;
+                        const auto info=inspect_path(path);
+                        if(info.error)return fail_recoverable(nift::detail::DiagnosticCode::IoMetadataFailed,"is_dir: "+info.error_message,error);
+                        const bool is_directory=info.exists&&info.type=="directory";
+                        entries.push_back({child,is_directory});
+                        if(is_directory&&!acquire(child,level+1))return false;
+                    }
+                    return true;
+                };
+                if(!acquire("",0))return false;
+                const bool bridge_trace=std::getenv("NIFT_P4_BRIDGE")!=nullptr;
+                std::uint64_t bridge_ns=0;
+                out=nift::RuntimeValue::make_array();out.array.reserve(entries.size());
+                for(auto& entry:entries){
+                    if(mode=="stat"&&entry.directory)continue;
+                    double size=entry.directory?-1:0;
+                    if(mode=="stat"){
+                        fs::path path;if(!path_for(entry.relative,"stat",path))return false;
+                        const auto info=inspect_path(path);
+                        if(info.error)return fail_recoverable(nift::detail::DiagnosticCode::IoMetadataFailed,"stat: "+info.error_message,error);
+                        if(!info.exists||info.type!="file"){error="value has no member: size";return false;}
+                        size=static_cast<double>(info.size);
+                    }
+                    const auto bridge_start=bridge_trace?std::chrono::steady_clock::now():std::chrono::steady_clock::time_point{};
+                    auto row=nift::RuntimeValue::make_array();row.array.reserve(3);
+                    row.array.emplace_back(std::move(entry.relative));row.array.emplace_back(size);row.array.emplace_back(0.0);out.array.push_back(std::move(row));
+                    if(bridge_trace)bridge_ns+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-bridge_start).count();
+                }
+                if(bridge_trace)std::fprintf(stderr,"P4_ORACLE_BRIDGE entries=%zu ns=%llu\n",out.array.size(),(unsigned long long)bridge_ns);
+                return true;
+            }
             if(call_args("exists",args,q)){fs::path p;if(args.size()!=1||!checked_path("exists",args,q,0,p))return false;FsInfo info=inspect_path(p);if(info.error)return fail_recoverable(nift::detail::DiagnosticCode::IoMetadataFailed,"exists: "+info.error_message,error);out=nift::RuntimeValue(info.exists);return true;}
             if(call_args("is_file",args,q)){fs::path p;if(args.size()!=1||!checked_path("is_file",args,q,0,p))return false;FsInfo info=inspect_path(p);if(info.error)return fail_recoverable(nift::detail::DiagnosticCode::IoMetadataFailed,"is_file: "+info.error_message,error);out=nift::RuntimeValue(info.exists&&info.type=="file");return true;}
             if(call_args("is_dir",args,q)){fs::path p;if(args.size()!=1||!checked_path("is_dir",args,q,0,p))return false;FsInfo info=inspect_path(p);if(info.error)return fail_recoverable(nift::detail::DiagnosticCode::IoMetadataFailed,"is_dir: "+info.error_message,error);out=nift::RuntimeValue(info.exists&&info.type=="directory");return true;}
@@ -5055,3 +5112,62 @@ bool Parser::invoke_struct_method(std::shared_ptr<StructInstance> instance,
 #undef NIFT_COMPAT_NOINLINE
 
 #undef NIFT_COMPAT_SPLIT_FRAMES
+
+bool Parser::p4_walk(const std::string& root_raw,const std::string& relative,nift::RuntimeValue& out,std::string& error,const nift::detail::SourceView& list_view,const nift::detail::SourceView& predicate_view,const nift::detail::SourceView& recursion_view,const std::string& self){
+    namespace fs=std::filesystem;
+    auto resolve_path=[&](const std::string& raw)->fs::path{std::string expanded=raw;if(standalone_script_host_&&!expanded.empty()&&expanded[0]=='~'&&(expanded.size()==1||expanded[1]=='/'||expanded[1]=='\\')){const char* home=std::getenv("HOME");
+#ifdef _WIN32
+    if(!home)home=std::getenv("USERPROFILE");
+#endif
+    if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p.is_relative())p=(standalone_script_host_?fs::current_path():host_.root())/p;return fs::absolute(p).lexically_normal();};
+                struct Entry{std::string relative;bool directory;};
+                std::vector<Entry> entries;
+                auto path_for=[&](const std::string& relative,const std::string& operation,fs::path& path)->bool {
+                    path=resolve_path(root_raw+"/"+relative);
+                    if(!standalone_script_host_&&!resource_path_authority_.project_root.empty()&&!filesystem::path_within(resource_path_authority_.project_root,path)){error=operation+": path must stay inside the Nift project";return false;}
+                    if(!nift_fs_root_allowed(path,resource_path_authority_.enforce_filesystem_root?resource_path_authority_.filesystem_root:fs::path{},error)){error=operation+": "+error;return false;}
+                    return true;
+                };
+                std::function<bool(const std::string&,int)> acquire;
+                acquire=[&](const std::string& rel,int level)->bool {
+                    if(level>0&&callable_call_depth_+level-1>=kMaxCallableDepth){expression_failure_view_=recursion_view;error="callable recursion depth exceeded: "+self;return false;}
+                    expression_failure_view_=list_view;fs::path directory;
+                    std::vector<std::string> names;
+                    if(glob_has_magic(root_raw+"/"+rel)){
+                        // The planned canonical leaf consumes a value, never
+                        // a quoted-source round trip (legacy escapes differ).
+                        push_variable_scope();
+                        struct ScopeGuard{Parser* parser;~ScopeGuard(){parser->pop_variable_scope();}} scope_guard{this};
+                        auto raw=std::make_shared<nift::RuntimeValue>(root_raw+"/"+rel);
+                        variable_scopes_.back().emplace("__p4_glob_path",VariableBinding{raw,nift_binding_type(*raw),true,false});
+                        nift::RuntimeValue listed;
+                        if(!evaluate_expression("ls(__p4_glob_path)",listed,error,list_view))return false;
+                        for(const auto& item:listed.array)names.push_back(item.string);
+                    }else{
+                        if(!path_for(rel,"ls",directory))return false;
+                        std::error_code ec;
+                        if(!fs::is_directory(directory,ec)||ec){if(ec)return fail_recoverable(nift::detail::DiagnosticCode::IoDirectoryReadFailed,"ls: "+ec.message(),error);error="ls: path is not a readable directory";return false;}
+                        for(fs::directory_iterator it(directory,ec),end;!ec&&it!=end;it.increment(ec))names.push_back(it->path().filename().generic_string());
+                        if(ec)return fail_recoverable(nift::detail::DiagnosticCode::IoDirectoryReadFailed,"ls: "+ec.message(),error);
+                        std::sort(names.begin(),names.end());
+                    }
+                    for(const auto& name:names){
+                        auto child=rel.empty()?name:rel+"/"+name;
+                        expression_failure_view_=predicate_view;fs::path path;if(!path_for(child,"is_dir",path))return false;
+                        const auto info=inspect_path(path);
+                        if(info.error)return fail_recoverable(nift::detail::DiagnosticCode::IoMetadataFailed,"is_dir: "+info.error_message,error);
+                        const bool is_directory=info.exists&&info.type=="directory";
+                        entries.push_back({child,is_directory});
+                        if(is_directory&&!acquire(child,level+1))return false;
+                    }
+                    return true;
+                };
+                if(!acquire(relative,0))return false;
+
+    const bool bridge_trace=std::getenv("NIFT_P4_BRIDGE")!=nullptr;
+    const auto bridge_start=bridge_trace?std::chrono::steady_clock::now():std::chrono::steady_clock::time_point{};
+    out=nift::RuntimeValue::make_array();out.array.reserve(entries.size());
+    for(auto& entry:entries){auto row=nift::RuntimeValue::make_array();row.array.reserve(2);row.array.emplace_back(std::move(entry.relative));row.array.emplace_back(entry.directory);out.array.push_back(std::move(row));}
+    if(bridge_trace)std::fprintf(stderr,"P4_ENTRY_BRIDGE entries=%zu ns=%llu\n",out.array.size(),(unsigned long long)std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-bridge_start).count());
+    expression_failure_view_={};return true;
+}
