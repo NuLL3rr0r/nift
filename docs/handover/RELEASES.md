@@ -7,7 +7,9 @@ approved release is packaged and published.
 
 ## Authority and current state
 
-The executable and Snap recipe declare `4.11.0`. The authorized GitHub v4.11.0
+The executable and Snap recipe declare `4.12.0`. The v4.12.0 release is in preparation on `main` at `7f7e487c47a87e871dfef53345e2b71288008bff`: prepared filesystem entry pipeline (P4), Linux single-snapshot statx metadata, prepared iterations shrink-safety repair and removal of the experimental `__p4_oracle` builtin are landed and certified (CI green, NRS 94/94, PRS 12/12). No tag or publication yet; `STOP for review` before tagging. The v4.11.0 release below remains the most recent published release:
+
+The authorized GitHub v4.11.0
 release is published and verified at immutable annotated tag target
 `c8d9c266518d115e4f289c5c6a2b94ddd7ee9968`; tag object
 `aca0cc8bfe5b0b906b300d6f92ad1ef9bb23b9e2`. Release workflow #38049463374,

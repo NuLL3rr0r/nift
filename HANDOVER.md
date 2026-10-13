@@ -20,11 +20,11 @@ whether it is a regression.
 ## Current identity
 
 - Product: **Nift**, a website generator and dependency-aware website build layer.
-- Current executable identity: `Nift v4.11.0`, the verified public release.
+- Current executable identity: `Nift v4.12.0` (release in preparation).
 - Language/toolchain: C++17 and Make.
 - Output convention for modern projects: `public/`.
 - Current branch: `main` in this checkout.
-- Current project phase: **v4.11.0 released and verified; stop for next direction**.
+- Current project phase: **v4.12.0 release in preparation; stop for review before tagging**.
   Immutable v4.11.0 targets `c8d9c266518d115e4f289c5c6a2b94ddd7ee9968`;
   annotated tag object `aca0cc8bfe5b0b906b300d6f92ad1ef9bb23b9e2`.
   Release workflow #38049463374 and all public installer lanes passed. Exactly
