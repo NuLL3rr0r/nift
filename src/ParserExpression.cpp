@@ -1,4 +1,7 @@
 #include "ProcessEnvironment.h"
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <cerrno>
 #include "JsonFile.h"
 #include "RuntimeJson.h"
 #include "Parser.h"
@@ -5034,6 +5037,27 @@ bool Parser::evaluate_condition(const std::string& expression, bool& value, std:
 
 Parser::FsInfo Parser::inspect_path(const std::filesystem::path& path) const {
     FsInfo info;
+#ifdef __linux__
+    // P5B1: one statx observation (type + size, symlink-following) replaces the
+    // std::filesystem status + file_size pair (two metadata syscalls) while
+    // preserving the fresh-observation contract and error/not-found semantics.
+    {
+        struct statx stx{};
+        if(::statx(AT_FDCWD, path.c_str(), 0, STATX_TYPE | STATX_SIZE, &stx) == 0) {
+            info.exists = true;
+            const unsigned m = stx.stx_mode;
+            if(S_ISREG(m)) { info.type = "file"; if(stx.stx_mask & STATX_SIZE) info.size = static_cast<std::uint64_t>(stx.stx_size); }
+            else if(S_ISDIR(m)) info.type = "directory";
+            else if(S_ISLNK(m)) info.type = "symlink";
+            else info.type = "other";
+            return info;
+        }
+        const int e = errno;
+        if(e == ENOENT || e == ENOTDIR) return info;              // not exists
+        if(e != ENOSYS) { info.error = true; info.error_message = std::generic_category().message(e); return info; }
+        // ENOSYS (old kernel): fall through to the portable path below.
+    }
+#endif
     std::error_code ec;
     const std::filesystem::file_status st = std::filesystem::status(path, ec);
     if (ec) {
