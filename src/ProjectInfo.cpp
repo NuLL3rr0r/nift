@@ -597,11 +597,6 @@ void ProjectInfo::refresh_hash_once(const fs::path& dependency) {
 void ProjectInfo::reload_identity_catalogue() {
     identity_reload_pending_=false;
     identity_catalogue_.reset();
-    if(config.incremental_mode!="modified")return;
-    try {
-        auto catalogue=std::make_unique<niftid::Catalogue>();
-        if(catalogue->load(root))identity_catalogue_=std::move(catalogue);
-    } catch (...) { /* Optional acceleration, never a consumer error. */ }
 }
 bool ProjectInfo::metadata_path_is_safe_prepared(unsigned id) const {
     const auto& c=*identity_catalogue_;
@@ -1290,7 +1285,7 @@ int ProjectInfo::build_many(const std::vector<BuildJob>& initial_jobs, bool targ
     std::atomic<std::size_t> completed{0};
     std::vector<unsigned char> succeeded(jobs.size(), 0);
     std::vector<std::optional<BuildError>> errors(jobs.size());
-    std::vector<std::vector<std::string>> discovered(config.incremental_mode=="modified"?jobs.size():0);
+    std::vector<std::vector<std::string>> discovered;
     BuildProgress progress(jobs.size(), completed);
 
     std::vector<std::vector<std::size_t>> dependents;

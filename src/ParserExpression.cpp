@@ -950,6 +950,7 @@ bool Parser::known_file_method(std::string_view method){
     return methods.find(method)!=methods.end();
 }
 
+
 bool Parser::execute_file_method(const nift::RuntimeValue& base,const std::string& method,std::size_t operand_count,
     const std::function<bool(std::size_t,nift::RuntimeValue&)>& eval_arg,
     const std::function<bool(const std::string&,nift::RuntimeValue&)>& evaluate_token,
@@ -1628,7 +1629,7 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
                         std::size_t index=0;try{index=(std::size_t)std::stoull(text.substr(index_start,me-index_start));}catch(...){error="page index is out of range in '"+text+"'";return false;}
                         ++me;
                         if(!current.is_array()||index>=current.array.size()){error="page index "+std::to_string(index)+" is out of range in '"+text+"'";return false;}
-                        current=current.array[index];
+                        {nift::RuntimeValue nx=current.array[index];current=std::move(nx);}
                         if(me==text.size()){out=std::move(current);return true;}
                         if(text[me]=='.'){mp=me+1;continue;}
                         // A following operator/expression makes this a compound
@@ -1763,7 +1764,7 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
                             catch (...) { walk_ok = false; break; }
                             ++pos;
                             if (!current.is_array() || index >= current.array.size()) { walk_ok = false; break; }
-                            current = current.array[index];
+                            {nift::RuntimeValue nx=current.array[index];current=std::move(nx);}
                         } else { walk_ok = false; break; }
                     }
                     if (walk_ok) { out = current; return true; }
@@ -2129,23 +2130,65 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
             return name;
         };
 
-        auto try_location_ref = [&](const std::string& source, VariableBinding& dst) -> bool {
+        auto try_location_ref = [&](const std::string& source, VariableBinding& dst, std::string* hard_error=nullptr, nift::RuntimeValue* value_out=nullptr, bool* value_resolved=nullptr) -> bool {
+            if(value_resolved)*value_resolved=false;
             const std::string ref_source=trim_copy(source);auto parsed=nift::ast::parse_expression(ref_source);if(!parsed.supported||!parsed.expr)return false;
-            EvaluatedOperand operand;
-            const bool formed=nift::detail::form_location_path(*parsed.expr,operand,
-                [&](const nift::ast::Expr& ex,EvaluatedOperand& result){
-                    auto* binding=find_binding(ex.name);if(!binding||!binding->value)return false;
-                    if(binding->is_location_ref()){result.root=binding->ref_root_slot;result.path=binding->ref_path;}else result.root=binding->slot;
-                    result.binding_type=binding->type;result.mutable_binding=binding->mutable_binding;result.deep_readonly=binding->deep_readonly;
-                    return true;
-                },
-                [&](const nift::ast::Expr& index,nift::RuntimeValue& value){return eval(index.text.empty()?ref_source.substr(index.span.begin,index.span.end-index.span.begin):index.text,value,depth+1);},
-                [&](const nift::RuntimeValue& index,std::vector<PathComponent>& path){std::size_t offset=0;if(nift::runtime_number_to_size(index,offset))path.push_back(PathComponent::at(offset));else if(index.is_string())path.push_back(PathComponent::member(index.string));else return false;return true;});
-            if(!formed||operand.path.empty())return false;
-            auto original=dst.value;
-            dst.ref_root_slot=std::move(operand.root);dst.ref_path=std::move(operand.path);dst.sync();if(!dst.value){dst.rebind(std::move(original));return false;}
-            if(!aliasable_call_leaf(*dst.value)){dst.ref_root_slot.reset();dst.ref_path.clear();dst.sync();return false;}
-            dst.type=nift_binding_type(*dst.value);return true;
+            const auto root_kind=parsed.expr->kind;
+            if(!(root_kind==nift::ast::Kind::Binding||root_kind==nift::ast::Kind::Index||root_kind==nift::ast::Kind::Member))return false;
+            std::shared_ptr<std::shared_ptr<nift::RuntimeValue>> root;std::vector<PathComponent> path;
+            nift::RuntimeValue current;bool have_current=false;
+            std::function<bool(const nift::ast::Expr&)> walk;
+            walk=[&](const nift::ast::Expr& ex)->bool{
+                if(ex.kind==nift::ast::Kind::Binding){
+                    auto* b=find_binding(ex.name);if(!b)return false;b->sync();if(!b->value)return false;
+                    if(b->is_location_ref()){root=b->ref_root_slot;path=b->ref_path;}else root=b->slot;
+                    current=*b->value;have_current=true;return true;
+                }
+                if(ex.kind==nift::ast::Kind::Member){
+                    if(!ex.left||!walk(*ex.left)||!have_current)return false;
+                    if(!current.is_object()){
+                        if(hard_error)*hard_error="cannot access member '"+ex.name+"' because the current JSON value is not an object";
+                        return false;
+                    }
+                    const auto* m=current.find_member(ex.name);
+                    if(!m){if(hard_error)*hard_error="JSON value '"+ref_source+"' has no member '"+ex.name+"'";return false;}
+                    path.push_back(PathComponent::member(ex.name));{nift::RuntimeValue nx=*m;current=std::move(nx);}return true;
+                }
+                if(ex.kind==nift::ast::Kind::Index){
+                    if(!ex.left||!walk(*ex.left)||!have_current)return false;
+                    nift::RuntimeValue idx;
+                    if(!eval(ex.right->text.empty()?ref_source.substr(ex.right->span.begin,ex.right->span.end-ex.right->span.begin):ex.right->text,idx,depth+1)){if(hard_error)*hard_error=error;return false;}
+                    if(current.is_array()){
+                        std::size_t index=0;
+                        if(!nift::runtime_number_to_size(idx,index)){if(hard_error)*hard_error="JSON array indices must be non-negative integers in '"+ref_source+"'";return false;}
+                        if(index>=current.array.size()){if(hard_error)*hard_error="JSON array index "+std::to_string(index)+" is out of range in '"+ref_source+"'";return false;}
+                        path.push_back(PathComponent::at(index));{nift::RuntimeValue nx=current.array[index];current=std::move(nx);}return true;
+                    }
+                    if(current.is_bytes()){
+                        std::size_t index=0;
+                        if(!nift::runtime_number_to_size(idx,index)){if(hard_error)*hard_error="bytes indices must be non-negative integers in '"+ref_source+"'";return false;}
+                        if(!current.bytes||index>=current.bytes->size()){if(hard_error)*hard_error="bytes index "+std::to_string(index)+" is out of range in '"+ref_source+"'";return false;}
+                        if(value_resolved)*value_resolved=false;
+                        current=nift::RuntimeValue(static_cast<int>((*current.bytes)[index]));return true;
+                    }
+                    if(current.is_object()){
+                        if(!idx.is_string()){if(hard_error)*hard_error="JSON object index must be a quoted string, string binding, or string expression in '"+ref_source+"'";return false;}
+                        const auto* m=current.find_member(idx.string);
+                        if(!m){if(hard_error)*hard_error="JSON object has no key '"+idx.string+"'";return false;}
+                        path.push_back(PathComponent::member(idx.string));{nift::RuntimeValue nx=*m;current=std::move(nx);}return true;
+                    }
+                    if(hard_error)*hard_error="cannot index value in '"+ref_source+"'";return false;
+                }
+                return false;
+            };
+            if(!walk(*parsed.expr)||path.empty())return false;
+            if(current.is_array()||current.is_object()||(current.is_string()&&current.string.rfind("\x1fnift:",0)==0)){
+                dst.ref_root_slot=std::move(root);dst.ref_path=std::move(path);dst.sync();if(!dst.value)return false;
+                dst.type=nift_binding_type(*dst.value);return true;
+            }
+            if(value_out)*value_out=std::move(current);
+            if(value_resolved)*value_resolved=true;
+            return false;
         };
 
         // Bind a callable parameter: preserve location identity when the argument
@@ -4025,32 +4068,17 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                 if (callee) {
                     const auto callee_env = module_callee ? module_callee_env : callee->module_env;
                     if (callable_call_depth_ >= kMaxCallableDepth) { error = "callable recursion depth exceeded: " + call_name; return false; }
-                    OrdinaryArgumentFrame local_arguments;auto* argument_frame=ordinary_arguments;
-                    bool formed_arguments=argument_frame&&depth==0&&argument_frame->callable==call_name&&!callee->async&&!callee->fragment;
-                    bool admitted=!callee->async&&!callee->fragment;
-                    auto* marker_binding=find_binding(call_name);if(marker_binding&&marker_binding->value&&marker_binding->value->is_string()&&marker_binding->value->string.rfind("\x1fnift:callable:",0)==0)admitted=false;
-                    bool raw_ok=false;auto raw_args=parse_parameters(text.substr(lp+1,text.size()-lp-2),raw_ok);
-                    for(const auto& argument:raw_args){auto parsed=nift::ast::parse_expression(argument);if(parsed.supported&&parsed.expr&&deferred_location(*parsed.expr))admitted=false;}
-                    if(!formed_arguments&&admitted&&raw_ok){
-                        if(!form_call_arguments(text.substr(lp+1,text.size()-lp-2),call_name,callee->params.size(),!callee->variadic_param.empty(),local_arguments,error,depth+1))return false;
-                        argument_frame=&local_arguments;formed_arguments=true;
-                    }
-                    std::vector<nift::RuntimeValue> spread_args;bool args_ok=false;std::vector<bool> quoted_args;std::vector<nift::detail::SourceText> args;std::vector<nift::RuntimeValue> values;
-                    if(formed_arguments){args=argument_frame->sources;args_ok=true;quoted_args.resize(args.size(),false);for(const auto& operand:argument_frame->operands)values.push_back(*operand.snapshot);}
-                    else {
-                    args=parse_parameters(text.substr(lp+1,text.size()-lp-2),args_ok,&quoted_args); if(args_ok){std::vector<nift::detail::SourceText> ex;std::vector<bool> eq;for(size_t ai=0;ai<args.size();++ai){if(!(ai<quoted_args.size()&&quoted_args[ai])&&trim_copy(args[ai]).rfind("...",0)==0){nift::RuntimeValue sv;if(!eval(trim_copy(args[ai]).substr(3),sv,depth+1))return false;if(!sv.is_array()){error="spread value must be an array";return false;}for(const auto& item:sv.array){ex.push_back("\x1fnift:spread:"+std::to_string(spread_args.size()));spread_args.push_back(item);eq.push_back(false);}}else{ex.push_back(args[ai]);eq.push_back(ai<quoted_args.size()&&quoted_args[ai]);}}args.swap(ex);quoted_args.swap(eq);}if(!args_ok||(!callee->variadic_param.empty()?args.size()<callee->params.size():args.size()!=callee->params.size())){error="callable argument count mismatch: "+call_name;return false;}
-                    for(std::size_t ai=0;ai<args.size();++ai){nift::RuntimeValue v;if(ai<quoted_args.size()&&quoted_args[ai])v=nift::RuntimeValue(args[ai]);else if(args[ai].rfind("\x1fnift:spread:",0)==0)v=spread_args[static_cast<std::size_t>(std::stoull(args[ai].substr(13)))];else if(!eval(args[ai],v,depth+1))return false;values.push_back(std::move(v));}
+                    std::vector<nift::RuntimeValue> spread_args;bool args_ok=false; std::vector<bool> quoted_args; auto args=parse_parameters(text.substr(lp+1,text.size()-lp-2),args_ok,&quoted_args); if(args_ok){std::vector<nift::detail::SourceText> ex;std::vector<bool> eq;for(size_t ai=0;ai<args.size();++ai){if(!(ai<quoted_args.size()&&quoted_args[ai])&&trim_copy(args[ai]).rfind("...",0)==0){nift::RuntimeValue sv;if(!eval(trim_copy(args[ai]).substr(3),sv,depth+1))return false;if(!sv.is_array()){error="spread value must be an array";return false;}for(const auto& item:sv.array){ex.push_back("\x1fnift:spread:"+std::to_string(spread_args.size()));spread_args.push_back(item);eq.push_back(false);}}else{ex.push_back(args[ai]);eq.push_back(ai<quoted_args.size()&&quoted_args[ai]);}}args.swap(ex);quoted_args.swap(eq);}if(!args_ok||(!callee->variadic_param.empty()?args.size()<callee->params.size():args.size()!=callee->params.size())){error="callable argument count mismatch: "+call_name;return false;}
+                    std::vector<nift::RuntimeValue> values(args.size());const bool call_is_async=callee->async;std::vector<VariableBinding> parameter_bindings;if(!call_is_async)parameter_bindings.reserve(args.size());
+                    for(std::size_t ai=0;ai<args.size();++ai){const bool q=ai<quoted_args.size()&&quoted_args[ai];const bool sp=args[ai].rfind("\x1fnift:spread:",0)==0;
+                        if(q){values[ai]=nift::RuntimeValue(args[ai]);if(!call_is_async)parameter_bindings.push_back(bind_call_param(args[ai],true,values[ai]));}
+                        else if(sp){values[ai]=spread_args[static_cast<std::size_t>(std::stoull(args[ai].substr(13)))];if(!call_is_async)parameter_bindings.push_back(bind_call_param(args[ai],true,values[ai]));}
+                        else{const std::string at=trim_copy(args[ai]);auto ap=nift::ast::parse_expression(at);const bool addr=ap.supported&&ap.expr&&(ap.expr->kind==nift::ast::Kind::Index||ap.expr->kind==nift::ast::Kind::Member||ap.expr->kind==nift::ast::Kind::SafeIndex||ap.expr->kind==nift::ast::Kind::SafeMember);if(addr){VariableBinding loc;std::string locerr;nift::RuntimeValue locval;bool have_val=false;if(try_location_ref(args[ai],loc,&locerr,&locval,&have_val)&&loc.is_location_ref()&&loc.value){loc.mutable_binding=true;loc.deep_readonly=false;values[ai]=*loc.value;if(!call_is_async)parameter_bindings.push_back(std::move(loc));continue;}if(have_val){values[ai]=std::move(locval);if(!call_is_async)parameter_bindings.push_back(bind_call_param(args[ai],true,values[ai]));continue;}if(!locerr.empty()){const auto apos=text.find(at);if(apos!=std::string::npos&&raw.view.size()>=apos+at.size())expression_failure_view_=raw.view.slice(apos,at.size());error=locerr;return false;}}nift::RuntimeValue v;if(!eval(args[ai],v,depth+1))return false;values[ai]=v;if(!call_is_async)parameter_bindings.push_back(bind_call_param(args[ai],addr?true:q,values[ai]));}
                     }
                     if(callee->async){if(module_callee){error="module-private async callables are unsupported";return false;}for(std::size_t ai=0;ai<args.size();++ai){const std::string an=trim_copy(args[ai]);if(valid_binding_identifier(an)){if(auto* ab=find_binding(an)){ab->sync();if(ab->value&&ab->value->is_string()&&ab->value->string.rfind("\x1fnift:atomic:",0)==0)values[ai]=*ab->value;}}}nift::RuntimeValue cb(named_callable_tag(call_name,callee->module_env));return spawn_future(cb,values,out);}
                     ++callable_call_depth_;
                     const int caller_loop_depth = loop_depth_;
                     loop_depth_ = 0;
-                    std::vector<VariableBinding> parameter_bindings;parameter_bindings.reserve(callee->params.size());for(std::size_t ai=0;ai<callee->params.size();++ai){
-                        if(!formed_arguments){parameter_bindings.push_back(bind_call_param(args[ai],ai<quoted_args.size()&&quoted_args[ai],values[ai]));continue;}
-                        const auto& operand=argument_frame->operands[ai];
-                        if(operand.provenance==EvaluatedOperand::Provenance::Location){VariableBinding location;location.ref_root_slot=operand.root;location.ref_path=operand.path;location.type=operand.binding_type;location.mutable_binding=true;location.deep_readonly=false;location.sync();parameter_bindings.push_back(std::move(location));}
-                        else {auto value=std::make_shared<nift::RuntimeValue>(std::move(values[ai]));parameter_bindings.emplace_back(value,operand.binding_type,true,false);}
-                    }
                     auto lexical_env=enter_lexical_environment(callee_env);
                     push_variable_scope(); auto& scope=variable_scopes_.back(); for(std::size_t ai=0;ai<callee->params.size();++ai)scope.emplace(callee->params[ai],std::move(parameter_bindings[ai]));if(!callee->variadic_param.empty()){nift::RuntimeValue rest=nift::RuntimeValue::make_array();for(std::size_t ai=callee->params.size();ai<values.size();++ai)rest.array.push_back(std::move(values[ai]));auto sp=std::make_shared<nift::RuntimeValue>(std::move(rest));scope.emplace(callee->variadic_param,VariableBinding{sp,nift_binding_type(*sp),true,false});}
                     const bool saved_mutation = last_expression_mutation_;
@@ -4369,7 +4397,7 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                             // Computed index from a binding or resolvable
                             // expression (e.g. a[i], a[i + 1]).
                             nift::RuntimeValue computed;
-                            if (!resolve_direct(token, computed) ||
+                            if (!eval(token, computed, depth+1) ||
                                 !nift::runtime_number_to_size(computed, index)) {
                                 error = "JSON array indices must be non-negative integers in '" + text + "'";
                                 return false;
@@ -4402,7 +4430,7 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                                 // Computed key from a resolvable expression
                                 // (e.g. info[page.name], obj[tag.to_lower()]).
                                 nift::RuntimeValue computed;
-                                if (!resolve_direct(token, computed) || !computed.is_string()) {
+                                if (!eval(token, computed, depth+1) || !computed.is_string()) {
                                     error = "JSON object index must be a quoted string, string binding, or string expression in '" + text + "'";
                                     return false;
                                 }
@@ -4468,6 +4496,7 @@ if(home)expanded=std::string(home)+expanded.substr(1);}fs::path p(expanded);if(p
                 if(sp!=std::string::npos){nift::RuntimeValue recv;if(!eval(text.substr(0,sp),recv,depth+1))return false;if(recv.is_null()){out=nift::RuntimeValue(nullptr);return true;}std::string ordinary=text;ordinary.erase(sp,1);return eval(ordinary,out,depth+1);}
             }
             if (compose_postfix(text, out)) return true;
+            if (!error.empty()) return false;
             if (!error.empty()) return false;
             if (resolve_direct(text,out)) return true;
             if (!error.empty()) return false;

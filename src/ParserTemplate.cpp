@@ -1264,10 +1264,10 @@ if(auto it=json_bindings_.find(name);it!=json_bindings_.end()){out=*it->second;r
 };c.failure_origin=[&](nift::ast::SourceSpan span){if(!expression_failure_view_)expression_failure_view_=prepared_view->slice(span.begin,span.end-span.begin);};
 // Ordinary bare bindings need no second parse/lookup. Atomic handles and
 // logical location aliases retain the canonical location-aware oracle.
-c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source=trim_copy(arg);if(valid_binding_identifier(ref_source)){bool location_alias=false;for(auto sc=variable_scopes_.rbegin();sc!=variable_scopes_.rend();++sc){auto it=sc->find(ref_source);if(it!=sc->end()){it->second.sync();if(it->second.value&&it->second.value->is_string()&&it->second.value->string.rfind("\x1fnift:atomic:",0)==0)return true;location_alias=it->second.is_location_ref();break;}}if(!location_alias)return false;}auto parsed=nift::ast::parse_expression(ref_source);if(!parsed.supported||!parsed.expr)return false;EvaluatedOperand operand;const bool formed=nift::detail::form_location_path(*parsed.expr,operand,
-    [&](const nift::ast::Expr& ex,EvaluatedOperand& result){VariableBinding* binding=nullptr;for(auto scope=variable_scopes_.rbegin();scope!=variable_scopes_.rend();++scope){auto it=scope->find(ex.name);if(it!=scope->end()){it->second.sync();binding=&it->second;break;}}if(!binding||!binding->value)return false;if(binding->is_location_ref()){result.root=binding->ref_root_slot;result.path=binding->ref_path;}else result.root=binding->slot;result.binding_type=binding->type;result.mutable_binding=binding->mutable_binding;result.deep_readonly=binding->deep_readonly;return true;},
-    [&](const nift::ast::Expr& index,nift::RuntimeValue& value){std::string index_error;return evaluate_expression(index.text.empty()?ref_source.substr(index.span.begin,index.span.end-index.span.begin):index.text,value,index_error);},
-    [&](const nift::RuntimeValue& index,std::vector<PathComponent>& path){if(index.is_number()&&index.num>=0&&std::trunc(index.num)==index.num)path.push_back(PathComponent::at((std::size_t)index.num));else if(index.is_string())path.push_back(PathComponent::member(index.string));else return false;return true;});if(!formed||operand.path.empty())return false;VariableBinding loc;loc.ref_root_slot=std::move(operand.root);loc.ref_path=std::move(operand.path);loc.sync();if(!loc.value)return false;return loc.value->is_array()||loc.value->is_object()||(loc.value->is_string()&&loc.value->string.rfind("\x1fnift:",0)==0);};c.call=[&](const std::string& name,std::vector<nift::RuntimeValue>&& args,nift::RuntimeValue& out,std::string& e)->bool{
+c.arg_is_location=[&](const std::string& call_name,const std::string& arg)->bool{const std::string ref_source=trim_copy(arg);if(valid_binding_identifier(ref_source)){bool location_alias=false;for(auto sc=variable_scopes_.rbegin();sc!=variable_scopes_.rend();++sc){auto it=sc->find(ref_source);if(it!=sc->end()){it->second.sync();if(it->second.value&&it->second.value->is_string()&&it->second.value->string.rfind("\x1fnift:atomic:",0)==0)return true;location_alias=it->second.is_location_ref();break;}}if(!location_alias)return false;}auto parsed=nift::ast::parse_expression(ref_source);if(!parsed.supported||!parsed.expr)return false;std::shared_ptr<std::shared_ptr<nift::RuntimeValue>> root;std::vector<PathComponent> path;bool unknown_index=false;std::function<bool(const nift::ast::Expr&)> has_effects;has_effects=[&](const nift::ast::Expr& node)->bool{if(node.kind==nift::ast::Kind::Call||node.kind==nift::ast::Kind::Lambda)return true;if(node.left&&has_effects(*node.left))return true;if(node.right&&has_effects(*node.right))return true;for(const auto& item:node.items)if(item&&has_effects(*item))return true;return false;};std::function<bool(const nift::ast::Expr&)> walk;walk=[&](const nift::ast::Expr& ex)->bool{if(ex.kind==nift::ast::Kind::Binding){VariableBinding* b=nullptr;for(auto sc=variable_scopes_.rbegin();sc!=variable_scopes_.rend();++sc){auto it=sc->find(ex.name);if(it!=sc->end()){it->second.sync();b=&it->second;break;}}if(!b||!b->value)return false;if(b->is_location_ref()){root=b->ref_root_slot;path=b->ref_path;}else root=b->slot;return true;}if(ex.kind==nift::ast::Kind::Member){if(!ex.left||!walk(*ex.left))return false;path.push_back(PathComponent::member(ex.name));return true;}if(ex.kind==nift::ast::Kind::Index){if(!ex.left||!walk(*ex.left))return false;if(ex.right&&(!has_effects(*ex.right)||known_file_method(call_name))){nift::RuntimeValue idx;std::string index_error;if(!evaluate_expression(ex.right->text.empty()?ref_source.substr(ex.right->span.begin,ex.right->span.end-ex.right->span.begin):ex.right->text,idx,index_error))return false;if(idx.is_number()&&idx.num>=0&&std::trunc(idx.num)==idx.num)path.push_back(PathComponent::at((std::size_t)idx.num));else if(idx.is_string())path.push_back(PathComponent::member(idx.string));else return false;}else{unknown_index=true;path.push_back(PathComponent::at(0));}return true;}return false;};if(!walk(*parsed.expr))return false;if(unknown_index)return true;if(path.empty())return false;VariableBinding loc;loc.ref_root_slot=std::move(root);loc.ref_path=std::move(path);loc.sync();if(!loc.value)return true;return loc.value->is_array()||loc.value->is_object()||(loc.value->is_string()&&loc.value->string.rfind("nift:",0)==0);};            c.call=[&](const std::string& name,std::vector<nift::RuntimeValue>&& args,nift::RuntimeValue& out,std::string& e)->bool{
+            // Native filesystem operations take precedence over same-named user
+            // callables; decline so the canonical filesystem recipe resolves them.
+            {const char fc=name.empty()?'\0':name[0];if((fc=='m'||fc=='c'||fc=='s'||fc=='f')&&(name=="move"||name=="mv"||name=="copy"||name=="cp"||name=="stat"||name=="file"))return false;}
             // Prepared dispatch for user callables: bind args, run the prepared
             // body once, propagate the return value. Any failure falls back to
             // Builtin dispatch is reached for every callable invocation; skip the
@@ -1301,7 +1301,23 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
             if(active_module_env_){auto mit=active_module_env_->callables.find(name);if(mit!=active_module_env_->callables.end()){callee=&mit->second;callee_env=mit->second.module_env ? mit->second.module_env : active_module_env_;}}
             if(!callee){auto ci=callables_.find(name);if(ci!=callables_.end())callee=&ci->second;}
             if(!callee&&host_.has_host_callable(name)){for(const auto& arg:args)if(contains_timer_resource(arg)){e="host callable '"+name+"' cannot receive a timer value";return true;}return call_runtime_host(host_, name, args, out, e);}
-            if(!callee||callee->fragment)return false;
+            if(callee&&callee->fragment)return false;
+            if(!callee){
+                // Native/unknown ordinary call: dispatch against the already
+                // evaluated arguments by binding them to temporaries, so side
+                // effects run exactly once and left-to-right. Falls back to the
+                // canonical string evaluator only for names it does not know.
+                if(variable_scopes_.empty())variable_scopes_.emplace_back();
+                std::string synth=name+"(";std::vector<std::string> temps;temps.reserve(args.size());
+                for(std::size_t ai=0;ai<args.size();++ai){if(ai)synth+=",";const std::string tn="__nift_native_arg_"+std::to_string(next_runtime_temporary_id_++);synth+=tn;auto sp=std::make_shared<nift::RuntimeValue>(std::move(args[ai]));variable_scopes_.back().emplace(tn,VariableBinding{sp,nift_binding_type(*sp),false,false});temps.push_back(tn);}
+                synth+=")";
+                nift::RuntimeValue nv;std::string ne;
+                const bool nok=evaluate_expression(synth,nv,ne);
+                for(const auto& tn:temps)variable_scopes_.back().erase(tn);
+                if(nok){out=std::move(nv);return true;}
+                if(!ne.empty()){e=ne;return true;}
+                return false;
+            }
             if(callee->async)return false; // legacy evaluator schedules async call and returns a future
             if(callee->variadic_param.empty()?args.size()!=callee->params.size():args.size()<callee->params.size())return false;
             auto& prep=prepared_callables_[callee];
@@ -1323,8 +1339,9 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
                 for(const auto& frame:variable_scopes_)if(frame.count(builtin))return false;
                 return true;
             };
-            bool p4_self_alias=false;for(const auto& frame:variable_scopes_)if(frame.count(name))p4_self_alias=true;
-            const bool p4_enabled=!p4_self_alias&&standalone_script_host_&&!std::getenv("NIFT_P4_DISABLE")&&!active_module_env_&&!callee_env&&!callee->module_env&&callee->variadic_param.empty();
+            const bool p4_shape=args.size()==2||args.size()==5;
+            bool p4_self_alias=false;if(p4_shape)for(const auto& frame:variable_scopes_)if(frame.count(name))p4_self_alias=true;
+            const bool p4_enabled=p4_shape&&!p4_self_alias&&standalone_script_host_&&!std::getenv("NIFT_P4_DISABLE")&&!active_module_env_&&!callee_env&&!callee->module_env&&callee->variadic_param.empty();
             nift::p4::Walker walker_plan;
             const bool p4_walker=p4_enabled&&args.size()==2&&args[0].is_string()&&args[1].is_string()&&args[0].string.rfind("\x1fnift:",0)!=0&&args[1].string.rfind("\x1fnift:",0)!=0&&unshadowed("ls")&&unshadowed("is_dir")&&nift::p4::walker(prep.stmts,callee->params,name,walker_plan);
             if(p4_walker){
@@ -1435,9 +1452,26 @@ c.arg_is_location=[&](const std::string& arg)->bool{const std::string ref_source
             if(method=="size"){if(recv.is_array()){out=nift::RuntimeValue((double)recv.array.size());return true;}if(recv.is_object()){out=nift::RuntimeValue((double)recv.object.size());return true;}}
             if(method=="length"){if(recv.is_array()){out=nift::RuntimeValue((double)recv.array.size());return true;}if(recv.is_string()){out=nift::RuntimeValue((double)recv.string.size());return true;}if(recv.is_object()){out=nift::RuntimeValue((double)recv.object.size());return true;}}
             if(method=="empty"){if(recv.is_array()){out=nift::RuntimeValue(recv.array.empty());return true;}if(recv.is_string()){out=nift::RuntimeValue(recv.string.empty());return true;}if(recv.is_object()){out=nift::RuntimeValue(recv.object.empty());return true;}}
-            if(method=="first"&&recv.is_array()){if(recv.array.empty()){e="first: array is empty";return false;}out=recv.array.front();return true;}
-            if(method=="last"&&recv.is_array()){if(recv.array.empty()){e="last: array is empty";return false;}out=recv.array.back();return true;}
+            if(method=="first"&&recv.is_array()){if(!args.empty())return false;if(recv.array.empty()){e="first: array is empty";return false;}out=recv.array.front();return true;}
+            if(method=="last"&&recv.is_array()){if(!args.empty())return false;if(recv.array.empty()){e="last: array is empty";return false;}out=recv.array.back();return true;}
+            if(method=="replace"&&recv.is_string()&&recv.string.rfind("\x1fnift:",0)!=0){if(args.size()!=2||!args[0].is_string()||!args[1].is_string()||args[0].string.empty())return false;std::string s=recv.string;std::size_t pos=0;while((pos=s.find(args[0].string,pos))!=std::string::npos){s.replace(pos,args[0].string.size(),args[1].string);pos+=args[1].string.size();}out=nift::RuntimeValue(std::move(s));return true;}
+            if(method=="split"&&recv.is_string()&&recv.string.rfind("\x1fnift:",0)!=0){if(args.size()!=1||!args[0].is_string())return false;const std::string& str=recv.string;const std::string& delim=args[0].string;nift::RuntimeValue result=nift::RuntimeValue::make_array();if(delim.empty()){for(std::size_t i=0;i<str.size();){const unsigned char c=(unsigned char)str[i];const std::size_t n=c<0x80?1:(c>=0xC2&&c<=0xDF?2:(c>=0xE0&&c<=0xEF?3:(c>=0xF0&&c<=0xF4?4:0)));if(!n||i+n>str.size()){e="split: invalid UTF-8";return false;}for(std::size_t j=1;j<n;++j)if(((unsigned char)str[i+j]&0xC0)!=0x80){e="split: invalid UTF-8";return false;}result.array.emplace_back(str.substr(i,n));i+=n;}}else{std::size_t pos=0;while(true){const std::size_t at=str.find(delim,pos);if(at==std::string::npos){result.array.emplace_back(str.substr(pos));break;}result.array.emplace_back(str.substr(pos,at-pos));pos=at+delim.size();}}out=std::move(result);return true;}
             return false;};
+            c.method_fallback=[&](const nift::RuntimeValue& recv,const std::string& method,std::vector<nift::RuntimeValue>&& args,nift::ast::SourceSpan span,const std::string& recv_text,nift::RuntimeValue& out,std::string& e)->bool{
+                if(variable_scopes_.empty())variable_scopes_.emplace_back();
+                const std::string rn="__nift_native_recv_"+std::to_string(next_runtime_temporary_id_++);
+                auto rsp=std::make_shared<nift::RuntimeValue>(recv);
+                variable_scopes_.back().emplace(rn,VariableBinding{rsp,nift_binding_type(*rsp),false,false});
+                std::string synth=rn+"."+method+"(";std::vector<std::string> mtemps;mtemps.reserve(args.size());
+                for(std::size_t ai=0;ai<args.size();++ai){if(ai)synth+=",";const std::string tn="__nift_native_arg_"+std::to_string(next_runtime_temporary_id_++);synth+=tn;auto sp=std::make_shared<nift::RuntimeValue>(std::move(args[ai]));variable_scopes_.back().emplace(tn,VariableBinding{sp,nift_binding_type(*sp),false,false});mtemps.push_back(tn);}
+                synth+=")";
+                nift::RuntimeValue nv;std::string ne;
+                const bool nok=evaluate_expression(synth,nv,ne);
+                variable_scopes_.back().erase(rn);for(const auto& tn:mtemps)variable_scopes_.back().erase(tn);
+                if(nok){out=std::move(nv);return true;}
+                if(!ne.empty()){for(std::size_t rp=0;(rp=ne.find(rn,rp))!=std::string::npos;){ne.replace(rp,rn.size(),recv_text);rp+=recv_text.size();}if(prepared_view)expression_failure_view_=prepared_view->slice(span.begin,span.end-span.begin);e=ne;return false;}
+                return false;
+            };
             auto legacy_call=std::move(c.call);
             c.call_outcome=[&,legacy_call=std::move(legacy_call)](
                 const std::string& name,std::vector<nift::RuntimeValue>&& args){

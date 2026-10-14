@@ -386,6 +386,8 @@ private:
     std::unordered_map<std::string,std::shared_ptr<const PreparedFilesystemOperation>> canonical_file_plans_;
     std::size_t canonical_file_plan_bytes_=0;
     static bool known_file_method(std::string_view method);
+    static bool readonly_method_supported(const nift::RuntimeValue& receiver, const std::string& method);
+    static bool readonly_method_arity_ok(const nift::RuntimeValue& receiver, const std::string& method, std::size_t argc, std::string& error);
     bool execute_file_method(const nift::RuntimeValue& base,const std::string& method,std::size_t operand_count,
         const std::function<bool(std::size_t,nift::RuntimeValue&)>& operand,
         const std::function<bool(const std::string&,nift::RuntimeValue&)>& evaluate_token,
@@ -400,8 +402,6 @@ private:
     enum class MethodCompletion { Unsupported, Completed, Failed };
     static MethodCompletion complete_readonly_method(const nift::RuntimeValue& receiver, const std::string& method,
         const std::vector<nift::RuntimeValue>& args, nift::RuntimeValue& out, std::string& error);
-    static bool readonly_method_arity_ok(const nift::RuntimeValue& receiver, const std::string& method, std::size_t argc, std::string& error);
-    static bool readonly_method_supported(const nift::RuntimeValue& receiver, const std::string& method);
     bool form_call_arguments(const nift::detail::SourceText&, const std::string&, std::size_t, bool, OrdinaryArgumentFrame&, std::string&, int child_depth=0);
     bool evaluate_call_operand(const nift::detail::SourceText&, EvaluatedOperand&, std::string&, int depth_budget=0);
     std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>> evaluate_source_call(const nift::ast::Expr&, nift::detail::SourceView,

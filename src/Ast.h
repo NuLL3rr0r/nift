@@ -48,6 +48,12 @@ struct Context {
     std::function<bool(const std::string&, nift::RuntimeValue&, std::string&)> legacy;
     std::function<bool(const std::string&, std::vector<nift::RuntimeValue>&&, nift::RuntimeValue&, std::string&)> call;
     std::function<bool(const nift::RuntimeValue&, const std::string&, std::vector<nift::RuntimeValue>&&, nift::RuntimeValue&, std::string&)> native_method;
+    // Optional canonical method arity validation, applied before any method
+    // argument evaluation so an arity error cannot run argument side effects.
+    // Optional value-based method completion: dispatches a method against an
+    // already-evaluated receiver and arguments, preserving the original call
+    // span for diagnostics. Empty means decline.
+    std::function<bool(const nift::RuntimeValue&, const std::string&, std::vector<nift::RuntimeValue>&&, SourceSpan, const std::string&, nift::RuntimeValue&, std::string&)> method_fallback;
     std::function<nift::detail::EvalOutcome<nift::RuntimeValue>(
         const std::string&, std::vector<nift::RuntimeValue>&&)> call_outcome;
     std::function<nift::detail::EvalOutcome<nift::RuntimeValue>(
@@ -62,7 +68,7 @@ struct Context {
     // When set and true for any argument, the prepared Call dispatch is skipped
     // and evaluation falls back to the legacy evaluator (the oracle), which
     // performs the location-aware binding.
-    std::function<bool(const std::string&)> arg_is_location;
+    std::function<bool(const std::string&, const std::string&)> arg_is_location;
     // Value-only native calls never need the location probe, which may inspect
     // complex argument syntax before normal one-time argument evaluation.
     std::function<bool(const std::string&)> call_is_value_only;
