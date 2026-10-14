@@ -1,0 +1,177 @@
+{
+ "argument_order": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "FIRST\nSECOND\n3\n"
+ },
+ "bad_argument": {
+  "exit": 1,
+  "stderr": "error: <DIR>/bad_argument.f:1:59: sleep: milliseconds must be a non-negative signed 64-bit integer\n",
+  "stdout": ""
+ },
+ "bound_stringify": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "EFFECT\n[7]\n"
+ },
+ "captured_location": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[[1,3]]\n[1,3]\n"
+ },
+ "computed_index_replay": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "INDEX\n[[1,2]]\n"
+ },
+ "dangling_location": {
+  "exit": 1,
+  "stderr": "error: <DIR>/dangling_location.f:4:59: reference target no longer exists: b\n",
+  "stdout": ""
+ },
+ "direct_binding": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[1]\n[1,2]\n"
+ },
+ "f1a_column39_regression": {
+  "exit": 1,
+  "stderr": "error: <DIR>/f1a_column39_regression.f:1:39: division by zero\n",
+  "stdout": "EFFECT\n"
+ },
+ "failing_index": {
+  "exit": 1,
+  "stderr": "error: <DIR>/failing_index.f:2:31: return: division by zero\n",
+  "stdout": "INDEX\n"
+ },
+ "fatal_diagnostic": {
+  "exit": 1,
+  "stderr": "error: <DIR>/fatal_diagnostic.f:1:22: unknown value or malformed expression: unknown_operand_value\n",
+  "stdout": ""
+ },
+ "index_failure": {
+  "exit": 1,
+  "stderr": "error: <DIR>/index_failure.f:2:65: invalid index\n",
+  "stdout": ""
+ },
+ "indexed_location": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[[1,2]]\ntrue\n"
+ },
+ "inline_index": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "EFFECT\n7\n"
+ },
+ "inline_size": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "EFFECT\n1\n"
+ },
+ "inline_stringify": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "EFFECT\n[7]\n"
+ },
+ "invalid_index_type": {
+  "exit": 1,
+  "stderr": "error: <DIR>/invalid_index_type.f:4:62: JSON array indices must be non-negative integers in 'a[index()]'\n",
+  "stdout": "INDEX\n"
+ },
+ "member_location": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "{\"member\":[1,2]}\ntrue\n"
+ },
+ "method_failure": {
+  "exit": 1,
+  "stderr": "error: <DIR>/method_failure.f:2:65: substr: unsupported for this value\n",
+  "stdout": ""
+ },
+ "nested_effect_indices": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "INDEX\nINDEX\n{\"member\":[{\"nested\":[[1,2]]}]}\n"
+ },
+ "nested_expression_failure": {
+  "exit": 1,
+  "stderr": "error: <DIR>/nested_expression_failure.f:1:22: division by zero\n",
+  "stdout": ""
+ },
+ "nested_indexed_member": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "{\"member\":[{\"nested\":[1,2]}]}\ntrue\n"
+ },
+ "nested_location": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "{\"member\":[{\"nested\":[1,2]}]}\ntrue\n"
+ },
+ "ordinary_value": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "7\n"
+ },
+ "out_of_range": {
+  "exit": 1,
+  "stderr": "error: <DIR>/out_of_range.f:3:62: JSON array index 99 is out of range in 'a[99]'\n",
+  "stdout": ""
+ },
+ "readonly_location_rejection": {
+  "exit": 1,
+  "stderr": "error: <DIR>/readonly_location_rejection.f:3:59: cannot mutate const array: b\n",
+  "stdout": ""
+ },
+ "readonly_parameter_behavior": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[[1,2]]\n"
+ },
+ "recoverable": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "user.once\nuser\n<DIR>/recoverable.f\n1\n15\n"
+ },
+ "return_division": {
+  "exit": 1,
+  "stderr": "error: <DIR>/return_division.f:1:22: division by zero\n",
+  "stdout": ""
+ },
+ "returned_location": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[[1,3],[2]]\ntrue\n"
+ },
+ "root_reallocation": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[1,3]\ntrue\n"
+ },
+ "root_rebind": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "[[9,2]]\ntrue\n"
+ },
+ "short_circuit": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "false\ntrue\n"
+ },
+ "string_index": {
+  "exit": 0,
+  "stderr": "",
+  "stdout": "KEY\n{\"key\":[1,2]}\n"
+ },
+ "typed_location_rejection": {
+  "exit": 1,
+  "stderr": "error: <DIR>/typed_location_rejection.f:3:59: cannot change binding type: b\n",
+  "stdout": ""
+ },
+ "typed_value_rejection": {
+  "exit": 1,
+  "stderr": "error: <DIR>/typed_value_rejection.f:2:59: cannot change binding type: x\n",
+  "stdout": ""
+ }
+}

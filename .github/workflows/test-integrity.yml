@@ -67,6 +67,8 @@ jobs:
         run: make -j2
       - name: Contract suite
         run: make test-contracts
+      - name: Function-call semantic certification
+        run: make test-call-semantics
       - name: Canonical C++ conformance, host seam, C ABI
         run: |
           make test-conformance

@@ -2034,3 +2034,16 @@ test: test-evaluated-operand
 test-evaluated-operand-differential: $(TARGET)
 	@test -n "$(NIFT_BASELINE_BIN)" || { echo "NIFT_BASELINE_BIN is required" >&2; exit 1; }
 	python3 tests/evaluated_operand_differential.py --baseline "$(NIFT_BASELINE_BIN)" --candidate "$(CURDIR)/$(TARGET)"
+
+# v4.12 function-call semantic certification (permanent).
+.PHONY: test-call-semantics
+test-call-semantics: $(TARGET)
+	python3 tests/v412_nested_index_oracle.py "$(CURDIR)/$(TARGET)"
+	python3 tests/v412_method_error_oracle.py --negative-control "$(CURDIR)/$(TARGET)"
+	python3 tests/v412_call_semantic_contract.py --candidate "$(CURDIR)/$(TARGET)"
+	python3 tests/v412_method_error_oracle.py "$(CURDIR)/$(TARGET)"
+.PHONY: test-release-cert
+test-release-cert: $(TARGET)
+	python3 scripts/release_certify.py --root "$(CURDIR)" --jobs "$(shell nproc)"
+
+test: test-call-semantics
