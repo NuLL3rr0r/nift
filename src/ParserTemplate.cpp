@@ -1315,7 +1315,7 @@ c.arg_is_location=[&](const std::string& call_name,const std::string& arg)->bool
                 const bool nok=evaluate_expression(synth,nv,ne);
                 for(const auto& tn:temps)variable_scopes_.back().erase(tn);
                 if(nok){out=std::move(nv);return true;}
-                if(!ne.empty()){e=ne;return true;}
+                if(!ne.empty()){suppress_next_call_frame_=true;e=ne;return true;}
                 return false;
             }
             if(callee->async)return false; // legacy evaluator schedules async call and returns a future
@@ -1477,8 +1477,9 @@ c.arg_is_location=[&](const std::string& call_name,const std::string& arg)->bool
                 const std::string& name,std::vector<nift::RuntimeValue>&& args){
                 nift::RuntimeValue value;std::string error;
                 const bool handled=legacy_call(name,std::move(args),value,error);
+                const bool suppress_frame=suppress_next_call_frame_;suppress_next_call_frame_=false;
                 if(active_recoverable_)return nift::detail::EvalOutcome<nift::RuntimeValue>::recoverable(*active_recoverable_);
-                if(!error.empty()){auto diagnostic=active_diagnostic_?*active_diagnostic_:nift::detail::make_diagnostic(nift::detail::DiagnosticCode::InternalLegacyFailure,std::move(error));diagnostic.frames.push_back({nift::detail::DiagnosticFrameKind::Callable,name,{},{}});result_.diagnostic=diagnostic;return nift::detail::EvalOutcome<nift::RuntimeValue>::fatal(std::move(diagnostic));}
+                if(!error.empty()){auto diagnostic=active_diagnostic_?*active_diagnostic_:nift::detail::make_diagnostic(nift::detail::DiagnosticCode::InternalLegacyFailure,std::move(error));if(!suppress_frame)diagnostic.frames.push_back({nift::detail::DiagnosticFrameKind::Callable,name,{},{}});result_.diagnostic=diagnostic;return nift::detail::EvalOutcome<nift::RuntimeValue>::fatal(std::move(diagnostic));}
                 if(handled)return nift::detail::EvalOutcome<nift::RuntimeValue>::value(std::move(value));
                 return nift::detail::EvalOutcome<nift::RuntimeValue>::unsupported();
             };

@@ -317,6 +317,7 @@ private:
     std::shared_ptr<const std::unordered_map<std::string, VariableBinding>> snapshot_callback_captures();
     std::uint64_t next_lambda_instance_id_ = 1;
     std::uint64_t next_runtime_temporary_id_ = 1;
+    bool suppress_next_call_frame_ = false;
     struct ThreadInstance {
         std::thread worker;
         mutable std::mutex mutex;
