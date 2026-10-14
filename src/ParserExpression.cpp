@@ -1535,7 +1535,7 @@ std::optional<nift::detail::EvalOutcome<nift::RuntimeValue>> Parser::evaluate_so
                 return Outcome::value(std::move(result));
 }
 
-bool Parser::evaluate_expression_impl(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe, OrdinaryArgumentFrame* ordinary_arguments, int inherited_depth) {
+bool Parser::evaluate_expression_impl(const std::string& expression, nift::RuntimeValue& value, std::string& error, nift::detail::SourceView view, const PreparedFilesystemOperation* recipe, OrdinaryArgumentFrame*, int inherited_depth) {
     last_expression_mutation_ = false;
     auto resolve_direct = [&](const std::string& raw, nift::RuntimeValue& out) -> bool {
         const std::string text = trim_copy(raw);
@@ -2177,7 +2177,7 @@ bool Parser::evaluate_expression_impl(const std::string& expression, nift::Runti
                         if(!m){if(hard_error)*hard_error="JSON object has no key '"+idx.string+"'";return false;}
                         path.push_back(PathComponent::member(idx.string));{nift::RuntimeValue nx=*m;current=std::move(nx);}return true;
                     }
-                    if(hard_error)*hard_error="cannot index value in '"+ref_source+"'";return false;
+                    if(hard_error){*hard_error="cannot index value in '"+ref_source+"'";}return false;
                 }
                 return false;
             };
