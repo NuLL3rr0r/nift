@@ -64,7 +64,7 @@ LIBFFI_INCLUDE := $(LIBFFI_BUILD)/install/include
 # is no upstream configure switch that drops that translation unit. The
 # suppression applies only to the libffi build, never to Nift's own sources.
 LIBFFI_CFLAGS ?= -O2 -fPIC -Wno-deprecated-declarations
-CPPFLAGS += -I$(LIBFFI_INCLUDE)
+override CPPFLAGS += -I$(LIBFFI_INCLUDE)
 # The deep profile permits stack-slot reuse for the broad recursion corpus.
 # The lifetime profile retains use-after-scope checking. Compatibility dispatch
 # uses independent sanitizer frames so expression depth guards remain reachable.
